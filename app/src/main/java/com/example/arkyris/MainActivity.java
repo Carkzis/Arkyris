@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void countUp(View view) {
         mCount++;
-        mZeroButton.setBackgroundColor(getResources().getColor(R.color.purple_500));
+        mZeroButton.setBackgroundColor(getResources().getColor(R.color.green));
         if (mCount % 2 == 0)
             view.setBackgroundColor(getResources().getColor(R.color.even));
         else

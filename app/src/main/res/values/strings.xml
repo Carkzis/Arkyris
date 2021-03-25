@@ -19,7 +19,7 @@
     as the colour you are currently feeling. There will also be a public screen, that will
     show a collective colour diary for all the users. Yes… users… may even get some Python
     in there with a <b>Django REST</b> back-end! Anyway, check out my GitHub at \n
-    https://github.com/Carkzis :).
+    <b>https://github.com/Carkzis</b>
     </string>
     <string name="about">About</string>
     <string name="title_activity_diary">Diary</string>

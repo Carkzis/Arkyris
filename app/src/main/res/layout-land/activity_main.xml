@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#009688"
     tools:context=".MainActivity">
 
     <Button
@@ -16,9 +15,9 @@
         android:layout_marginTop="8dp"
         android:onClick="diaryScreen"
         android:text="@string/diary"
-        android:textColor="#E91E63"
+        android:textColor="@color/black"
         android:textSize="12sp"
-        app:backgroundTint="#FFEB3B"
+        app:backgroundTint="@color/green"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_about" />
 
@@ -31,8 +30,9 @@
         android:layout_marginTop="8dp"
         android:onClick="aboutScreen"
         android:text="About"
-        android:textSize="10sp"
-        app:backgroundTint="#673AB7"
+        android:textSize="12sp"
+        android:textColor="@android:color/black"
+        app:backgroundTint="@color/green"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_count" />
 
@@ -45,6 +45,7 @@
         android:layout_marginTop="8dp"
         android:onClick="zeroCount"
         android:text="@string/button_label_zero"
+        android:textColor="@android:color/black"
         app:backgroundTint="@color/zero_inactive"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_toast" />
@@ -58,7 +59,8 @@
         android:layout_marginTop="16dp"
         android:onClick="showToast"
         android:text="@string/button_label_toast"
-        android:textColor="@android:color/white"
+        app:backgroundTint="@color/green"
+        android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -71,7 +73,7 @@
         android:layout_marginTop="8dp"
         android:onClick="countUp"
         android:text="@string/button_label_count"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/black"
         app:backgroundTint="@color/even"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_zero" />
@@ -86,7 +88,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:background="#9C27B0"
+        android:background="@color/pink_light"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/count_initial_value"
         android:textSize="120sp"
