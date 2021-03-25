@@ -1,2 +1,2 @@
 # Arkyris
-Picture messaging with a twist.
+A diary, but with colours instead of words!

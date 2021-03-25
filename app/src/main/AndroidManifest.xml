@@ -9,7 +9,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Arkyris">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".DiaryActivity"
+            android:label="@string/title_activity_diary"
+            android:theme="@style/Theme.Arkyris.NoActionBar">
+
+        </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:parentActivityName=".MainActivity">
+
+        </activity>
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.Arkyris.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

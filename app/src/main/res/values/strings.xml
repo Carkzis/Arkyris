@@ -1,3 +1,36 @@
 <resources>
     <string name="app_name">Arkyris</string>
+    <string name="button_label_toast">Toast</string>
+    <string name="button_label_count">Count</string>
+    <string name="count_initial_value">0</string>
+    <string name="toast_message">Time to Toast!!!</string>
+    <string name="button_label_zero">Zero</string>
+    <string name="toast_zero">It is already zero!!!</string>
+    <string name="article_title">About Arkyris</string>
+    <string name="article_subtitle">Bringing more colour into our lives.</string>
+    <string name="article_text">Well, this is could be an interesting one. After learning
+    some <b>Python</b> (a great programming language, by the way) and using it in a variety of
+    diffferent ways, such as in the form of web apps, GUI manipulation and even some very
+    basic machine learning (although I have to say backpropagation prompted me to put
+    a pin in <i>that</i>, at least for the time being), I decided to go on a make an app for
+    Android. Okay, so it\'s <b>Java</b>, not Python, and sure, I would like to learn some
+    Kotlin along the way, but anyhoo, here\'s to my next slightly larger project of creating
+    an app that can act as a sort of diary of colours, where you can describe each day
+    as the colour you are currently feeling. There will also be a public screen, that will
+    show a collective colour diary for all the users. Yes… users… may even get some Python
+    in there with a <b>Django REST</b> back-end! Anyway, check out my GitHub at \n
+    https://github.com/Carkzis :).
+    </string>
+    <string name="about">About</string>
+    <string name="title_activity_diary">Diary</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="diary">DIARY</string>
+    <string name="settings">Settings</string>
 </resources>
