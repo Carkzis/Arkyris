@@ -1,6 +1,7 @@
 package com.example.arkyris;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +37,15 @@ public class MainActivity extends AppCompatActivity {
         mCountButton = (Button) findViewById(R.id.button_count);
         mMessageEditText = findViewById(R.id.editText_main);
         mPublicTextView = findViewById(R.id.text_public_message);
+
+        // get received implicit intent
+        Intent outsideIntent = getIntent();
+        Uri uri = outsideIntent.getData(); // intent data is always uri
+        if (uri != null) {
+            String uri_string = getString(R.string.uri_label) + uri.toString();
+            TextView textView = findViewById(R.id.text_uri_message);
+            textView.setText(uri_string);
+        }
 
         // Restore the state
         if (savedInstanceState != null) {
@@ -126,12 +136,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void aboutScreen(View view) {
         Intent intent = new Intent(this, AboutActivity.class);
-        startActivity(intent);
+        startActivity(intent); // for when a return result isn't needed
     }
 
     public void diaryScreen(View view) {
         Intent intent = new Intent(this, DiaryActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, TEXT_REQUEST); // this is important, remember it!!!
     }
 
     public void launchSecondActivity(View view) {
@@ -147,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // test that the correct Intent is processed
+        Log.d(LOG_TAG, String.valueOf(resultCode));
         if (requestCode == TEXT_REQUEST) {
             if (resultCode == RESULT_OK) {
                 String publicisedMessage = data.getStringExtra(DiaryActivity.EXTRA_PUBLICISE);

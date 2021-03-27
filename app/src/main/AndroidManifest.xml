@@ -18,8 +18,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.arkyris.MainActivity"/>
-
         </activity>
+
         <activity
             android:name=".AboutActivity"
             android:label="@string/about_arkyris"
@@ -32,10 +32,22 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <!-- intent with view actions -->
+                <action android:name="android.intent.action.VIEW" />
+                <!-- any implicit intent -->
+                <category android:name="android.intent.category.DEFAULT" />
+                <!-- requests for browsable links -->
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- URIs that contain scheme of http and host of developer.android.com -->
+                <data android:scheme="https" />
+            </intent-filter>
+
         </activity>
+
     </application>
 
 </manifest>

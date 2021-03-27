@@ -31,4 +31,15 @@
     <string name="tell_your_diary_something">Tell your diary something!</string>
     <string name="publicise">Publicise</string>
     <string name="editText_publicise">Publicise how you feel!</string>
+    <string name="edittext_hint_uri">Open a website!</string>
+    <string name="eddittext_uri">https://github.com/Carkzis/Arkyris</string>
+    <string name="open_website">Open Website</string>
+    <string name="edittext_hint_loc">Choose a location</string>
+    <string name="edittext_loc">Manchester</string>
+    <string name="edittext_hint_share">Tell someone about us!</string>
+    <string name="edittext_share">Hear about Arkyris?</string>
+    <string name="open_location">Open Location</string>
+    <string name="button_share">Share</string>
+    <string name="uri_label">Why is this here? </string>
+    <string name="button_camera">Take a picture...?</string>
 </resources>

@@ -51,6 +51,7 @@ public class DiaryActivity extends AppCompatActivity {
             }
         });
 
+        // This does nothing currently
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,8 +111,10 @@ public class DiaryActivity extends AppCompatActivity {
     public void returnReply(View view) {
         Log.d(LOG_TAG, "Publicise button clicked!");
         String publicise = mReply.getText().toString();
+        Log.d(LOG_TAG, publicise);
         Intent publiciseIntent = new Intent(); // don't reuse intent used to get to the Diary
         publiciseIntent.putExtra(EXTRA_PUBLICISE, publicise);
+        // set result for returning to main activity
         setResult(RESULT_OK, publiciseIntent);
         Log.d(LOG_TAG, "End DiaryActivity");
         finish(); // closes the activity and returns to the main activity

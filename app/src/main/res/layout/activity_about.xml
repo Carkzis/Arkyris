@@ -23,19 +23,88 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/article_subheading">
 
-        <TextView
-            android:id="@+id/article"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:autoLink="web"
-            android:lineSpacingExtra="@dimen/line_spacing"
-            android:padding="@dimen/padding_regular"
-            android:text="@string/article_text"
-            android:textAlignment="center"
-            android:textColor="?colorOnPrimary"
-            android:textColorLink="@color/white"
-            android:textSize="18sp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/article"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:autoLink="web"
+                android:lineSpacingExtra="@dimen/line_spacing"
+                android:padding="@dimen/padding_regular"
+                android:text="@string/article_text"
+                android:textAlignment="center"
+                android:textColor="?colorOnPrimary"
+                android:textColorLink="@color/white"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/website_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:hint="@string/edittext_hint_uri"
+                android:text="@string/eddittext_uri"/>
+
+            <Button
+                android:id="@+id/open_website_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="@string/open_website"
+                android:onClick="openWebsite"
+                android:backgroundTint="?colorSecondary"
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:id="@+id/location_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/edittext_hint_loc"
+                android:text="@string/edittext_loc"/>
+
+            <Button
+                android:id="@+id/open_location_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="@string/open_location"
+                android:onClick="openLocation"
+                android:backgroundTint="?colorSecondary"
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:id="@+id/share_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/edittext_hint_share"
+                android:text="@string/edittext_share"/>
+
+            <Button
+                android:id="@+id/share_text_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="@string/button_share"
+                android:onClick="shareText"
+                android:backgroundTint="?colorSecondary"
+                android:textColor="@color/black"/>
+
+            <Button
+                android:id="@+id/camera_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="@string/button_camera"
+                android:onClick="takePicture"
+                android:backgroundTint="?colorSecondary"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
 
     </ScrollView>
 
