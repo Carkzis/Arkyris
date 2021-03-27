@@ -13,16 +13,22 @@
         <activity
             android:name=".DiaryActivity"
             android:label="@string/title_activity_diary"
-            android:theme="@style/Theme.Arkyris.NoActionBar">
+            android:theme="@style/Theme.Arkyris.NoActionBar"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.arkyris.MainActivity"/>
 
         </activity>
         <activity
             android:name=".AboutActivity"
+            android:label="@string/about_arkyris"
             android:parentActivityName=".MainActivity">
 
         </activity>
         <activity android:name=".MainActivity">
-            <!--android:theme="@style/Theme.Arkyris.NoActionBar"-->
+            <!--android:theme="@style/Theme.Arkyris.NoActionBar"
+            android:screenOrientation="portrait"-->
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
