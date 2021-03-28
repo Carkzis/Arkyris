@@ -16,10 +16,25 @@
         android:layout_marginRight="8dp"
         android:ems="10"
         android:hint="@string/editText_publicise"
+        android:importantForAutofill="no"
         android:inputType="textLongMessage"
         app:layout_constraintBaseline_toBaselineOf="@+id/button_publicise"
         app:layout_constraintEnd_toStartOf="@+id/button_publicise"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/email_colour"
+        app:layout_constraintBottom_toTopOf="@+id/button_publicise"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_dialog_email" />
 
     <Button
         android:id="@+id/button_publicise"
@@ -57,4 +72,23 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_header" />
+
+    <ImageView
+        android:id="@+id/chosen_colour"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/colour_diary_entry"
+        android:onClick="addEntry"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/editText_publicise"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/colour_circle" />
 </androidx.constraintlayout.widget.ConstraintLayout>

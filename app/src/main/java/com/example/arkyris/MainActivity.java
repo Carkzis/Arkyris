@@ -11,6 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +26,12 @@ public class MainActivity extends AppCompatActivity {
     private Button mZeroButton;
     private Button mCountButton;
     private TextView mPublicTextView;
+    private boolean mIsEven;
+
+    private static final String[] mColorArray = {"red", "pink", "purple", "deep_purple",
+            "indigo", "blue", "light_blue", "cyan", "teal", "green",
+            "light_green", "lime", "yellow", "amber", "orange", "deep_orange",
+            "brown", "grey", "blue_grey", "black" };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +42,19 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialise view variables
         mShowCount = (TextView) findViewById(R.id.show_count);
-        mZeroButton = (Button) findViewById(R.id.button_zero);
-        mCountButton = (Button) findViewById(R.id.button_count);
+        mZeroButton = findViewById(R.id.button_zero);
+        mCountButton = findViewById(R.id.button_count);
         mMessageEditText = findViewById(R.id.editText_main);
         mPublicTextView = findViewById(R.id.text_public_message);
+
+        // Initialise toggles
+        mIsEven = true; // as it will always start at zero, so even
 
         // get received implicit intent
         Intent outsideIntent = getIntent();
         Uri uri = outsideIntent.getData(); // intent data is always uri
         if (uri != null) {
-            String uri_string = getString(R.string.uri_label) + uri.toString();
+            String uri_string = getString(R.string.uri_label) + " " + uri.toString();
             TextView textView = findViewById(R.id.text_uri_message);
             textView.setText(uri_string);
         }
@@ -55,7 +67,18 @@ public class MainActivity extends AppCompatActivity {
                 mPublicTextView.setText(savedInstanceState.getString("public_text"));
                 mPublicTextView.setVisibility(View.VISIBLE);
             }
+            // set the colour of the button to what we want
+            if (savedInstanceState.getBoolean("is_even")){
+                mCountButton.setBackgroundColor(getResources().getColor(R.color.even));
+                mIsEven = true;
+            } else {
+                mCountButton.setBackgroundColor(getResources().getColor(R.color.odd));
+                mIsEven = false;
+            }
+            // set count variable to the correct amount, and the amount on the screen
+            mCount = Integer.parseInt(savedInstanceState.getString("show_count"));
             mShowCount.setText(savedInstanceState.getString("show_count"));
+            mShowCount.setTextColor(savedInstanceState.getInt("count_color"));
         }
     }
 
@@ -81,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("show_count", mShowCount.getText().toString());
+        outState.putBoolean("is_even", mIsEven);
+        outState.putInt("count_color", mShowCount.getCurrentTextColor());
         if (mPublicTextView.getVisibility() == View.VISIBLE){
             outState.putBoolean("public_text_visible", true);
             outState.putString("public_text", mPublicTextView.getText().toString());
@@ -113,10 +138,13 @@ public class MainActivity extends AppCompatActivity {
     public void countUp(View view) {
         mCount++;
         mZeroButton.setBackgroundColor(getResources().getColor(R.color.green));
-        if (mCount % 2 == 0)
+        if (mCount % 2 == 0) {
             view.setBackgroundColor(getResources().getColor(R.color.even));
-        else
+            mIsEven = true;
+        } else {
             view.setBackgroundColor(getResources().getColor(R.color.odd));
+            mIsEven = false;
+        }
         if (mShowCount != null)
             mShowCount.setText(Integer.toString(mCount));
     }
@@ -128,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
             mZeroButton.setBackgroundColor(getResources().getColor(R.color.zero_inactive));
             mCountButton.setBackgroundColor(getResources().getColor(R.color.even));
             mCount = 0;
+            mIsEven = true;
             if (mShowCount != null) {
                 mShowCount.setText(Integer.toString(mCount));
             }
@@ -165,6 +194,22 @@ public class MainActivity extends AppCompatActivity {
                 mPublicTextView.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    public void changeColor(View view) {
+        Random random = new Random();
+        // pick a random colour (using an index)
+        String colorName = mColorArray[random.nextInt(20)];
+
+        // get resource identifier
+        int colourResourceName = getResources().getIdentifier(colorName, "color",
+                getApplicationContext().getPackageName()); // look up the string colorName in the
+        // "color" resources
+        // there are separate ints for both names and the values
+        int colorRes = ContextCompat.getColor(this, colourResourceName);
+        // ContextCompat will let you use getColor with old versions of Android
+        mShowCount.setTextColor(colorRes);
+
     }
 
 }

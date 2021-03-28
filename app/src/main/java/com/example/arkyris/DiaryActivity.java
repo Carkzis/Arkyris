@@ -7,9 +7,11 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ShareCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -36,7 +38,7 @@ public class DiaryActivity extends AppCompatActivity {
         String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
         TextView textView = findViewById(R.id.text_message);
         textView.setText(message);
-        if (message != null){
+        if (message != null) {
             TextView headerTextView = findViewById(R.id.text_header);
             headerTextView.setText(R.string.message_received);
         }
@@ -51,13 +53,25 @@ public class DiaryActivity extends AppCompatActivity {
             }
         });
 
-        // This does nothing currently
+        /**
+         * This will send the latest colour to a friend. Just a placeholder message currently.
+         */
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Choose your recipients!", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
+
+                // define a MIME type, text currently but will be "image/jpeg"
+                String mimeType = "text/plain";
+
+                ShareCompat.IntentBuilder
+                        .from(DiaryActivity.this)
+                        .setType(mimeType)
+                        .setChooserTitle("Share your colour: ") // appears on system app chooser
+                        .setText("Feeling pink!") // placeholder, will be image
+                        .startChooser(); // show the chooser and send intent
             }
         });
 
@@ -94,7 +108,7 @@ public class DiaryActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         Log.d(LOG_TAG, "onStart");
     }
@@ -108,6 +122,12 @@ public class DiaryActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * This will mostly be replaced, but the concept of
+     * public diary entries is on a list of things to do.
+     *
+     * @param view is the "publicise" button
+     */
     public void returnReply(View view) {
         Log.d(LOG_TAG, "Publicise button clicked!");
         String publicise = mReply.getText().toString();
@@ -118,5 +138,20 @@ public class DiaryActivity extends AppCompatActivity {
         setResult(RESULT_OK, publiciseIntent);
         Log.d(LOG_TAG, "End DiaryActivity");
         finish(); // closes the activity and returns to the main activity
+    }
+
+    /**
+     * This will add a colour entry into the diary.
+     * It currently just shows a toast as a placeholder.
+     *
+     * @param view is the ImageView that enters a particular colour to the diary.
+     */
+    public void addEntry(View view) {
+        displayToast(getString(R.string.diary_entry_added));
+        // TODO: Add a way to enter the entry into the SQL database, and update the entry history
+    }
+
+    public void displayToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }
