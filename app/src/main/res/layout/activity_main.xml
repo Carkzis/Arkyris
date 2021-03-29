@@ -22,8 +22,7 @@
                 android:layout_alignParentTop="true"
                 android:background="?attr/colorPrimary"
                 android:minHeight="?attr/actionBarSize"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"

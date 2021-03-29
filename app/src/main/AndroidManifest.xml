@@ -11,14 +11,15 @@
         android:theme="@style/Theme.Arkyris">
 
         <activity
+
             android:name=".AboutActivity"
             android:label="@string/about_arkyris"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.Arkyris">
 
         </activity>
+
         <activity android:name=".MainActivity">
-            <!--android:theme="@style/Theme.Arkyris.NoActionBar"
-            android:screenOrientation="portrait"-->
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

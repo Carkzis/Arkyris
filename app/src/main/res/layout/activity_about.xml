@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schema.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.android.android.scrollingtext.MainActivity">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <TextView
         android:id="@+id/article_subheading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/appbar"
         android:layout_gravity="center_horizontal"
         android:background="?colorPrimaryVariant"
         android:padding="@dimen/padding_regular"
@@ -48,61 +66,61 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:hint="@string/edittext_hint_uri"
-                android:text="@string/edittext_uri"/>
+                android:text="@string/edittext_uri" />
 
             <Button
                 android:id="@+id/open_website_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:text="@string/open_website"
-                android:onClick="openWebsite"
                 android:backgroundTint="?colorSecondary"
-                android:textColor="@color/black"/>
+                android:onClick="openWebsite"
+                android:text="@string/open_website"
+                android:textColor="@color/black" />
 
             <EditText
                 android:id="@+id/location_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/edittext_hint_loc"
-                android:text="@string/edittext_loc"/>
+                android:text="@string/edittext_loc" />
 
             <Button
                 android:id="@+id/open_location_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:text="@string/open_location"
-                android:onClick="openLocation"
                 android:backgroundTint="?colorSecondary"
-                android:textColor="@color/black"/>
+                android:onClick="openLocation"
+                android:text="@string/open_location"
+                android:textColor="@color/black" />
 
             <EditText
                 android:id="@+id/share_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/edittext_hint_share"
-                android:text="@string/edittext_share"/>
+                android:text="@string/edittext_share" />
 
             <Button
                 android:id="@+id/share_text_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:text="@string/button_share"
-                android:onClick="shareText"
                 android:backgroundTint="?colorSecondary"
-                android:textColor="@color/black"/>
+                android:onClick="shareText"
+                android:text="@string/button_share"
+                android:textColor="@color/black" />
 
             <Button
                 android:id="@+id/camera_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:text="@string/button_camera"
-                android:onClick="takePicture"
                 android:backgroundTint="?colorSecondary"
-                android:textColor="@color/black"/>
+                android:onClick="takePicture"
+                android:text="@string/button_camera"
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
