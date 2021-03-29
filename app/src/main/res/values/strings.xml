@@ -1,14 +1,7 @@
 <resources>
-    <string name="app_name">Arkyris</string>
-    <string name="button_label_toast">Toast</string>
-    <string name="button_label_count">Count</string>
-    <string name="count_initial_value">0</string>
-    <string name="toast_message">Time to Toast!!!</string>
-    <string name="button_label_zero">Zero</string>
-    <string name="toast_zero">It is already zero!!!</string>
-    <string name="article_title">Welcome to Arkyris!</string>
-    <string name="article_subtitle">Bringing more colour into our lives.</string>
-    <string name="article_text">Well, this is could be an interesting one. After learning
+    <string name="about_arkyris">About Arkyris</string>
+    <string name="about_subtitle">Bringing more colour into our lives.</string>
+    <string name="about_text">Well, this is could be an interesting one. After learning
     some <b>Python</b> (a great programming language, by the way) and using it in a variety of
     diffferent ways, such as in the form of web apps, GUI manipulation and even some very
     basic machine learning (although I have to say backpropagation prompted me to put
@@ -19,31 +12,21 @@
     as the colour you are currently feeling. There will also be a public screen, that will
     show a collective colour diary for all the users. Yes… users… may even get some Python
     in there with a <b>Django REST</b> back-end! Anyway, check out my GitHub at \n
-    <b>https://github.com/Carkzis</b>
-    </string>
-    <string name="about">About</string>
-    <string name="title_activity_diary">Diary</string>
-    <string name="diary">DIARY</string>
-    <string name="settings">Settings</string>
-    <string name="send">SEND</string>
-    <string name="about_arkyris">About Arkyris</string>
-    <string name="message_received">Message received</string>
-    <string name="tell_your_diary_something">Tell your diary something!</string>
-    <string name="publicise">Publicise</string>
-    <string name="editText_publicise">Publicise how you feel!</string>
-    <string name="edittext_hint_uri">Open a website!</string>
-    <string name="eddittext_uri">https://github.com/Carkzis/Arkyris</string>
-    <string name="open_website">Open Website</string>
-    <string name="edittext_hint_loc">Choose a location</string>
-    <string name="edittext_loc">Manchester</string>
-    <string name="edittext_hint_share">Tell someone about us!</string>
-    <string name="edittext_share">Hear about Arkyris?</string>
-    <string name="open_location">Open Location</string>
-    <string name="button_share">Share</string>
-    <string name="uri_label">Why is this here?</string>
+    <b>https://github.com/Carkzis</b></string>
+    <string name="app_name">Arkyris</string>
+    <string name="arke">Arke</string>
     <string name="button_camera">Take a picture...?</string>
-    <string name="change_color">Change</string>
+    <string name="button_share">Share</string>
     <string name="colour_diary_entry">Colour of diary entry.</string>
     <string name="email_colour">E-mail your colour.</string>
-    <string name="diary_entry_added">Your diary entry has been made! Placeholder.</string>
+    <string name="edittext_hint_loc">Choose a location</string>
+    <string name="edittext_hint_uri">Open a website!</string>
+    <string name="edittext_hint_share">Tell someone about us!</string>
+    <string name="edittext_loc">Manchester</string>
+    <string name="edittext_uri">https://github.com/Carkzis/Arkyris</string>
+    <string name="edittext_share">Hear about Arkyris?</string>
+    <string name="iris">Iris</string>
+    <string name="open_location">Open Location</string>
+    <string name="open_website">Open Website</string>
+    <string name="toast_entry_added">Your diary entry has been made! Placeholder.</string>
 </resources>

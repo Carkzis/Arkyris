@@ -11,160 +11,38 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-        <TextView
-            android:id="@+id/text_public_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_send" />
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/button_diary"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="diaryScreen"
-            android:text="@string/diary"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            app:backgroundTint="@color/green"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_about" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <Button
-            android:id="@+id/button_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:onClick="countUp"
-            android:text="@string/button_label_count"
-            android:textColor="@color/black"
-            app:backgroundTint="@color/even"
-            app:layout_constraintStart_toStartOf="@+id/button_zero"
-            app:layout_constraintTop_toBottomOf="@+id/button_zero" />
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/toolbar"
+                android:background="?attr/colorPrimaryVariant"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-        <Button
-            android:id="@+id/button_toast"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="24dp"
-            android:onClick="showToast"
-            android:text="@string/button_label_toast"
-            android:textColor="@android:color/black"
-            app:backgroundTint="@color/green"
-            app:layout_constraintEnd_toEndOf="@+id/button_zero"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/tab_layout"
+                android:background="@color/black"/>
 
-        <Button
-            android:id="@+id/button_zero"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:onClick="zeroCount"
-            android:text="@string/button_label_zero"
-            android:textColor="@android:color/black"
-            app:backgroundTint="@color/zero_inactive"
-            app:layout_constraintStart_toStartOf="@+id/button_toast"
-            app:layout_constraintTop_toBottomOf="@+id/button_toast" />
-
-        <TextView
-            android:id="@+id/show_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@color/pink_light"
-            android:gravity="center_horizontal|center_vertical"
-            android:text="@string/count_initial_value"
-            android:textSize="160sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/editText_main"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/button_toast"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/button_about"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="aboutScreen"
-            android:text="@string/about"
-            android:textColor="@android:color/black"
-            android:textSize="12sp"
-            app:backgroundTint="@color/green"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_count" />
-
-        <Button
-            android:id="@+id/button_send"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="launchSecondActivity"
-            android:text="@string/send"
-            android:textColor="@android:color/black"
-            app:backgroundTint="@color/green"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_diary" />
-
-        <EditText
-            android:id="@+id/editText_main"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:ems="10"
-            android:hint="@string/tell_your_diary_something"
-            android:inputType="textLongMessage"
-            app:layout_constraintBaseline_toBaselineOf="@+id/button_send"
-            app:layout_constraintStart_toEndOf="@+id/button_send" />
-
-        <TextView
-            android:id="@+id/text_uri_message"
-            android:layout_width="0dp"
-            android:layout_height="21dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/change_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="changeColor"
-            android:text="@string/change_color"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            app:backgroundTint="@color/green"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_send" />
+        </com.google.android.material.appbar.AppBarLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.core.widget.NestedScrollView>

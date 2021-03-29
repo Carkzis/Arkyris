@@ -12,7 +12,7 @@
         android:layout_gravity="center_horizontal"
         android:background="?colorPrimaryVariant"
         android:padding="@dimen/padding_regular"
-        android:text="@string/article_subtitle"
+        android:text="@string/about_subtitle"
         android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault"
         android:textColor="?colorOnPrimary"
@@ -36,7 +36,7 @@
                 android:autoLink="web"
                 android:lineSpacingExtra="@dimen/line_spacing"
                 android:padding="@dimen/padding_regular"
-                android:text="@string/article_text"
+                android:text="@string/about_text"
                 android:textAlignment="center"
                 android:textColor="?colorOnPrimary"
                 android:textColorLink="@color/white"
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:hint="@string/edittext_hint_uri"
-                android:text="@string/eddittext_uri"/>
+                android:text="@string/edittext_uri"/>
 
             <Button
                 android:id="@+id/open_website_button"
