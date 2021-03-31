@@ -16,10 +16,12 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
 
     private final LinkedList<ArkeItem> mArkeColourList;
     private LayoutInflater mInflater;
+    private Context context;
 
     public ArkeListAdapter(Context context, LinkedList<ArkeItem> wordList) {
         mInflater = LayoutInflater.from(context);
         this.mArkeColourList = wordList;
+        this.context = context;
     }
 
     /**
@@ -45,6 +47,7 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
     public void onBindViewHolder(@NonNull ArkeListAdapter.ArkeViewHolder holder, int position) {
         ArkeItem mCurrent = mArkeColourList.get(position);
         holder.mImageView.setImageResource(mCurrent.getImage());
+        holder.mImageView.setColorFilter(context.getResources().getColor(R.color.green));
         holder.mDateView.setText(mCurrent.getDate());
         holder.mTimeView.setText(mCurrent.getTime());
     }
@@ -64,7 +67,6 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
 
         public ArkeViewHolder(@NonNull View itemView, ArkeListAdapter adapter) {
             super(itemView);
-            // TODO: this needs sorting
             mImageView = itemView.findViewById(R.id.arke_colour);
             mDateView = itemView.findViewById(R.id.arke_date);
             mTimeView = itemView.findViewById(R.id.arke_time);

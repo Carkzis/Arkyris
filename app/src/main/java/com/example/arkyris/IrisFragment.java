@@ -102,6 +102,8 @@ public class IrisFragment extends Fragment {
             // TODO: Add a way to enter the entry into the SQL database, and update the entry history
         });
 
+        image.setColorFilter(getResources().getColor(R.color.green));
+
         // Inflate the layout for this fragment
         return rootView;
 
