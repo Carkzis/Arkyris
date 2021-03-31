@@ -6,6 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.LinkedList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +28,9 @@ public class ArkeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private final LinkedList<String> mWordList = new LinkedList<>();
+    private RecyclerView mRecyclerView;
+    private ArkeListAdapter mAdapter;
 
     public ArkeFragment() {
         // Required empty public constructor
@@ -54,10 +63,46 @@ public class ArkeFragment extends Fragment {
         }
     }
 
+    /**
+     * Note to self: for fragments, treat this as onCreate.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        final View rootView = inflater.inflate(R.layout.fragment_arke, container, false);
+
+        final FloatingActionButton fab = rootView.findViewById(R.id.arke_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int wordListSize = mWordList.size();
+                // add a new word to the List
+                mWordList.addLast("+ Word " + wordListSize);
+                // notify the adapter that data has changed
+                mRecyclerView.getAdapter().notifyItemInserted(wordListSize);
+                // scroll to the bottom
+                mRecyclerView.smoothScrollToPosition(wordListSize);
+            }
+        });
+
+        // Create a placeholder list of words for RecycleView.
+        for (int i = 0; i < 30; i++) {
+            mWordList.addLast("Word " + i);
+        }
+        // Get a handler for the RecyclerView
+        mRecyclerView = rootView.findViewById(R.id.arke_recyclerview);
+        // Create an adapter and supply the data
+        mAdapter = new ArkeListAdapter(getActivity(), mWordList);
+        // Connect adapter to RecyclerView
+        mRecyclerView.setAdapter(mAdapter);
+        // Give RecyclerView a LayoutManager
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_arke, container, false);
+        return rootView;
     }
 }

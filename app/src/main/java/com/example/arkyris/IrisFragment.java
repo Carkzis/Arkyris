@@ -75,7 +75,7 @@ public class IrisFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Choose your recipients!", Snackbar.LENGTH_SHORT)
+                Snackbar.make(view, R.string.choose_recipient, Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
 
                 // define a MIME type, text currently but will be "image/jpeg"
