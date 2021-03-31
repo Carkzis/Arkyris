@@ -28,7 +28,8 @@ public class ArkeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private final LinkedList<String> mWordList = new LinkedList<>();
+
+    private final LinkedList<ArkeItem> mArkeColourList = new LinkedList<>();
     private RecyclerView mRecyclerView;
     private ArkeListAdapter mAdapter;
 
@@ -77,27 +78,25 @@ public class ArkeFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_arke, container, false);
 
         final FloatingActionButton fab = rootView.findViewById(R.id.arke_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int wordListSize = mWordList.size();
-                // add a new word to the List
-                mWordList.addLast("+ Word " + wordListSize);
-                // notify the adapter that data has changed
-                mRecyclerView.getAdapter().notifyItemInserted(wordListSize);
-                // scroll to the bottom
-                mRecyclerView.smoothScrollToPosition(wordListSize);
-            }
+        fab.setOnClickListener(view -> {
+            int wordListSize = mArkeColourList.size();
+            // add a new word to the List
+            mArkeColourList.addLast(new ArkeItem(R.drawable.colour_rectangle, "Testing", "Testing"));;
+            // notify the adapter that data has changed
+            mRecyclerView.getAdapter().notifyItemInserted(wordListSize);
+            // scroll to the bottom
+            mRecyclerView.smoothScrollToPosition(wordListSize);
         });
 
         // Create a placeholder list of words for RecycleView.
-        for (int i = 0; i < 30; i++) {
-            mWordList.addLast("Word " + i);
+        for (int i = 0; i < 50; i++) {
+            mArkeColourList.addLast(new ArkeItem(R.drawable.colour_rectangle, "31 03 2021", "21 21"));
         }
+
         // Get a handler for the RecyclerView
         mRecyclerView = rootView.findViewById(R.id.arke_recyclerview);
         // Create an adapter and supply the data
-        mAdapter = new ArkeListAdapter(getActivity(), mWordList);
+        mAdapter = new ArkeListAdapter(getActivity(), mArkeColourList);
         // Connect adapter to RecyclerView
         mRecyclerView.setAdapter(mAdapter);
         // Give RecyclerView a LayoutManager

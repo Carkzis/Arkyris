@@ -97,12 +97,9 @@ public class IrisFragment extends Fragment {
          * @param view is the ImageView that enters a particular colour to the diary.
          */
         final ImageView image = rootView.findViewById(R.id.chosen_colour);
-        image.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
-                 displayToast(getString(R.string.toast_entry_added));
-                 // TODO: Add a way to enter the entry into the SQL database, and update the entry history
-             }
+        image.setOnClickListener(view -> {
+            displayToast(getString(R.string.toast_entry_added));
+            // TODO: Add a way to enter the entry into the SQL database, and update the entry history
         });
 
         // Inflate the layout for this fragment

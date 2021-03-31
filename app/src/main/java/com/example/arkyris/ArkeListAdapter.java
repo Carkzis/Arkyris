@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,12 +14,12 @@ import java.util.LinkedList;
 
 public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeViewHolder> {
 
-    private final LinkedList<String> mWordList;
+    private final LinkedList<ArkeItem> mArkeColourList;
     private LayoutInflater mInflater;
 
-    public ArkeListAdapter(Context context, LinkedList<String> wordList) {
+    public ArkeListAdapter(Context context, LinkedList<ArkeItem> wordList) {
         mInflater = LayoutInflater.from(context);
-        this.mWordList = wordList;
+        this.mArkeColourList = wordList;
     }
 
     /**
@@ -42,23 +43,32 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
      */
     @Override
     public void onBindViewHolder(@NonNull ArkeListAdapter.ArkeViewHolder holder, int position) {
-        String mCurrent = mWordList.get(position);
-        holder.arkeItemView.setText(mCurrent);
+        ArkeItem mCurrent = mArkeColourList.get(position);
+        holder.mImageView.setImageResource(mCurrent.getImage());
+        holder.mDateView.setText(mCurrent.getDate());
+        holder.mTimeView.setText(mCurrent.getTime());
     }
 
     @Override
     public int getItemCount() {
-        return mWordList.size();
+        return mArkeColourList.size();
     }
 
     class ArkeViewHolder extends RecyclerView.ViewHolder {
 
-        public final TextView arkeItemView;
+        public final ImageView mImageView;
+        public final TextView mDateView;
+        public final TextView mTimeView;
+
         final ArkeListAdapter mAdapter;
 
         public ArkeViewHolder(@NonNull View itemView, ArkeListAdapter adapter) {
             super(itemView);
-            arkeItemView = itemView.findViewById(R.id.colour_arke);
+            // TODO: this needs sorting
+            mImageView = itemView.findViewById(R.id.arke_colour);
+            mDateView = itemView.findViewById(R.id.arke_date);
+            mTimeView = itemView.findViewById(R.id.arke_time);
+
             this.mAdapter = adapter;
         }
     }
