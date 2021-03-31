@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -72,10 +73,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_settings:
+                Toast.makeText(this, R.string.settings_placeholder, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_about:
                 Intent intent = new Intent(MainActivity.this, AboutActivity.class);
                 startActivity(intent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
