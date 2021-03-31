@@ -3,34 +3,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    app:cardBackgroundColor="@color/black">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="96dp"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:layout_marginTop="2dp"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/arke_datetime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:rotation="270">
 
             <TextView
                 android:id="@+id/arke_date"
-                android:layout_width="wrap_content"
+                android:layout_width="48dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textSize="12sp"
-                tools:text="31/03/2021" />
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="10sp"
+                tools:text="31/03/21" />
 
             <TextView
                 android:id="@+id/arke_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="12sp"
+                android:gravity="center"
+                android:textSize="10sp"
                 tools:text="23:11" />
 
         </LinearLayout>

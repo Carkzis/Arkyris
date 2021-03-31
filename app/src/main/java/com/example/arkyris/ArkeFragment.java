@@ -90,7 +90,7 @@ public class ArkeFragment extends Fragment {
 
         // Create a placeholder list of words for RecycleView.
         for (int i = 0; i < 50; i++) {
-            mArkeColourList.addLast(new ArkeItem(R.drawable.colour_rectangle, "31 03 2021", "21 21"));
+            mArkeColourList.addLast(new ArkeItem(R.drawable.colour_rectangle, "31/03/21", "21:21"));
         }
 
         // Get a handler for the RecyclerView
