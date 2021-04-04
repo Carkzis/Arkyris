@@ -1,10 +1,12 @@
 package com.example.arkyris;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +35,12 @@ public class ArkeFragment extends Fragment {
     private final LinkedList<ArkeItem> mArkeColourList = new LinkedList<>();
     private RecyclerView mRecyclerView;
     private ArkeListAdapter mAdapter;
+
+    // Placeholder to test changing colours of entries
+    private static final String[] mColourArray = {"red", "pink", "purple", "deep_purple",
+            "indigo", "blue", "light_blue", "cyan", "teal", "green",
+            "light_green", "lime", "yellow", "amber", "orange", "deep_orange",
+            "brown", "grey", "blue_grey", "pink_dark"};
 
     public ArkeFragment() {
         // Required empty public constructor
@@ -66,6 +75,7 @@ public class ArkeFragment extends Fragment {
 
     /**
      * Note to self: for fragments, treat this as onCreate.
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -79,9 +89,10 @@ public class ArkeFragment extends Fragment {
 
         final FloatingActionButton fab = rootView.findViewById(R.id.arke_fab);
         fab.setOnClickListener(view -> {
-            int wordListSize = mArkeColourList.size();
+            int colourName = changeColour();
             // add a new word to the List
-            mArkeColourList.addFirst(new ArkeItem(R.drawable.colour_rectangle, "Testing", "Testing"));;
+            mArkeColourList.addFirst(new ArkeItem(R.drawable.colour_rectangle, colourName, "Testing", "Testing"));
+            ;
             // notify the adapter that data has changed
             mRecyclerView.getAdapter().notifyItemInserted(0);
             mRecyclerView.smoothScrollToPosition(0);
@@ -90,7 +101,8 @@ public class ArkeFragment extends Fragment {
 
         // Create a placeholder list of words for RecycleView.
         for (int i = 0; i < 50; i++) {
-            mArkeColourList.addLast(new ArkeItem(R.drawable.colour_rectangle, "31/03/21", "21:21"));
+            int colourName = changeColour();
+            mArkeColourList.addLast(new ArkeItem(R.drawable.colour_rectangle, colourName, "31/03/2021", "21:21"));
         }
 
         // Get a handler for the RecyclerView
@@ -104,4 +116,20 @@ public class ArkeFragment extends Fragment {
         // Inflate the layout for this fragment
         return rootView;
     }
+
+    public int changeColour() {
+        Random random = new Random();
+        // pick a random colour (using an index)
+        String colourName = mColourArray[random.nextInt(20)];
+        Log.e("OOPS", String.valueOf(colourName));
+        // get resource identifier
+        int colourResourceName = getResources().getIdentifier(colourName, "color",
+                getActivity().getApplicationContext().getPackageName()); // look up the string colorName in the
+        // "color" resources
+        // there are separate ints for both names and the values
+        int colourRes = ContextCompat.getColor(getActivity(), colourResourceName);
+        Log.e("OOPS", String.valueOf(colourName));
+        return colourRes;
+    }
+
 }

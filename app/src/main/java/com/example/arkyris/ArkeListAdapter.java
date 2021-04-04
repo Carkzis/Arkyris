@@ -48,7 +48,8 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
         ArkeItem mCurrent = mArkeColourList.get(position);
         holder.mImageView.setImageResource(mCurrent.getImage());
         // TODO: Change this so the input is the colour, rather than the image resource
-        holder.mImageView.setColorFilter(context.getResources().getColor(R.color.green));
+        holder.mImageView.setColorFilter(mCurrent.getColour());
+        // holder.mImageView.setColorFilter(context.getResources().getColor(R.color.green));
         holder.mDateView.setText(mCurrent.getDate());
         holder.mTimeView.setText(mCurrent.getTime());
     }
