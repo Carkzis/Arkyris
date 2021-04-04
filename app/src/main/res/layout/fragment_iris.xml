@@ -38,6 +38,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/colour_circle" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/arke_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="172dp"
+            tools:layout_editor_absoluteY="306dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

@@ -25,9 +25,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/arke_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="172dp"
-            tools:layout_editor_absoluteY="306dp" />
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="172dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
