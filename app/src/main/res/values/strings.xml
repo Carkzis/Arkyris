@@ -22,4 +22,5 @@
     <string name="about">About</string>
     <string name="settings_placeholder">This will open settings!</string>
     <string name="choose_recipient">Choose your recipient!</string>
+    <string name="iris_add_colour">Add your colour to the diary.</string>
 </resources>

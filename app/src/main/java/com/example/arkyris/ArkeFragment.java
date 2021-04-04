@@ -121,7 +121,6 @@ public class ArkeFragment extends Fragment {
         Random random = new Random();
         // pick a random colour (using an index)
         String colourName = mColourArray[random.nextInt(20)];
-        Log.e("OOPS", String.valueOf(colourName));
         // get resource identifier
         int colourResourceName = getResources().getIdentifier(colourName, "color",
                 getActivity().getApplicationContext().getPackageName()); // look up the string colorName in the

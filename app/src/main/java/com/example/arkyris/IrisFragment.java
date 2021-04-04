@@ -8,14 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -85,41 +83,26 @@ public class IrisFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_iris, container, false);
 
         /**
-         * This will send the latest colour to a friend. Just a placeholder message currently.
-         */
-
-        final FloatingActionButton fab = rootView.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, R.string.choose_recipient, Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
-
-                // define a MIME type, text currently but will be "image/jpeg"
-                String mimeType = "text/plain";
-
-                ShareCompat.IntentBuilder
-                        .from(getActivity())
-                        .setType(mimeType)
-                        .setChooserTitle("Share your colour: ") // appears on system app chooser
-                        .setText("Feeling pink!") // placeholder, will be image
-                        .startChooser(); // show the chooser and send intent
-            }
-        });
-
-        /**
          * This will add a colour entry into the diary.
          * It currently just shows a toast as a placeholder.
          *
          * @param view is the ImageView that enters a particular colour to the diary.
          */
-        final ImageView image = rootView.findViewById(R.id.chosen_colour);
-        image.setOnClickListener(view -> {
-            displayToast(getString(R.string.toast_entry_added));
-            // TODO: Add a way to enter the entry into the SQL database, and update the entry history
+
+        final FloatingActionButton fab = rootView.findViewById(R.id.iris_fab);
+        fab.setOnClickListener(view -> {
+                int colourName = changeColour();
+                // add a new word to the List
+                mIrisColourList.addFirst(new IrisItem(R.drawable.colour_rectangle, colourName, "Testing", "Testing"));
+                ;
+                // notify the adapter that data has changed
+                mRecyclerView.getAdapter().notifyItemInserted(0);
+                mRecyclerView.smoothScrollToPosition(0);
         });
 
-        image.setColorFilter(getResources().getColor(R.color.green));
+        final ImageView image = rootView.findViewById(R.id.chosen_colour);
+        int loadColour = changeColour();
+        image.setColorFilter(loadColour);
 
         // Create a placeholder list of words for RecycleView.
         for (int i = 0; i < 50; i++) {

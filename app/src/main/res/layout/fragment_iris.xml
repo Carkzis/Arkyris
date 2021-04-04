@@ -12,15 +12,17 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/iris_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|end"
             android:layout_margin="@dimen/fab_margin"
-            android:contentDescription="@string/email_colour"
+            android:contentDescription="@string/iris_add_colour"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@android:drawable/ic_dialog_email" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chosen_colour"
+            app:srcCompat="@android:drawable/ic_input_add" />
 
         <ImageView
             android:id="@+id/chosen_colour"
@@ -53,6 +55,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="invisible"
+            android:padding="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
