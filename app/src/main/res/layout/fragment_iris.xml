@@ -39,12 +39,50 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/colour_circle" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Hacky way to make the RecyclerView wrap the content. -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                app:srcCompat="@drawable/colour_circle" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BLANK"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BLANK"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/arke_recyclerview"
+            android:id="@+id/iris_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="172dp"
-            tools:layout_editor_absoluteY="306dp" />
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+            app:layout_constraintTop_toTopOf="@+id/linearLayout"
+            tools:layout_editor_absoluteX="172dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

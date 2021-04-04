@@ -128,7 +128,7 @@ public class IrisFragment extends Fragment {
         }
 
         // Get a handler for the RecyclerView
-        mRecyclerView = rootView.findViewById(R.id.arke_recyclerview);
+        mRecyclerView = rootView.findViewById(R.id.iris_recyclerview);
         // Create an adapter and supply the data
         mAdapter = new IrisListAdapter(getActivity(), mIrisColourList);
         // Connect adapter to RecyclerView
