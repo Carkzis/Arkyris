@@ -1,7 +1,6 @@
 package com.example.arkyris;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -89,9 +90,16 @@ public class ArkeFragment extends Fragment {
 
         final FloatingActionButton fab = rootView.findViewById(R.id.arke_fab);
         fab.setOnClickListener(view -> {
+            // get a random colour
+            // TODO: obtain a colour of the member's choosing
+            // TODO: enter into a database
             int colourName = changeColour();
+            // create timestamps
+            // TODO: make these obey local formatting
+            String timeStampDate = new SimpleDateFormat("dd/mm/yyyy").format(new Date());
+            String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
             // add a new word to the List
-            mArkeColourList.addFirst(new ArkeItem(R.drawable.colour_rectangle, colourName, "Testing", "Testing"));
+            mArkeColourList.addFirst(new ArkeItem(R.drawable.colour_rectangle, colourName, timeStampDate, timeStampTime));
             ;
             // notify the adapter that data has changed
             mRecyclerView.getAdapter().notifyItemInserted(0);
@@ -100,6 +108,8 @@ public class ArkeFragment extends Fragment {
         });
 
         // Create a placeholder list of words for RecycleView.
+        // TODO: obtain items from database
+        // TODO: show a different item for the end, "e.g. there are no more entries"
         for (int i = 0; i < 50; i++) {
             int colourName = changeColour();
             mArkeColourList.addLast(new ArkeItem(R.drawable.colour_rectangle, colourName, "31/03/2021", "21:21"));
@@ -127,7 +137,6 @@ public class ArkeFragment extends Fragment {
         // "color" resources
         // there are separate ints for both names and the values
         int colourRes = ContextCompat.getColor(getActivity(), colourResourceName);
-        Log.e("OOPS", String.valueOf(colourName));
         return colourRes;
     }
 

@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -91,9 +93,16 @@ public class IrisFragment extends Fragment {
 
         final FloatingActionButton fab = rootView.findViewById(R.id.iris_fab);
         fab.setOnClickListener(view -> {
+                // get a random colour
+                // TODO: obtain a colour of the member's choosing
+                // TODO: enter into a database
                 int colourName = changeColour();
+                // create timestamps
+                // TODO: make these obey local formatting
+                String timeStampDate = new SimpleDateFormat("dd/mm/yyyy").format(new Date());
+                String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
                 // add a new word to the List
-                mIrisColourList.addFirst(new IrisItem(R.drawable.colour_rectangle, colourName, "Testing", "Testing"));
+                mIrisColourList.addFirst(new IrisItem(R.drawable.colour_rectangle, colourName, timeStampDate, timeStampTime));
                 ;
                 // notify the adapter that data has changed
                 mRecyclerView.getAdapter().notifyItemInserted(0);
@@ -105,6 +114,8 @@ public class IrisFragment extends Fragment {
         image.setColorFilter(loadColour);
 
         // Create a placeholder list of words for RecycleView.
+        // TODO: obtain these from database
+        // TODO: show a message if there are no items
         for (int i = 0; i < 50; i++) {
             int colourName = changeColour();
             mIrisColourList.addLast(new IrisItem(R.drawable.colour_circle, colourName, "31/03/2021", "21:21"));
