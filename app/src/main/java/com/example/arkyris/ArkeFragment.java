@@ -81,11 +81,11 @@ public class ArkeFragment extends Fragment {
         fab.setOnClickListener(view -> {
             int wordListSize = mArkeColourList.size();
             // add a new word to the List
-            mArkeColourList.addLast(new ArkeItem(R.drawable.colour_rectangle, "Testing", "Testing"));;
+            mArkeColourList.addFirst(new ArkeItem(R.drawable.colour_rectangle, "Testing", "Testing"));;
             // notify the adapter that data has changed
-            mRecyclerView.getAdapter().notifyItemInserted(wordListSize);
-            // scroll to the bottom
-            mRecyclerView.smoothScrollToPosition(wordListSize);
+            mRecyclerView.getAdapter().notifyItemInserted(0);
+            mRecyclerView.smoothScrollToPosition(0);
+
         });
 
         // Create a placeholder list of words for RecycleView.
