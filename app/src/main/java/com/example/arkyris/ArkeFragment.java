@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
 
-import eltos.simpledialogfragment.color.SimpleColorDialog;
+import yuku.ambilwarna.AmbilWarnaDialog;
 
 
 /**
@@ -80,22 +80,11 @@ public class ArkeFragment extends Fragment {
 
         final FloatingActionButton fab = rootView.findViewById(R.id.arke_fab);
         fab.setOnClickListener(view -> {
-            // TODO: This needs to do add to th
-            openColourPickerDialogue();
-            // get a random colour
-            // TODO: obtain a colour of the member's choosing
             // TODO: enter into a database
+            // get a random colour, to initially display to the user in the color picker dialogue.
             mColourName = changeColour();
-            // create timestamps
-            // TODO: make these obey local formatting
-            String timeStampDate = new SimpleDateFormat("dd/mm/yyyy").format(new Date());
-            String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
-            // add a new word to the List
-            mArkeColourList.addFirst(new ArkeItem(R.drawable.colour_rectangle, mColourName, timeStampDate, timeStampTime));
-            ;
-            // notify the adapter that data has changed
-            mRecyclerView.getAdapter().notifyItemInserted(0);
-            mRecyclerView.smoothScrollToPosition(0);
+            // This will open a dialogue to enter a colour.
+            openColourPickerDialogue();
 
         });
 
@@ -132,13 +121,37 @@ public class ArkeFragment extends Fragment {
         return colourRes;
     }
 
+    /**
+     * This will open the colour picker dialogue, to allow us to add a new entry
+     * with our chosen colour.
+     */
     public void openColourPickerDialogue() {
         // TODO: This needs to do something.
-        SimpleColorDialog.build()
-                .title("Choose your colour!")
-                .colorPreset(mColourName)
-                .allowCustom(true)
-                .show(getActivity(), "Hello");
+        final AmbilWarnaDialog colorPickerDialogue = new AmbilWarnaDialog(getActivity(), mColourName,
+                new AmbilWarnaDialog.OnAmbilWarnaListener() {
+                    @Override
+                    public void onCancel(AmbilWarnaDialog dialog) {
+                        // Leaver this blank, as closes automatically
+                        // on clicked cancel button
+                    }
+
+                    @Override
+                    public void onOk(AmbilWarnaDialog dialog, int color) {
+                        // amend the colour to the chosen one
+                        mColourName = color;
+                        // create timestamps
+                        // TODO: make these obey local formatting
+                        String timeStampDate = new SimpleDateFormat("dd/mm/yyyy").format(new Date());
+                        String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
+                        // add a new word to the List
+                        mArkeColourList.addFirst(new ArkeItem(R.drawable.colour_rectangle, mColourName, timeStampDate, timeStampTime));
+                        ;
+                        // notify the adapter that data has changed
+                        mRecyclerView.getAdapter().notifyItemInserted(0);
+                        mRecyclerView.smoothScrollToPosition(0);
+                    }
+                });
+        colorPickerDialogue.show();
     }
 
 
