@@ -150,7 +150,7 @@ public class IrisFragment extends Fragment {
     public void openColourPickerDialogue(ImageView image) {
 
         ColorPickerDialogBuilder
-                .with(getActivity())
+                .with(getActivity(), R.style.ColorPickerDialogTheme)
                 .setTitle("How do you feel today?")
                 .initialColor(mColourName)
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)

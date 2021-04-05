@@ -129,7 +129,7 @@ public class ArkeFragment extends Fragment {
     public void openColourPickerDialogue() {
 
         ColorPickerDialogBuilder
-                .with(getActivity())
+                .with(getActivity(), R.style.ColorPickerDialogTheme)
                 .setTitle("Tell the world how you feel!")
                 .initialColor(mColourName)
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
