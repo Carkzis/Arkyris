@@ -1,23 +1,28 @@
 package com.example.arkyris;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorSelectedListener;
+import com.flask.colorpicker.builder.ColorPickerClickListener;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
-
-import yuku.ambilwarna.AmbilWarnaDialog;
 
 
 /**
@@ -80,6 +85,8 @@ public class ArkeFragment extends Fragment {
 
         final FloatingActionButton fab = rootView.findViewById(R.id.arke_fab);
         fab.setOnClickListener(view -> {
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
             // TODO: enter into a database
             // get a random colour, to initially display to the user in the color picker dialogue.
             mColourName = changeColour();
@@ -126,32 +133,54 @@ public class ArkeFragment extends Fragment {
      * with our chosen colour.
      */
     public void openColourPickerDialogue() {
-        // TODO: This needs to do something.
-        final AmbilWarnaDialog colorPickerDialogue = new AmbilWarnaDialog(getActivity(), mColourName,
-                new AmbilWarnaDialog.OnAmbilWarnaListener() {
-                    @Override
-                    public void onCancel(AmbilWarnaDialog dialog) {
-                        // Leaver this blank, as closes automatically
-                        // on clicked cancel button
-                    }
 
+        ColorPickerDialogBuilder
+                .with(getActivity())
+                .setTitle("Tell the world how you feel!")
+                .initialColor(mColourName)
+                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .density(12)
+                .setOnColorSelectedListener(new OnColorSelectedListener() {
                     @Override
-                    public void onOk(AmbilWarnaDialog dialog, int color) {
+                    public void onColorSelected(int selectedColor) {
+                        // toast there decision, currently hexadecimal so it's just a bit silly
+                        Toast.makeText(
+                                getActivity().getApplicationContext(),
+                                "Feeling a bit... " + Integer.toHexString(selectedColor) + "?",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                })
+                // what to do if they choose the colour
+                .setPositiveButton("ok", new ColorPickerClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
                         // amend the colour to the chosen one
-                        mColourName = color;
+                        mColourName = selectedColor;
                         // create timestamps
                         // TODO: make these obey local formatting
                         String timeStampDate = new SimpleDateFormat("dd/mm/yyyy").format(new Date());
                         String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
                         // add a new word to the List
-                        mArkeColourList.addFirst(new ArkeItem(R.drawable.colour_rectangle, mColourName, timeStampDate, timeStampTime));
+                        mArkeColourList.addFirst(new ArkeItem(
+                                R.drawable.colour_rectangle,
+                                mColourName,
+                                timeStampDate,
+                                timeStampTime));
                         ;
                         // notify the adapter that data has changed
                         mRecyclerView.getAdapter().notifyItemInserted(0);
                         mRecyclerView.smoothScrollToPosition(0);
                     }
-                });
-        colorPickerDialogue.show();
+                })
+                // otherwise exit
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .build()
+                .show();
+
     }
 
 
