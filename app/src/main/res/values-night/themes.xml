@@ -17,6 +17,11 @@
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <item name="backgroundColor">@color/black</item>
+        <item name="tabTextColor">?attr/colorPrimary</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+
     </style>
 
     <style name="Theme.Arkyris.NoActionBar">
