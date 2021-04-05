@@ -17,7 +17,6 @@ import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -85,8 +84,6 @@ public class ArkeFragment extends Fragment {
 
         final FloatingActionButton fab = rootView.findViewById(R.id.arke_fab);
         fab.setOnClickListener(view -> {
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
             // TODO: enter into a database
             // get a random colour, to initially display to the user in the color picker dialogue.
             mColourName = changeColour();
@@ -158,7 +155,7 @@ public class ArkeFragment extends Fragment {
                         mColourName = selectedColor;
                         // create timestamps
                         // TODO: make these obey local formatting
-                        String timeStampDate = new SimpleDateFormat("dd/mm/yyyy").format(new Date());
+                        String timeStampDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
                         String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
                         // add a new word to the List
                         mArkeColourList.addFirst(new ArkeItem(

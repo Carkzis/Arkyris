@@ -1,5 +1,6 @@
 package com.example.arkyris;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorSelectedListener;
+import com.flask.colorpicker.builder.ColorPickerClickListener;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
@@ -30,6 +35,7 @@ public class IrisFragment extends Fragment {
     private final LinkedList<IrisItem> mIrisColourList = new LinkedList<>();
     private RecyclerView mRecyclerView;
     private IrisListAdapter mAdapter;
+    private int mColourName;
 
     // Placeholder to test changing colours of entries
     private static final String[] mColourArray = {"red", "pink", "purple", "deep_purple",
@@ -79,16 +85,13 @@ public class IrisFragment extends Fragment {
 
         final FloatingActionButton fab = rootView.findViewById(R.id.iris_fab);
         fab.setOnClickListener(view -> {
-                // get a random colour
-                // TODO: obtain a colour of the member's choosing
-                // TODO: enter into a database
-                int colourName = changeColour();
+                // this will add the colour in the circle to the user's diary
                 // create timestamps
                 // TODO: make these obey local formatting
-                String timeStampDate = new SimpleDateFormat("dd/mm/yyyy").format(new Date());
+                String timeStampDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
                 String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
                 // add a new word to the List
-                mIrisColourList.addFirst(new IrisItem(R.drawable.colour_rectangle, colourName, timeStampDate, timeStampTime));
+                mIrisColourList.addFirst(new IrisItem(R.drawable.colour_rectangle, mColourName, timeStampDate, timeStampTime));
                 ;
                 // notify the adapter that data has changed
                 mRecyclerView.getAdapter().notifyItemInserted(0);
@@ -98,6 +101,13 @@ public class IrisFragment extends Fragment {
         final ImageView image = rootView.findViewById(R.id.chosen_colour);
         int loadColour = changeColour();
         image.setColorFilter(loadColour);
+
+        image.setOnClickListener(view -> {
+            // get a random colour, to initially display to the user in the color picker dialogue.
+            mColourName = changeColour();
+            // This will open a dialogue to enter a colour.
+            openColourPickerDialogue(image);
+        });
 
         // Create a placeholder list of words for RecycleView.
         // TODO: obtain these from database
@@ -138,6 +148,48 @@ public class IrisFragment extends Fragment {
         int colourRes = ContextCompat.getColor(getActivity(), colourResourceName);
         Log.e("OOPS", String.valueOf(colourName));
         return colourRes;
+    }
+
+    /**
+     * This will open the colour picker dialogue, to allow us to add a new entry
+     * with our chosen colour.
+     */
+    public void openColourPickerDialogue(ImageView image) {
+
+        ColorPickerDialogBuilder
+                .with(getActivity())
+                .setTitle("Tell the world how you feel!")
+                .initialColor(mColourName)
+                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .density(12)
+                .setOnColorSelectedListener(new OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int selectedColor) {
+                        // toast there decision, currently hexadecimal so it's just a bit silly
+                        Toast.makeText(
+                                getActivity().getApplicationContext(),
+                                "Feeling a bit... " + Integer.toHexString(selectedColor) + "?",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                })
+                // what to do if they choose the colour
+                .setPositiveButton("ok", new ColorPickerClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                        // amend the colour to the chosen one
+                        mColourName = selectedColor;
+                        image.setColorFilter(mColourName);
+                    }
+                })
+                // otherwise exit
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .build()
+                .show();
+
     }
 
 }
