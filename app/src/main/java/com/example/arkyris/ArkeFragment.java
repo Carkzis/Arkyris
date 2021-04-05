@@ -17,6 +17,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
 
+import eltos.simpledialogfragment.color.SimpleColorDialog;
+
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ArkeFragment#newInstance} factory method to
@@ -24,18 +27,10 @@ import java.util.Random;
  */
 public class ArkeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private final LinkedList<ArkeItem> mArkeColourList = new LinkedList<>();
     private RecyclerView mRecyclerView;
     private ArkeListAdapter mAdapter;
+    private int mColourName;
 
     // Placeholder to test changing colours of entries
     private static final String[] mColourArray = {"red", "pink", "purple", "deep_purple",
@@ -51,16 +46,12 @@ public class ArkeFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment ArkeFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static ArkeFragment newInstance(String param1, String param2) {
+    public static ArkeFragment newInstance() {
         ArkeFragment fragment = new ArkeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        // Currently no arguments here.
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,8 +60,7 @@ public class ArkeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            // Currently no arguments here.
         }
     }
 
@@ -90,16 +80,18 @@ public class ArkeFragment extends Fragment {
 
         final FloatingActionButton fab = rootView.findViewById(R.id.arke_fab);
         fab.setOnClickListener(view -> {
+            // TODO: This needs to do add to th
+            openColourPickerDialogue();
             // get a random colour
             // TODO: obtain a colour of the member's choosing
             // TODO: enter into a database
-            int colourName = changeColour();
+            mColourName = changeColour();
             // create timestamps
             // TODO: make these obey local formatting
             String timeStampDate = new SimpleDateFormat("dd/mm/yyyy").format(new Date());
             String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
             // add a new word to the List
-            mArkeColourList.addFirst(new ArkeItem(R.drawable.colour_rectangle, colourName, timeStampDate, timeStampTime));
+            mArkeColourList.addFirst(new ArkeItem(R.drawable.colour_rectangle, mColourName, timeStampDate, timeStampTime));
             ;
             // notify the adapter that data has changed
             mRecyclerView.getAdapter().notifyItemInserted(0);
@@ -139,5 +131,15 @@ public class ArkeFragment extends Fragment {
         int colourRes = ContextCompat.getColor(getActivity(), colourResourceName);
         return colourRes;
     }
+
+    public void openColourPickerDialogue() {
+        // TODO: This needs to do something.
+        SimpleColorDialog.build()
+                .title("Choose your colour!")
+                .colorPreset(mColourName)
+                .allowCustom(true)
+                .show(getActivity(), "Hello");
+    }
+
 
 }

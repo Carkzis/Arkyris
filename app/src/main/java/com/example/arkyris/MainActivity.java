@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "-------");
         Log.d(LOG_TAG, "onCreate");
 
+
         // Initialise toolbar
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
