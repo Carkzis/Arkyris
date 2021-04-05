@@ -1,6 +1,5 @@
 package com.example.arkyris;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.OnColorSelectedListener;
-import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -137,43 +134,34 @@ public class ArkeFragment extends Fragment {
                 .initialColor(mColourName)
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                 .density(12)
-                .setOnColorSelectedListener(new OnColorSelectedListener() {
-                    @Override
-                    public void onColorSelected(int selectedColor) {
-                        // toast there decision, currently hexadecimal so it's just a bit silly
-                        Toast.makeText(
-                                getActivity().getApplicationContext(),
-                                "Feeling a bit... " + Integer.toHexString(selectedColor) + "?",
-                                Toast.LENGTH_SHORT).show();
-                    }
+                .setOnColorSelectedListener(selectedColor -> {
+                    // toast their decision, currently hexadecimal so it's just a bit silly
+                    Toast.makeText(
+                            getActivity().getApplicationContext(),
+                            "Feeling a bit... " + Integer.toHexString(selectedColor) + "?",
+                            Toast.LENGTH_SHORT).show();
                 })
                 // what to do if they choose the colour
-                .setPositiveButton("ok", new ColorPickerClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
-                        // amend the colour to the chosen one
-                        mColourName = selectedColor;
-                        // create timestamps
-                        // TODO: make these obey local formatting
-                        String timeStampDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-                        String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
-                        // add a new word to the List
-                        mArkeColourList.addFirst(new ArkeItem(
-                                R.drawable.colour_rectangle,
-                                mColourName,
-                                timeStampDate,
-                                timeStampTime));
-                        ;
-                        // notify the adapter that data has changed
-                        mRecyclerView.getAdapter().notifyItemInserted(0);
-                        mRecyclerView.smoothScrollToPosition(0);
-                    }
+                .setPositiveButton("ok", (dialog, selectedColor, allColors) -> {
+                    // amend the colour to the chosen one
+                    mColourName = selectedColor;
+                    // create timestamps
+                    // TODO: make these obey local formatting
+                    String timeStampDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+                    String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
+                    // add a new word to the List
+                    mArkeColourList.addFirst(new ArkeItem(
+                            R.drawable.colour_rectangle,
+                            mColourName,
+                            timeStampDate,
+                            timeStampTime));
+                    ;
+                    // notify the adapter that data has changed
+                    mRecyclerView.getAdapter().notifyItemInserted(0);
+                    mRecyclerView.smoothScrollToPosition(0);
                 })
                 // otherwise exit
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
+                .setNegativeButton("cancel", (dialog, which) -> {
                 })
                 .build()
                 .show();

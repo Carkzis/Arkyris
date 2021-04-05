@@ -23,4 +23,7 @@
     <string name="settings_placeholder">This will open settings!</string>
     <string name="choose_recipient">Choose your recipient!</string>
     <string name="iris_add_colour">Add your colour to the diary.</string>
+    <string name="iris_dialogue_yes">Yes, to Arke!</string>
+    <string name="iris_dialogue_no">No, keep private.</string>
+    <string name="iris_dialogue_cancel">Cancel, do nothing.</string>
 </resources>
