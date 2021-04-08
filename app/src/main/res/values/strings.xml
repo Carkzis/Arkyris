@@ -26,4 +26,6 @@
     <string name="iris_dialogue_yes">Yes, to Arke!</string>
     <string name="iris_dialogue_no">No, keep private.</string>
     <string name="iris_dialogue_cancel">Cancel, do nothing.</string>
+    <string name="sandbox">Sandbox</string>
+    <string name="sandbox_label">Sandbox</string>
 </resources>

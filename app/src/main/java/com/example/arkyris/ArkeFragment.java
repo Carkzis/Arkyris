@@ -134,6 +134,7 @@ public class ArkeFragment extends Fragment {
                 .initialColor(mColourName)
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                 .density(12)
+                .showAlphaSlider(false)
                 .setOnColorSelectedListener(selectedColor -> {
                     // toast their decision, currently hexadecimal so it's just a bit silly
                     Toast.makeText(

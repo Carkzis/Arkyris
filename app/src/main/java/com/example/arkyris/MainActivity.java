@@ -77,8 +77,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.settings_placeholder, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_about:
-                Intent intent = new Intent(MainActivity.this, AboutActivity.class);
-                startActivity(intent);
+                Intent intentAbout = new Intent(MainActivity.this, AboutActivity.class);
+                startActivity(intentAbout);
+                return true;
+            case R.id.menu_sandbox:
+                Intent intentSandbox = new Intent(MainActivity.this, SandboxActivity.class);
+                startActivity(intentSandbox);
                 return true;
         }
         return super.onOptionsItemSelected(item);
