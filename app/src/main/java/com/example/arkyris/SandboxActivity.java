@@ -1,10 +1,14 @@
 package com.example.arkyris;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,7 +62,57 @@ public class SandboxActivity extends AppCompatActivity {
             Word word = new Word(randInt);
             mWordViewModel.insert(word);
         });
+
+        // can swipe items to delete the items
+        ItemTouchHelper helper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0,
+                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                    // note: we aren't doing anything with the onMove here
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView,
+                                          RecyclerView.ViewHolder viewHolder,
+                                          RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder,
+                                         int direction) {
+                        // get position of adapter, so we delete the correct item
+                        int position = viewHolder.getAdapterPosition();
+                        Word myWord = adapter.getWordAtPosition(position); // as defined in adapter
+                        Toast.makeText(SandboxActivity.this, "Deleting " +
+                                myWord.getWord(), Toast.LENGTH_LONG).show();
+                        // Delete the word, remember the ViewModel is what interacts with database
+                        mWordViewModel.deleteWord(myWord);
+                    }
+                }
+        );
+        helper.attachToRecyclerView(recyclerView);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu options from the res/menu/menu_catalog.xml file.
+        // This adds menu items to the app bar.
+        getMenuInflater().inflate(R.menu.menu_sandbox, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.clear_data) {
+            // Add a toast just for confirmation
+            Toast.makeText(this, "Clearing the data...",
+                    Toast.LENGTH_SHORT).show();
+
+            // Delete the existing data
+            mWordViewModel.deleteAll();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 }

@@ -29,4 +29,5 @@
     <string name="sandbox">Sandbox</string>
     <string name="sandbox_label">Sandbox</string>
     <string name="sandbox_fab">Sandbox Fab</string>
+    <string name="delete_all">Delete All</string>
 </resources>

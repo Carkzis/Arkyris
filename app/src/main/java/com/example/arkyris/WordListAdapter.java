@@ -56,4 +56,9 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
             wordItemView = itemView.findViewById(R.id.textView);
         }
     }
+
+    // used to get a word at a position
+    public Word getWordAtPosition(int position) {
+        return mWords.get(position);
+    }
 }
