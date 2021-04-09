@@ -1,7 +1,6 @@
 package com.example.arkyris;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -9,13 +8,19 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Database(entities = {Word.class}, version = 1, exportSchema = false)
 public abstract class WordRoomDatabase extends RoomDatabase {
 
     // Need an abstract getter method for each @Dao
     public abstract WordDao wordDao();
 
-    private static WordRoomDatabase INSTANCE;
+    // make volatile to ensure atomic access to variable
+    private static volatile WordRoomDatabase INSTANCE;
+    private static final int NUMBER_OF_THREADS = 4;
+    static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     // create WordRoomDatabase as singleton so only one database at a time
     public static WordRoomDatabase getDatabase(final Context context) {
@@ -37,48 +42,26 @@ public abstract class WordRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static RoomDatabase.Callback sRoomDatabaseCallback =
-            new RoomDatabase.Callback(){
-
+    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
         @Override
-        public void onOpen (@NonNull SupportSQLiteDatabase db){
-            super.onOpen(db);
-            new PopulateDbAsync(INSTANCE).execute();
-        }
-    };
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
 
-    /**
-     * Populate the database in the background.
-     */
-    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
+            String[] words = {"0", "500", "1000"};
 
-        private final WordDao mDao;
-        String[] words = {"0", "500", "1000"};
+            databaseWriteExecutor.execute(() -> {
+                // Populate database in the background
+                WordDao dao = INSTANCE.wordDao();
 
-        PopulateDbAsync(WordRoomDatabase db) {
-            mDao = db.wordDao();
-        }
-
-        @Override
-        protected Void doInBackground(final Void... params) {
-            // Start the app with a clean database every time.
-            // Not needed if you only populate the database
-            // when it is first created
-            // mDao.deleteAll();
-
-            // if we have no words, create initial list
-            if (mDao.getAnyWord().length < 1) {
-                for (int i = 0; i <= words.length - 1; i++) {
-                    Word word = new Word(words[i]);
-                    mDao.insert(word);
+                // if we have no words, create initial list
+                if (dao.getAnyWord().length < 1) {
+                    for (int i = 0; i <= words.length - 1; i++) {
+                        Word word = new Word(words[i]);
+                        dao.insert(word);
+                    }
                 }
-            }
-
-            for (int i = 0; i <= words.length - 1; i++) {
-                Word word = new Word(words[i]);
-                mDao.insert(word);
-            }
-            return null;
+            });
         }
-    }
+
+    };
 }
