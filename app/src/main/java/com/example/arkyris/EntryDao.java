@@ -23,6 +23,10 @@ public interface EntryDao {
     @Query("SELECT * FROM entry_table ORDER BY _entryId DESC")
     LiveData<List<EntryItem>> getAllEntries();
 
+    // Just get public entries
+    @Query("SELECT * FROM entry_table WHERE public = 1 ORDER BY _entryId DESC")
+    LiveData<List<EntryItem>> getAllPublicEntries();
+
     // Test if there is anything in the table
     @Query("SELECT * FROM entry_table LIMIT 1")
     EntryItem[] getAnyItem();

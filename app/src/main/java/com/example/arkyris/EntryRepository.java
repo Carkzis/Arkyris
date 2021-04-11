@@ -11,18 +11,24 @@ public class EntryRepository {
     // add member variables for DAO and list of words
     private EntryDao mEntryDao;
     private LiveData<List<EntryItem>> mAllEntries;
+    private LiveData<List<EntryItem>> mPublicEntries;
 
     // constructor to get handle to db and initialise member variables
     EntryRepository(Application application) {
         ArkyrisRoomDatabase db = ArkyrisRoomDatabase.getDatabase(application);
         mEntryDao = db.entryDao();
         mAllEntries = mEntryDao.getAllEntries();
+        mPublicEntries = mEntryDao.getAllPublicEntries();
     }
 
     // wrapper method to return cached words as LiveData
     // this is because room executes queries on a separate thread
     LiveData<List<EntryItem>> getAllEntries() {
         return mAllEntries;
+    }
+
+    LiveData<List<EntryItem>> getAllPublicEntries() {
+        return mPublicEntries;
     }
 
     // wrapper for insert() using threads

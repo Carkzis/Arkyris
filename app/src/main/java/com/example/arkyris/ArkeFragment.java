@@ -113,7 +113,7 @@ public class ArkeFragment extends Fragment {
 
         // an observer sees when the data is changed while the activity is open,
         // and updates the data in the adapter
-        mArkeViewModel.getAllEntries().observe(getActivity(), new Observer<List<EntryItem>>() {
+        mArkeViewModel.getAllPublicEntries().observe(getActivity(), new Observer<List<EntryItem>>() {
             @Override
             public void onChanged(List<EntryItem> entries) {
                 // update cached copy of words in adapter

@@ -10,17 +10,17 @@ import java.util.List;
 public class ArkeViewModel extends AndroidViewModel {
 
     private EntryRepository mRepository;
-    private LiveData<List<EntryItem>> mAllEntries;
+    private LiveData<List<EntryItem>> mPublicEntries;
 
     public ArkeViewModel (Application application) {
         super(application);
         mRepository = new EntryRepository(application);
-        mAllEntries = mRepository.getAllEntries();
+        mPublicEntries = mRepository.getAllPublicEntries();
     }
 
     // getter method for getting all the words,
     // hides implementation from the UI
-    LiveData<List<EntryItem>> getAllEntries() { return mAllEntries; }
+    LiveData<List<EntryItem>> getAllPublicEntries() { return mPublicEntries; }
 
     // wrapper for insert that calls Repository's insert() method,
     // hides implementation of insert() from UI

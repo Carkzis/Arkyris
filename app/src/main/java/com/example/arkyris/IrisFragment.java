@@ -212,9 +212,9 @@ public class IrisFragment extends Fragment {
                     Toast.makeText(getActivity(),
                             "Imagine this goes public!",
                             Toast.LENGTH_SHORT).show();
-                    postColour();
+                    postColour(1);
                 } else if (getString(R.string.iris_dialogue_no).equals(choices[which])) {
-                    postColour();
+                    postColour(0);
                 } else {
                     // Do nothing
                 }
@@ -223,17 +223,17 @@ public class IrisFragment extends Fragment {
         builder.show();
     }
 
-    public void postColour() {
+    public void postColour(int isPublic) {
         // create timestamps
         // TODO: make these obey local formatting
         String timeStampDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
         String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
-        // add a new word to the List
+        // add a new item to the List
         EntryItem entryItem = new EntryItem(
                 mColourName,
                 timeStampDate,
                 timeStampTime,
-                1);
+                isPublic); // 0 for private post, 1 for public post (appears on both Arke and Iris)
         // notify the adapter that data has changed
         mIrisViewModel.insert(entryItem);
         // smooth scroll to position
