@@ -46,7 +46,7 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
     @Override
     public void onBindViewHolder(@NonNull ArkeListAdapter.ArkeViewHolder holder, int position) {
         ArkeItem mCurrent = mArkeColourList.get(position);
-        holder.mImageView.setImageResource(mCurrent.getImage());
+        holder.mImageView.setImageResource(R.drawable.colour_rectangle);
         holder.mImageView.setColorFilter(mCurrent.getColour());
         // holder.mImageView.setColorFilter(context.getResources().getColor(R.color.green));
         holder.mDateView.setText(mCurrent.getDate());

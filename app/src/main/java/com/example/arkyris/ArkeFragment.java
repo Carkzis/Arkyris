@@ -94,7 +94,7 @@ public class ArkeFragment extends Fragment {
         // TODO: show a different item for the end, "e.g. there are no more entries"
         for (int i = 0; i < 50; i++) {
             int colourName = changeColour();
-            mArkeColourList.addLast(new ArkeItem(R.drawable.colour_rectangle, colourName, "31/03/2021", "21:21"));
+            mArkeColourList.addLast(new ArkeItem(colourName, "31/03/2021", "21:21", 1));
         }
 
         // Get a handler for the RecyclerView
@@ -152,10 +152,10 @@ public class ArkeFragment extends Fragment {
                     String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
                     // add a new word to the List
                     mArkeColourList.addFirst(new ArkeItem(
-                            R.drawable.colour_rectangle,
                             mColourName,
                             timeStampDate,
-                            timeStampTime));
+                            timeStampTime,
+                            1));
                     ;
                     // notify the adapter that data has changed
                     mRecyclerView.getAdapter().notifyItemInserted(0);

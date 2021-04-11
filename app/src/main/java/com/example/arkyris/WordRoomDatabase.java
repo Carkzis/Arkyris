@@ -17,7 +17,8 @@ public abstract class WordRoomDatabase extends RoomDatabase {
     // Need an abstract getter method for each @Dao
     public abstract WordDao wordDao();
 
-    // make volatile to ensure atomic access to variable
+    // make volatile to ensure atomic access to variable, prevent
+    // concurrency issues (volatile makes state true across all threads)
     private static volatile WordRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);

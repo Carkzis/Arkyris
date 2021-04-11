@@ -211,7 +211,7 @@ public class IrisFragment extends Fragment {
         String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
         // add a new word to the List
         mIrisColourList.addFirst(new IrisItem(
-                R.drawable.colour_rectangle,
+                R.drawable.colour_circle,
                 mColourName,
                 timeStampDate,
                 timeStampTime));
