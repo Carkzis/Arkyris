@@ -52,4 +52,8 @@ public class EntryItem {
 
     public int getIsPublic() { return mIsPublic; }
 
+    public void setIsPublic(int isPublic) {
+        mIsPublic = isPublic;
+    }
+
 }

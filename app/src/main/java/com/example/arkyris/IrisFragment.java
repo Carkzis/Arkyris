@@ -129,13 +129,14 @@ public class IrisFragment extends Fragment {
             }
         });
 
-        // delete an item on click
-        // TODO: CHANGE THIS!
+        // delete an item on long click
         mAdapter.setOnItemClickListener((v, position) -> {
             EntryItem entryItem = mAdapter.getEntryAtPosition(position);
             Toast.makeText(getActivity(), "Item Deleted!", Toast.LENGTH_SHORT).show();
-            // delete word
-            mIrisViewModel.deleteEntry(entryItem);
+            // delete
+            //mIrisViewModel.deleteEntry(entryItem);
+
+            deleteOrPublicAlert(entryItem);
         });
 
         // Inflate the layout for this fragment
@@ -191,6 +192,11 @@ public class IrisFragment extends Fragment {
 
     }
 
+    /**
+     * Asks if you want to make a new entry public (to go to the Arke fragment that
+     * has everyone's entries as well as the private fragment), or keep it private in the Iris
+     * fragment, or cancel entry.
+     */
     public void makePublicAlert() {
         String[] choices = {
                 getString(R.string.iris_dialogue_yes),
@@ -202,14 +208,49 @@ public class IrisFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (getString(R.string.iris_dialogue_yes).equals(choices[which])) {
-                    // currently doesn't do anything special, but will allow a post
-                    // to go be posted on the public fragment as well as the user's
                     Toast.makeText(getActivity(),
-                            "Imagine this goes public!",
+                            "To Arke it goes!",
                             Toast.LENGTH_SHORT).show();
                     postColour(1);
                 } else if (getString(R.string.iris_dialogue_no).equals(choices[which])) {
                     postColour(0);
+                } else {
+                    // Do nothing
+                }
+            }
+        });
+        builder.show();
+    }
+
+    public void deleteOrPublicAlert(EntryItem entryItem) {
+        // initial choices
+        String [] choices = {
+                "Make this entry public?",
+                "Delete this entry?",
+                "Cancel, do nothing."};
+        // change the text for the first choice depending on whether the
+        // item is currently public or private
+        if (entryItem.getIsPublic() == 1) {
+            choices[0] = "Make this entry private?";
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("What would you like to do?");
+        builder.setItems(choices, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if ("Make this entry public?".equals(choices[which])) {
+                    // if entry public, make private
+                    entryItem.setIsPublic(1);
+                    mIrisViewModel.updatePublic(entryItem);
+                } else if ("Make this entry private?".equals(choices[which])) {
+                    // if entry private, make public
+                    entryItem.setIsPublic(0);
+                    mIrisViewModel.updatePublic(entryItem);
+                } else if ("Delete this entry?".equals(choices[which])) {
+                    // delete entry
+                    // TODO: create an extra alert for deletion
+                    // TODO: change deletion to use deletion tag instead
+                    mIrisViewModel.deleteEntry(entryItem);
                 } else {
                     // Do nothing
                 }
