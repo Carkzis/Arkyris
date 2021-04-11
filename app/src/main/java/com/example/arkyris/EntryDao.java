@@ -14,25 +14,25 @@ import java.util.List;
 public interface EntryDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(ArkeItem entry);
+    void insert(EntryItem entry);
 
     @Query("DELETE FROM entry_table")
     void deleteAll();
 
     // LiveData helps app respond to data changes
     @Query("SELECT * FROM entry_table ORDER BY _entryId DESC")
-    LiveData<List<ArkeItem>> getAllEntries();
+    LiveData<List<EntryItem>> getAllEntries();
 
     // Test if there is anything in the table
     @Query("SELECT * FROM entry_table LIMIT 1")
-    ArkeItem[] getAnyItem();
+    EntryItem[] getAnyItem();
 
     @Delete
-    void deleteEntry(ArkeItem entry);
+    void deleteEntry(EntryItem entry);
 
     // TODO: This will toggle whether an item is consider public or not
     // Needs looking into how this is achieved; it is incomplete
     @Update
-    void updatePublic(ArkeItem entry);
+    void updatePublic(EntryItem entry);
 
 }

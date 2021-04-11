@@ -1,7 +1,6 @@
 package com.example.arkyris;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -12,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {ArkeItem.class}, version = 3, exportSchema = false)
+@Database(entities = {EntryItem.class}, version = 3, exportSchema = false)
 public abstract class ArkyrisRoomDatabase extends RoomDatabase {
 
     // abstract getting method for Dao
@@ -56,15 +55,6 @@ public abstract class ArkyrisRoomDatabase extends RoomDatabase {
                 // Populate database in the background
                 EntryDao dao = INSTANCE.entryDao();
 
-                Log.e("WHY", "Note working!");
-
-                // if we have no words, create initial list
-                if (dao.getAnyItem().length < 1) {
-                    for (int i = 0; i <= colourArray.length - 1; i++) {
-                        ArkeItem entry = new ArkeItem(colourArray[i], "31/03/2021", "21:21", 1);
-                        dao.insert(entry);
-                    }
-                }
             });
         }
 

@@ -97,16 +97,11 @@ public class ArkeFragment extends Fragment {
         // Create a placeholder list of words for RecycleView.
         // TODO: obtain items from database
         // TODO: show a different item for the end, "e.g. there are no more entries"
-        for (int i = 0; i < 50; i++) {
-            int colourName = changeColour();
-            mArkeColourList.addLast(new ArkeItem(colourName, "31/03/2021", "21:21", 1));
-        }
          */
 
         // Get a handler for the RecyclerView
         mRecyclerView = rootView.findViewById(R.id.arke_recyclerview);
         // Create an adapter and supply the data
-        // TODO: THIS???
         mAdapter = new ArkeListAdapter(getActivity());
         // Connect adapter to RecyclerView
         mRecyclerView.setAdapter(mAdapter);
@@ -118,9 +113,9 @@ public class ArkeFragment extends Fragment {
 
         // an observer sees when the data is changed while the activity is open,
         // and updates the data in the adapter
-        mArkeViewModel.getAllEntries().observe(getActivity(), new Observer<List<ArkeItem>>() {
+        mArkeViewModel.getAllEntries().observe(getActivity(), new Observer<List<EntryItem>>() {
             @Override
-            public void onChanged(List<ArkeItem> entries) {
+            public void onChanged(List<EntryItem> entries) {
                 // update cached copy of words in adapter
                 mAdapter.setEntries(entries);
             }
@@ -172,12 +167,12 @@ public class ArkeFragment extends Fragment {
                     String timeStampDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
                     String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
                     // add a new word to the List
-                    ArkeItem arkeItem = new ArkeItem(
+                    EntryItem entryItem = new EntryItem(
                             mColourName,
                             timeStampDate,
                             timeStampTime,
                             1);
-                    mArkeViewModel.insert(arkeItem);
+                    mArkeViewModel.insert(entryItem);
                     // smooth scroll to position
                     mRecyclerView.smoothScrollToPosition(0);
                 })

@@ -5,7 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "entry_table")
-public class ArkeItem {
+public class EntryItem {
 
     // Attributes for each entry
     @PrimaryKey(autoGenerate = true)
@@ -25,7 +25,7 @@ public class ArkeItem {
     // 0 for not public, 1 for public
     private int mIsPublic;
 
-    public ArkeItem(int colour, String date, String time, int isPublic) {
+    public EntryItem(int colour, String date, String time, int isPublic) {
         mEntryId = 0;
         mDate = date;
         mTime = time;

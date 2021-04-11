@@ -7,12 +7,12 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-public class ArkeViewModel extends AndroidViewModel {
+public class IrisViewModel extends AndroidViewModel {
 
     private EntryRepository mRepository;
     private LiveData<List<EntryItem>> mAllEntries;
 
-    public ArkeViewModel (Application application) {
+    public IrisViewModel (Application application) {
         super(application);
         mRepository = new EntryRepository(application);
         mAllEntries = mRepository.getAllEntries();
@@ -29,5 +29,4 @@ public class ArkeViewModel extends AndroidViewModel {
     public void deleteAll() { mRepository.deleteAll(); }
 
     public void deleteEntry(EntryItem entry) { mRepository.deleteEntry(entry); }
-
 }

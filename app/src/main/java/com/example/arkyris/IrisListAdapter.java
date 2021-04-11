@@ -10,19 +10,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisViewHolder> {
 
-    private final LinkedList<IrisItem> mIrisColourList;
-    private LayoutInflater mInflater;
-    private Context context;
+    private static final String LOG_TAG = IrisListAdapter.class.getSimpleName();
 
-    public IrisListAdapter(Context context, LinkedList<IrisItem> wordList) {
-        mInflater = LayoutInflater.from(context);
-        this.mIrisColourList = wordList;
-        this.context = context;
-    }
+    private final LayoutInflater mInflater;
+    private List<EntryItem> mEntries; // Cached copy of words
+
+    public IrisListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
 
     /**
      * This inflates the item layout and returns a ViewHolder with the layout and the adapter.
@@ -40,15 +37,25 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
 
     @Override
     public void onBindViewHolder(@NonNull IrisListAdapter.IrisViewHolder holder, int position) {
-        IrisItem mCurrent = mIrisColourList.get(position);
-        holder.mImageView.setImageResource(mCurrent.getImage());
+        EntryItem mCurrent = mEntries.get(position);
+        holder.mImageView.setImageResource(R.drawable.colour_circle);
         holder.mImageView.setColorFilter(mCurrent.getColour());
         holder.mDateView.setText(mCurrent.getDate());
         holder.mTimeView.setText(mCurrent.getTime());
     }
 
+    void setEntries(List<EntryItem> entries){
+        mEntries = entries;
+        notifyDataSetChanged();
+    }
+
     @Override
-    public int getItemCount() { return mIrisColourList.size(); }
+    public int getItemCount() {
+        if (mEntries != null) {
+            return mEntries.size();
+        }
+        return 0;
+    }
 
     class IrisViewHolder extends RecyclerView.ViewHolder {
 

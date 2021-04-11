@@ -10,7 +10,7 @@ public class EntryRepository {
 
     // add member variables for DAO and list of words
     private EntryDao mEntryDao;
-    private LiveData<List<ArkeItem>> mAllEntries;
+    private LiveData<List<EntryItem>> mAllEntries;
 
     // constructor to get handle to db and initialise member variables
     EntryRepository(Application application) {
@@ -21,12 +21,12 @@ public class EntryRepository {
 
     // wrapper method to return cached words as LiveData
     // this is because room executes queries on a separate thread
-    LiveData<List<ArkeItem>> getAllEntries() {
+    LiveData<List<EntryItem>> getAllEntries() {
         return mAllEntries;
     }
 
     // wrapper for insert() using threads
-    public void insert(ArkeItem entry) {
+    public void insert(EntryItem entry) {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
             mEntryDao.insert(entry);
         });
@@ -38,7 +38,7 @@ public class EntryRepository {
         });
     }
 
-    public void deleteEntry(ArkeItem entry) {
+    public void deleteEntry(EntryItem entry) {
         WordRoomDatabase.databaseWriteExecutor.execute(() -> {
             mEntryDao.deleteEntry(entry);
         });

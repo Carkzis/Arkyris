@@ -18,10 +18,9 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
 
     private final LayoutInflater mInflater;
     private Context context;
-    private List<ArkeItem> mEntries; // Cached copy of words
+    private List<EntryItem> mEntries; // Cached copy of words
 
-    public ArkeListAdapter(Context context) { mInflater = LayoutInflater.from(context);
-    }
+    public ArkeListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
 
     /**
      * This inflates the item layout and returns a ViewHolder with the layout and the adapter.
@@ -44,14 +43,14 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
      */
     @Override
     public void onBindViewHolder(@NonNull ArkeListAdapter.ArkeViewHolder holder, int position) {
-        ArkeItem mCurrent = mEntries.get(position);
+        EntryItem mCurrent = mEntries.get(position);
         holder.mImageView.setImageResource(R.drawable.colour_rectangle);
         holder.mImageView.setColorFilter(mCurrent.getColour());
         holder.mDateView.setText(mCurrent.getDate());
         holder.mTimeView.setText(mCurrent.getTime());
     }
 
-    void setEntries(List<ArkeItem> entries){
+    void setEntries(List<EntryItem> entries){
         mEntries = entries;
         notifyDataSetChanged();
     }
