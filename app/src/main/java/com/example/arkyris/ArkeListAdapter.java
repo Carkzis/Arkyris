@@ -1,6 +1,7 @@
 package com.example.arkyris;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +11,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeViewHolder> {
 
-    private final LinkedList<ArkeItem> mArkeColourList;
-    private LayoutInflater mInflater;
-    private Context context;
+    private static final String LOG_TAG = ArkeListAdapter.class.getSimpleName();
 
-    public ArkeListAdapter(Context context, LinkedList<ArkeItem> wordList) {
-        mInflater = LayoutInflater.from(context);
-        this.mArkeColourList = wordList;
-        this.context = context;
+    private final LayoutInflater mInflater;
+    private Context context;
+    private List<ArkeItem> mEntries; // Cached copy of words
+
+    public ArkeListAdapter(Context context) { mInflater = LayoutInflater.from(context);
     }
 
     /**
@@ -45,17 +45,29 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
      */
     @Override
     public void onBindViewHolder(@NonNull ArkeListAdapter.ArkeViewHolder holder, int position) {
-        ArkeItem mCurrent = mArkeColourList.get(position);
-        holder.mImageView.setImageResource(R.drawable.colour_rectangle);
-        holder.mImageView.setColorFilter(mCurrent.getColour());
-        // holder.mImageView.setColorFilter(context.getResources().getColor(R.color.green));
-        holder.mDateView.setText(mCurrent.getDate());
-        holder.mTimeView.setText(mCurrent.getTime());
+        if (mEntries != null) {
+            ArkeItem mCurrent = mEntries.get(position);
+            holder.mImageView.setImageResource(R.drawable.colour_rectangle);
+            holder.mImageView.setColorFilter(mCurrent.getColour());
+            // holder.mImageView.setColorFilter(context.getResources().getColor(R.color.green));
+            holder.mDateView.setText(mCurrent.getDate());
+            holder.mTimeView.setText(mCurrent.getTime());
+        } else {
+            Log.e(LOG_TAG, "Not working!");
+        }
+    }
+
+    void setEntries(List<ArkeItem> entries){
+        mEntries = entries;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return mArkeColourList.size();
+        if (mEntries != null) {
+            return mEntries.size();
+        }
+            return 0;
     }
 
     class ArkeViewHolder extends RecyclerView.ViewHolder {

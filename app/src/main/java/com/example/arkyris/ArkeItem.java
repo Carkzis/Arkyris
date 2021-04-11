@@ -10,10 +10,10 @@ public class ArkeItem {
     // Attributes for each entry
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_entryId")
-    public Integer mEntryId;
+    public int mEntryId;
 
     @ColumnInfo(name = "colour")
-    private Integer mColour;
+    private int mColour;
 
     @ColumnInfo(name = "date")
     private String mDate;
@@ -23,7 +23,7 @@ public class ArkeItem {
 
     @ColumnInfo(name = "public")
     // 0 for not public, 1 for public
-    private Integer mIsPublic;
+    private int mIsPublic;
 
     public ArkeItem(int colour, String date, String time, int isPublic) {
         mEntryId = 0;

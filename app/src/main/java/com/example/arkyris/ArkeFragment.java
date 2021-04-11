@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,7 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -28,10 +30,12 @@ import java.util.Random;
  */
 public class ArkeFragment extends Fragment {
 
-    private final LinkedList<ArkeItem> mArkeColourList = new LinkedList<>();
     private RecyclerView mRecyclerView;
     private ArkeListAdapter mAdapter;
     private int mColourName;
+
+    // all activity interactions are with the WordViewModel only
+    private ArkeViewModel mArkeViewModel;
 
     // Placeholder to test changing colours of entries
     private static final String[] mColourArray = {"red", "pink", "purple", "deep_purple",
@@ -89,6 +93,7 @@ public class ArkeFragment extends Fragment {
 
         });
 
+        /**
         // Create a placeholder list of words for RecycleView.
         // TODO: obtain items from database
         // TODO: show a different item for the end, "e.g. there are no more entries"
@@ -96,15 +101,31 @@ public class ArkeFragment extends Fragment {
             int colourName = changeColour();
             mArkeColourList.addLast(new ArkeItem(colourName, "31/03/2021", "21:21", 1));
         }
+         */
 
         // Get a handler for the RecyclerView
         mRecyclerView = rootView.findViewById(R.id.arke_recyclerview);
         // Create an adapter and supply the data
-        mAdapter = new ArkeListAdapter(getActivity(), mArkeColourList);
+        // TODO: THIS???
+        mAdapter = new ArkeListAdapter(getActivity());
         // Connect adapter to RecyclerView
         mRecyclerView.setAdapter(mAdapter);
         // Give RecyclerView a LayoutManager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        // associated the ViewModel with the controller, this persists through config changes
+        mArkeViewModel = ViewModelProviders.of(this).get(ArkeViewModel.class);
+
+        // an observer sees when the data is changed while the activity is open,
+        // and updates the data in the adapter
+        mArkeViewModel.getAllEntries().observe(getActivity(), new Observer<List<ArkeItem>>() {
+            @Override
+            public void onChanged(List<ArkeItem> entries) {
+                // update cached copy of words in adapter
+                mAdapter.setEntries(entries);
+            }
+        });
+
         // Inflate the layout for this fragment
         return rootView;
     }
@@ -151,12 +172,12 @@ public class ArkeFragment extends Fragment {
                     String timeStampDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
                     String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
                     // add a new word to the List
-                    mArkeColourList.addFirst(new ArkeItem(
+                    ArkeItem arkeItem = new ArkeItem(
                             mColourName,
                             timeStampDate,
                             timeStampTime,
-                            1));
-                    ;
+                            1);
+                    mArkeViewModel.insert(arkeItem);
                     // notify the adapter that data has changed
                     mRecyclerView.getAdapter().notifyItemInserted(0);
                     mRecyclerView.smoothScrollToPosition(0);

@@ -139,7 +139,6 @@ public class IrisFragment extends Fragment {
         // "color" resources
         // there are separate ints for both names and the values
         int colourRes = ContextCompat.getColor(getActivity(), colourResourceName);
-        Log.e("OOPS", String.valueOf(colourName));
         return colourRes;
     }
 

@@ -1,6 +1,7 @@
 package com.example.arkyris;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -11,7 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {ArkeItem.class}, version = 1, exportSchema = false)
+@Database(entities = {ArkeItem.class}, version = 2, exportSchema = false)
 public abstract class ArkyrisRoomDatabase extends RoomDatabase {
 
     // abstract getting method for Dao
@@ -26,7 +27,7 @@ public abstract class ArkyrisRoomDatabase extends RoomDatabase {
     // create ArkyrisRoomDatabase as singleton so only one database at a time
     public static ArkyrisRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            synchronized (WordRoomDatabase.class) {
+            synchronized (ArkyrisRoomDatabase.class) {
                 if (INSTANCE == null) {
                     // databases here
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
@@ -54,6 +55,8 @@ public abstract class ArkyrisRoomDatabase extends RoomDatabase {
             databaseWriteExecutor.execute(() -> {
                 // Populate database in the background
                 EntryDao dao = INSTANCE.entryDao();
+
+                Log.e("WHY", "Note working!");
 
                 // if we have no words, create initial list
                 if (dao.getAnyItem().length < 1) {

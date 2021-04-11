@@ -28,6 +28,6 @@ public class ArkeViewModel extends AndroidViewModel {
 
     public void deleteAll() { mRepository.deleteAll(); }
 
-    public void deleteWord(ArkeItem entry) { mRepository.deleteEntry(entry); }
+    public void deleteEntry(ArkeItem entry) { mRepository.deleteEntry(entry); }
 
 }
