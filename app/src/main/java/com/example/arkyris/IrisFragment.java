@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -31,10 +33,12 @@ import java.util.Random;
  */
 public class IrisFragment extends Fragment {
 
-    private final LinkedList<IrisItem> mIrisColourList = new LinkedList<>();
     private RecyclerView mRecyclerView;
     private IrisListAdapter mAdapter;
     private int mColourName;
+
+    // all activity interactions are with the WordViewModel only
+    private IrisViewModel mIrisViewModel;
 
     // Placeholder to test changing colours of entries
     private static final String[] mColourArray = {"red", "pink", "purple", "deep_purple",
@@ -99,6 +103,7 @@ public class IrisFragment extends Fragment {
             openColourPickerDialogue(image);
         });
 
+        /**
         // Create a placeholder list of words for RecycleView.
         // TODO: obtain these from database
         // TODO: show a message if there are no items
@@ -110,11 +115,12 @@ public class IrisFragment extends Fragment {
                     "31/03/2021",
                     "21:21"));
         }
+         */
 
         // Get a handler for the RecyclerView
         mRecyclerView = rootView.findViewById(R.id.iris_recyclerview);
         // Create an adapter and supply the data
-        mAdapter = new IrisListAdapter(getActivity(), mIrisColourList);
+        mAdapter = new IrisListAdapter(getActivity());
         // Connect adapter to RecyclerView
         mRecyclerView.setAdapter(mAdapter);
         // Give RecyclerView a LayoutManager, make it horizontal
@@ -123,6 +129,20 @@ public class IrisFragment extends Fragment {
                 LinearLayoutManager.HORIZONTAL,
                 false);
         mRecyclerView.setLayoutManager(layoutManager);
+
+        // associated the ViewModel with the controller, this persists through config changes
+        mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
+
+        // an observer sees when the data is changed while the activity is open,
+        // and updates the data in the adapter
+        mIrisViewModel.getAllEntries().observe(getActivity(), new Observer<List<EntryItem>>() {
+            @Override
+            public void onChanged(List<EntryItem> entries) {
+                // update cached copy of words in adapter
+                mAdapter.setEntries(entries);
+            }
+        });
+
         // Inflate the layout for this fragment
         return rootView;
 
@@ -209,14 +229,14 @@ public class IrisFragment extends Fragment {
         String timeStampDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
         String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
         // add a new word to the List
-        mIrisColourList.addFirst(new IrisItem(
-                R.drawable.colour_circle,
+        EntryItem entryItem = new EntryItem(
                 mColourName,
                 timeStampDate,
-                timeStampTime));
-        ;
+                timeStampTime,
+                1);
         // notify the adapter that data has changed
-        mRecyclerView.getAdapter().notifyItemInserted(0);
+        mIrisViewModel.insert(entryItem);
+        // smooth scroll to position
         mRecyclerView.smoothScrollToPosition(0);
     }
 
