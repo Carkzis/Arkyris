@@ -72,7 +72,14 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
             mDateView = itemView.findViewById(R.id.iris_date);
             mTimeView = itemView.findViewById(R.id.iris_time);
 
-            itemView.setOnClickListener(view -> clickListener.onItemClick(view, getAdapterPosition()));
+            // converting it to a long click
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    clickListener.onItemClick(v, getAdapterPosition());
+                    return true;
+                }
+            });
 
             this.mAdapter = adapter;
         }
