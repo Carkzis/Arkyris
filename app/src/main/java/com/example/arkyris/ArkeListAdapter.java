@@ -1,7 +1,6 @@
 package com.example.arkyris;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,16 +44,11 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
      */
     @Override
     public void onBindViewHolder(@NonNull ArkeListAdapter.ArkeViewHolder holder, int position) {
-        if (mEntries != null) {
-            ArkeItem mCurrent = mEntries.get(position);
-            holder.mImageView.setImageResource(R.drawable.colour_rectangle);
-            holder.mImageView.setColorFilter(mCurrent.getColour());
-            // holder.mImageView.setColorFilter(context.getResources().getColor(R.color.green));
-            holder.mDateView.setText(mCurrent.getDate());
-            holder.mTimeView.setText(mCurrent.getTime());
-        } else {
-            Log.e(LOG_TAG, "Not working!");
-        }
+        ArkeItem mCurrent = mEntries.get(position);
+        holder.mImageView.setImageResource(R.drawable.colour_rectangle);
+        holder.mImageView.setColorFilter(mCurrent.getColour());
+        holder.mDateView.setText(mCurrent.getDate());
+        holder.mTimeView.setText(mCurrent.getTime());
     }
 
     void setEntries(List<ArkeItem> entries){

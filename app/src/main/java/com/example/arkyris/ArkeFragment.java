@@ -178,8 +178,7 @@ public class ArkeFragment extends Fragment {
                             timeStampTime,
                             1);
                     mArkeViewModel.insert(arkeItem);
-                    // notify the adapter that data has changed
-                    mRecyclerView.getAdapter().notifyItemInserted(0);
+                    // smooth scroll to position
                     mRecyclerView.smoothScrollToPosition(0);
                 })
                 // otherwise exit
