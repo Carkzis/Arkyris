@@ -10,7 +10,7 @@ public class ArkeItem {
     // Attributes for each entry
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_entryId")
-    private Integer _entryId;
+    public Integer mEntryId;
 
     @ColumnInfo(name = "colour")
     private Integer mColour;
@@ -22,10 +22,11 @@ public class ArkeItem {
     private String mTime;
 
     @ColumnInfo(name = "public")
+    // 0 for not public, 1 for public
     private Integer mIsPublic;
 
     public ArkeItem(int colour, String date, String time, int isPublic) {
-        _entryId = 0;
+        mEntryId = 0;
         mDate = date;
         mTime = time;
         mColour = colour;
@@ -36,6 +37,8 @@ public class ArkeItem {
      * Getter methods for getting Views into the RecycleView.
      * @return
      */
+
+    public Integer getEntryId() { return mEntryId; }
 
     public String getDate() {
         return mDate;
