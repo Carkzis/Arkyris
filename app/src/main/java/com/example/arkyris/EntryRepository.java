@@ -45,8 +45,14 @@ public class EntryRepository {
     }
 
     public void deleteEntry(EntryItem entry) {
-        WordRoomDatabase.databaseWriteExecutor.execute(() -> {
+        ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
             mEntryDao.deleteEntry(entry);
+        });
+    }
+
+    public void updatePublic(EntryItem entry) {
+        ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mEntryDao.updatePublic(entry);
         });
     }
 

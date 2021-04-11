@@ -103,20 +103,6 @@ public class IrisFragment extends Fragment {
             openColourPickerDialogue(image);
         });
 
-        /**
-        // Create a placeholder list of words for RecycleView.
-        // TODO: obtain these from database
-        // TODO: show a message if there are no items
-        for (int i = 0; i < 50; i++) {
-            int colourName = changeColour();
-            mIrisColourList.addLast(new IrisItem(
-                    R.drawable.colour_circle,
-                    colourName,
-                    "31/03/2021",
-                    "21:21"));
-        }
-         */
-
         // Get a handler for the RecyclerView
         mRecyclerView = rootView.findViewById(R.id.iris_recyclerview);
         // Create an adapter and supply the data
@@ -141,6 +127,15 @@ public class IrisFragment extends Fragment {
                 // update cached copy of words in adapter
                 mAdapter.setEntries(entries);
             }
+        });
+
+        // delete an item on click
+        // TODO: CHANGE THIS!
+        mAdapter.setOnItemClickListener((v, position) -> {
+            EntryItem entryItem = mAdapter.getEntryAtPosition(position);
+            Toast.makeText(getActivity(), "Item Deleted!", Toast.LENGTH_SHORT).show();
+            // delete word
+            mIrisViewModel.deleteEntry(entryItem);
         });
 
         // Inflate the layout for this fragment

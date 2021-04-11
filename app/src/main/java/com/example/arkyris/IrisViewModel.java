@@ -26,7 +26,12 @@ public class IrisViewModel extends AndroidViewModel {
     // hides implementation of insert() from UI
     public void insert(EntryItem entry) { mRepository.insert(entry); }
 
+    // This is only for testing purposes
     public void deleteAll() { mRepository.deleteAll(); }
 
+    // Delete a single entry
     public void deleteEntry(EntryItem entry) { mRepository.deleteEntry(entry); }
+
+    // Toggle the public option for an individual entry on or off
+    public void updatePublic(EntryItem entry) { mRepository.updatePublic(entry); }
 }

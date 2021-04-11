@@ -18,6 +18,7 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
 
     private final LayoutInflater mInflater;
     private List<EntryItem> mEntries; // Cached copy of words
+    private static ClickListener clickListener;
 
     public IrisListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
 
@@ -71,7 +72,22 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
             mDateView = itemView.findViewById(R.id.iris_date);
             mTimeView = itemView.findViewById(R.id.iris_time);
 
+            itemView.setOnClickListener(view -> clickListener.onItemClick(view, getAdapterPosition()));
+
             this.mAdapter = adapter;
         }
+    }
+
+    public EntryItem getEntryAtPosition(int position) {
+        return mEntries.get(position);
+    }
+
+
+    public void setOnItemClickListener(ClickListener clickListener) {
+        IrisListAdapter.clickListener = clickListener;
+    }
+
+    public interface ClickListener {
+        void onItemClick(View v, int position);
     }
 }
