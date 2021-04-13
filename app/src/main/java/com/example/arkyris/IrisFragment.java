@@ -132,10 +132,8 @@ public class IrisFragment extends Fragment {
         // delete an item on long click
         mAdapter.setOnItemClickListener((v, position) -> {
             EntryItem entryItem = mAdapter.getEntryAtPosition(position);
-            Toast.makeText(getActivity(), "Item Deleted!", Toast.LENGTH_SHORT).show();
-            // delete
-            //mIrisViewModel.deleteEntry(entryItem);
 
+            // call method to decide what to do with entry
             deleteOrPublicAlert(entryItem);
         });
 
@@ -242,15 +240,24 @@ public class IrisFragment extends Fragment {
                     // if entry public, make private
                     entryItem.setIsPublic(1);
                     mIrisViewModel.updatePublic(entryItem);
+                    Toast.makeText(getActivity(),
+                            "To Arke it goes!",
+                            Toast.LENGTH_SHORT).show();
                 } else if ("Make this entry private?".equals(choices[which])) {
                     // if entry private, make public
                     entryItem.setIsPublic(0);
                     mIrisViewModel.updatePublic(entryItem);
+                    Toast.makeText(getActivity(),
+                            "Back from Arke it comes!",
+                            Toast.LENGTH_SHORT).show();
                 } else if ("Delete this entry?".equals(choices[which])) {
                     // delete entry
                     // TODO: create an extra alert for deletion
                     // TODO: change deletion to use deletion tag instead
                     mIrisViewModel.deleteEntry(entryItem);
+                    Toast.makeText(getActivity(),
+                            "Entry deleted!",
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     // Do nothing
                 }
