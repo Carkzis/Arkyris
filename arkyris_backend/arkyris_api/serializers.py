@@ -5,4 +5,4 @@ class EntrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Entry
-        fields = ['pk', 'user', 'colour', 'date_time']
+        fields = ['pk', 'user', 'colour', 'date_time', 'public', 'deleted']

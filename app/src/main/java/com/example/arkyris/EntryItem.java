@@ -15,6 +15,7 @@ public class EntryItem {
     @ColumnInfo(name = "colour")
     private int mColour;
 
+    // TODO: Turn date and time into one field
     @ColumnInfo(name = "date")
     private String mDate;
 

@@ -5,7 +5,7 @@ from .serializers import EntrySerializer
 
 # Create your views here.
 
-class EntryCreate(generics.CreateAPIView):
+class EntryCreate(generics.ListCreateAPIView):
     # Allows creation of a new entry
     queryset = Entry.objects.all()
     serializer_class = EntrySerializer
