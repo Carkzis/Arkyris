@@ -1,4 +1,4 @@
-package com.example.arkyris;
+package com.example.arkyris.sandbox;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.arkyris.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;

@@ -1,6 +1,7 @@
 package com.example.arkyris;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,9 +35,12 @@ import java.util.Random;
  */
 public class ArkeFragment extends Fragment {
 
+    private static final String LOG_TAG = ArkeFragment.class.getSimpleName();
+
     private RecyclerView mRecyclerView;
     private ArkeListAdapter mAdapter;
     private int mColourName;
+    EntryService entryService;
 
     // all activity interactions are with the WordViewModel only
     private ArkeViewModel mArkeViewModel;
@@ -82,6 +90,8 @@ public class ArkeFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_arke, container, false);
+
+        entryService = APIUtils.getEntryService();
 
         final FloatingActionButton fab = rootView.findViewById(R.id.arke_fab);
         fab.setOnClickListener(view -> {
@@ -162,19 +172,8 @@ public class ArkeFragment extends Fragment {
                 .setPositiveButton("ok", (dialog, selectedColor, allColors) -> {
                     // amend the colour to the chosen one
                     mColourName = selectedColor;
-                    // create timestamps
-                    // TODO: make these obey local formatting
-                    String timeStampDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-                    String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
-                    // add a new word to the List
-                    EntryItem entryItem = new EntryItem(
-                            mColourName,
-                            timeStampDate,
-                            timeStampTime,
-                            1);
-                    mArkeViewModel.insert(entryItem);
-                    // smooth scroll to position
-                    mRecyclerView.smoothScrollToPosition(0);
+                    addLocalEntry();
+                    addRemoteEntry();
                 })
                 // otherwise exit
                 .setNegativeButton("cancel", (dialog, which) -> {
@@ -184,5 +183,44 @@ public class ArkeFragment extends Fragment {
 
     }
 
+    /**
+     * Add colour choice to local database (SQLite)
+     */
+    public void addLocalEntry() {
+        // create timestamps
+        // TODO: make these obey local formatting
+        String timeStampDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+        String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
+        // add a new word to the List
+        EntryItem entryItem = new EntryItem(
+                mColourName,
+                timeStampDate,
+                timeStampTime,
+                1);
+        mArkeViewModel.insert(entryItem);
+        // smooth scroll to position
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
+    public void addRemoteEntry() {
+        EntryItemRemote entry = new EntryItemRemote("Carkzis", mColourName, 1);
+        Call<EntryItemRemote> call = entryService.addEntry(entry);
+        call.enqueue(new Callback<EntryItemRemote>() {
+            @Override
+            public void onResponse(Call<EntryItemRemote> call, Response<EntryItemRemote> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getActivity(),
+                            "Entry has reached the dark depths!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EntryItemRemote> call, Throwable throwable) {
+                Log.e(LOG_TAG, throwable.getMessage());
+            }
+
+        });
+    }
 
 }

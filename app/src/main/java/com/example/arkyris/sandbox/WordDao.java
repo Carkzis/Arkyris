@@ -1,4 +1,4 @@
-package com.example.arkyris;
+package com.example.arkyris.sandbox;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
