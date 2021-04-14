@@ -9,7 +9,7 @@ import retrofit2.http.POST;
 
 public interface EntryService {
 
-    @GET()
+    @GET(".")
     Call<List<EntryItemRemote>> getEntries();
 
     @POST("create/")

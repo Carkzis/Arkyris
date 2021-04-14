@@ -1,13 +1,14 @@
 package com.example.arkyris;
 
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class EntryItemRemote {
@@ -49,15 +50,16 @@ public class EntryItemRemote {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String getDate() {
-        LocalDateTime localDateTime = LocalDateTime.parse(mDateTime);
+        OffsetDateTime localDateTime = OffsetDateTime.parse(mDateTime);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return localDateTime.format(formatter);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String getTime() {
-        LocalDateTime localDateTime = LocalDateTime.parse(mDateTime);
+        OffsetDateTime localDateTime = OffsetDateTime.parse(mDateTime);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        Log.e("WHY", localDateTime.format(formatter));
         return localDateTime.format(formatter);
     }
 

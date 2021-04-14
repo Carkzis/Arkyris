@@ -11,5 +11,8 @@ class Entry(models.Model):
     # for soft deletion, 0 = not deleted, 1 = deleted
     deleted = models.IntegerField()
 
+    class Meta:
+        ordering = ['-date_time', 'user']
+
     def __str__(self):
         return f'User: {self.user} - Date: {self.date_time}'

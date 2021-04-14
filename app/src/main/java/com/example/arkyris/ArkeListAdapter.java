@@ -1,6 +1,7 @@
 package com.example.arkyris;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
 
     private final LayoutInflater mInflater;
     private Context context;
-    private List<EntryItem> mEntries; // Cached copy of words
+    private List<EntryItemRemote> mEntries; // Cached copy of words
 
     public ArkeListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
 
@@ -41,16 +43,17 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
      * @param holder
      * @param position
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ArkeListAdapter.ArkeViewHolder holder, int position) {
-        EntryItem mCurrent = mEntries.get(position);
+        EntryItemRemote mCurrent = mEntries.get(position);
         holder.mImageView.setImageResource(R.drawable.colour_rectangle);
         holder.mImageView.setColorFilter(mCurrent.getColour());
         holder.mDateView.setText(mCurrent.getDate());
         holder.mTimeView.setText(mCurrent.getTime());
     }
 
-    void setEntries(List<EntryItem> entries){
+    void setEntries(List<EntryItemRemote> entries){
         mEntries = entries;
         notifyDataSetChanged();
     }

@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +18,7 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -41,6 +41,7 @@ public class ArkeFragment extends Fragment {
     private ArkeListAdapter mAdapter;
     private int mColourName;
     EntryService entryService;
+    List<EntryItemRemote> entriesList = new ArrayList<EntryItemRemote>();
 
     // all activity interactions are with the WordViewModel only
     private ArkeViewModel mArkeViewModel;
@@ -118,19 +119,38 @@ public class ArkeFragment extends Fragment {
         // Give RecyclerView a LayoutManager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        Call<List<EntryItemRemote>> call = entryService.getEntries();
+        call.enqueue(new Callback<List<EntryItemRemote>>() {
+            @Override
+            public void onResponse(Call<List<EntryItemRemote>> call, Response<List<EntryItemRemote>> response) {
+                if (response.isSuccessful()) {
+                    Log.e(LOG_TAG, "WHYYYY");
+                    entriesList = response.body();
+                    mAdapter.setEntries(entriesList);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<EntryItemRemote>> call, Throwable t) {
+                Log.e(LOG_TAG, t.getMessage());
+            }
+        });
+
         // associated the ViewModel with the controller, this persists through config changes
         mArkeViewModel = ViewModelProviders.of(this).get(ArkeViewModel.class);
 
+        /**
         // an observer sees when the data is changed while the activity is open,
         // and updates the data in the adapter
-        mArkeViewModel.getAllPublicEntries().observe(getActivity(), new Observer<List<EntryItem>>() {
+        entryService.getEntries().observe(getActivity(), new Observer<List<EntryItem>>() {
             @Override
-            public void onChanged(List<EntryItem> entries) {
+            public void onChanged(List<EntryItemRemote> entries) {
                 // update cached copy of words in adapter
                 mAdapter.setEntries(entries);
             }
         });
 
+         */
         // Inflate the layout for this fragment
         return rootView;
     }
