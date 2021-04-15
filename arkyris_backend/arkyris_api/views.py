@@ -15,6 +15,11 @@ class EntryList(generics.ListAPIView):
     queryset = Entry.objects.all()
     serializer_class = EntrySerializer
 
+class EntryListPublic(generics.ListAPIView):
+    # Allows entries to be listed and viewed
+    queryset = Entry.objects.filter(public=1)
+    serializer_class = EntrySerializer
+
 class EntryDetail(generics.RetrieveAPIView):
     # Returns a single entry using primary key
     queryset = Entry.objects.all()

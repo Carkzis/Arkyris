@@ -247,6 +247,9 @@ public class ArkeFragment extends Fragment {
         });
     }
 
+    /**
+     * This method refreshes the fragment.
+     */
     public void refresh() {
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         if (Build.VERSION.SDK_INT >= 26) {

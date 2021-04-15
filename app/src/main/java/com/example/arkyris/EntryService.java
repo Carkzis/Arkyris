@@ -9,7 +9,11 @@ import retrofit2.http.POST;
 
 public interface EntryService {
 
-    @GET(".")
+    /**
+     * This is only for public posts, i.e. Arke
+     * @return
+     */
+    @GET("public/")
     Call<List<EntryItemRemote>> getEntries();
 
     @POST("create/")
