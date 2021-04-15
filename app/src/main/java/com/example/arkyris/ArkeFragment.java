@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
@@ -44,6 +45,7 @@ public class ArkeFragment extends Fragment {
     private int mColourName;
     EntryService entryService;
     List<EntryItemRemote> entriesList = new ArrayList<EntryItemRemote>();
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     // all activity interactions are with the WordViewModel only
     private ArkeViewModel mArkeViewModel;
@@ -112,6 +114,7 @@ public class ArkeFragment extends Fragment {
         // TODO: show a different item for the end, "e.g. there are no more entries"
          */
 
+        mSwipeRefreshLayout = rootView.findViewById(R.id.arke_swipe);
         // Get a handler for the RecyclerView
         mRecyclerView = rootView.findViewById(R.id.arke_recyclerview);
         // Create an adapter and supply the data
@@ -141,6 +144,14 @@ public class ArkeFragment extends Fragment {
 
         // associated the ViewModel with the controller, this persists through config changes
         mArkeViewModel = ViewModelProviders.of(this).get(ArkeViewModel.class);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSwipeRefreshLayout.setRefreshing(false);
+                refreshFragment();
+            }
+        });
 
         /**
         // an observer sees when the data is changed while the activity is open,
@@ -225,7 +236,11 @@ public class ArkeFragment extends Fragment {
         mRecyclerView.smoothScrollToPosition(0);
     }
 
+    /**
+     * Add colour to the backend postgreSQL database
+     */
     public void addRemoteEntry() {
+        // TODO: This will assign a member to the entry
         EntryItemRemote entry = new EntryItemRemote("Carkzis", mColourName, 1);
         Call<EntryItemRemote> call = entryService.addEntry(entry);
         call.enqueue(new Callback<EntryItemRemote>() {
@@ -235,7 +250,7 @@ public class ArkeFragment extends Fragment {
                     Toast.makeText(getActivity(),
                             "Entry has reached the dark depths!",
                             Toast.LENGTH_SHORT).show();
-                    refresh();
+                    refreshFragment();
                 }
             }
 
@@ -250,7 +265,7 @@ public class ArkeFragment extends Fragment {
     /**
      * This method refreshes the fragment.
      */
-    public void refresh() {
+    public void refreshFragment() {
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         if (Build.VERSION.SDK_INT >= 26) {
             fragmentTransaction.setReorderingAllowed(false);
