@@ -11,6 +11,7 @@ class Entry(models.Model):
     # for soft deletion, 0 = not deleted, 1 = deleted
     deleted = models.IntegerField()
 
+    # Set in reverse time order
     class Meta:
         ordering = ['-date_time', 'user']
 

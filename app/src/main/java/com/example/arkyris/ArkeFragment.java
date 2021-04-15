@@ -1,5 +1,6 @@
 package com.example.arkyris;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -119,6 +121,7 @@ public class ArkeFragment extends Fragment {
         // Give RecyclerView a LayoutManager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        // This will load the items from the database
         Call<List<EntryItemRemote>> call = entryService.getEntries();
         call.enqueue(new Callback<List<EntryItemRemote>>() {
             @Override
@@ -232,6 +235,7 @@ public class ArkeFragment extends Fragment {
                     Toast.makeText(getActivity(),
                             "Entry has reached the dark depths!",
                             Toast.LENGTH_SHORT).show();
+                    refresh();
                 }
             }
 
@@ -241,6 +245,15 @@ public class ArkeFragment extends Fragment {
             }
 
         });
+    }
+
+    public void refresh() {
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        if (Build.VERSION.SDK_INT >= 26) {
+            fragmentTransaction.setReorderingAllowed(false);
+        }
+        fragmentTransaction.detach(this).attach(this).commit();
+
     }
 
 }
