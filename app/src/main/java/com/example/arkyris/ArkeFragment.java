@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
@@ -46,6 +47,9 @@ public class ArkeFragment extends Fragment {
     EntryService entryService;
     List<EntryItemRemote> entriesList = new ArrayList<EntryItemRemote>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    // textview for when there is a connection error
+    private TextView mConnectionError;
 
     // all activity interactions are with the WordViewModel only
     private ArkeViewModel mArkeViewModel;
@@ -114,6 +118,9 @@ public class ArkeFragment extends Fragment {
         // TODO: show a different item for the end, "e.g. there are no more entries"
          */
 
+        // connection error text view
+        mConnectionError = rootView.findViewById(R.id.connection_error);
+        // swipe refresh widget
         mSwipeRefreshLayout = rootView.findViewById(R.id.arke_swipe);
         // Get a handler for the RecyclerView
         mRecyclerView = rootView.findViewById(R.id.arke_recyclerview);
@@ -130,21 +137,27 @@ public class ArkeFragment extends Fragment {
             @Override
             public void onResponse(Call<List<EntryItemRemote>> call, Response<List<EntryItemRemote>> response) {
                 if (response.isSuccessful()) {
-                    Log.e(LOG_TAG, "WHYYYY");
+                    Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
                     mAdapter.setEntries(entriesList);
+                    fab.setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
             public void onFailure(Call<List<EntryItemRemote>> call, Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
+                mConnectionError.setVisibility(View.VISIBLE);
+                fab.setVisibility(View.INVISIBLE);
             }
         });
 
         // associated the ViewModel with the controller, this persists through config changes
         mArkeViewModel = ViewModelProviders.of(this).get(ArkeViewModel.class);
 
+        /**
+         * Refresh the fragment on swiping down
+         */
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -169,6 +182,10 @@ public class ArkeFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Method for generating a random color
+     * @return
+     */
     public int changeColour() {
         Random random = new Random();
         // pick a random colour (using an index)

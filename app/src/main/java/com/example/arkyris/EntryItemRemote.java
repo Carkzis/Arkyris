@@ -1,7 +1,6 @@
 package com.example.arkyris;
 
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -59,7 +58,6 @@ public class EntryItemRemote {
     public String getTime() {
         OffsetDateTime localDateTime = OffsetDateTime.parse(mDateTime);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        Log.e("WHY", localDateTime.format(formatter));
         return localDateTime.format(formatter);
     }
 
