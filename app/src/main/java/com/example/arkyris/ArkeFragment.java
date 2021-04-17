@@ -1,6 +1,5 @@
 package com.example.arkyris;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -166,18 +164,6 @@ public class ArkeFragment extends Fragment {
             }
         });
 
-        /**
-        // an observer sees when the data is changed while the activity is open,
-        // and updates the data in the adapter
-        entryService.getEntries().observe(getActivity(), new Observer<List<EntryItem>>() {
-            @Override
-            public void onChanged(List<EntryItemRemote> entries) {
-                // update cached copy of words in adapter
-                mAdapter.setEntries(entries);
-            }
-        });
-
-         */
         // Inflate the layout for this fragment
         return rootView;
     }
@@ -265,7 +251,7 @@ public class ArkeFragment extends Fragment {
             public void onResponse(Call<EntryItemRemote> call, Response<EntryItemRemote> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(getActivity(),
-                            "Entry has reached the dark depths!",
+                            "Entry added!",
                             Toast.LENGTH_SHORT).show();
                     refreshFragment();
                 }
@@ -280,14 +266,36 @@ public class ArkeFragment extends Fragment {
     }
 
     /**
-     * This method refreshes the fragment.
+     * This method refreshes the recycler view
      */
     public void refreshFragment() {
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        if (Build.VERSION.SDK_INT >= 26) {
-            fragmentTransaction.setReorderingAllowed(false);
-        }
-        fragmentTransaction.detach(this).attach(this).commit();
+
+        Call<List<EntryItemRemote>> call = entryService.getEntries();
+        call.enqueue(new Callback<List<EntryItemRemote>>() {
+            @Override
+            public void onResponse(Call<List<EntryItemRemote>> call, Response<List<EntryItemRemote>> response) {
+                if (response.isSuccessful()) {
+                    Log.e(LOG_TAG, "Entries called.");
+                    mConnectionError.setVisibility(View.GONE);
+                    entriesList = response.body();
+                    mAdapter.setEntries(entriesList);
+                    // smooth scroll to position
+                    mRecyclerView.smoothScrollToPosition(0);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<EntryItemRemote>> call, Throwable t) {
+                Log.e(LOG_TAG, t.getMessage());
+                if (entriesList.size() > 0) {
+                    Toast.makeText(getActivity(),
+                            "Connection error...",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    mConnectionError.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
     }
 
