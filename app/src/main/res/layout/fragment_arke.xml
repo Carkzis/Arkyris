@@ -52,14 +52,25 @@
             <TextView
                 android:id="@+id/connection_error"
                 android:layout_width="wrap_content"
-                android:layout_height="19dp"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/arke_connection_error"
+                android:gravity="center"
+                android:textSize="24sp"
+                android:textStyle="bold"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/arke_recyclerview" />
+
+            <ProgressBar
+                android:id="@+id/loading_indicator"
+                style="@android:style/Widget.Holo.Light.ProgressBar.Large.Inverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:indeterminate="true" />
 
         </RelativeLayout>
 

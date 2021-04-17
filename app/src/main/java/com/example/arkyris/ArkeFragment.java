@@ -120,6 +120,8 @@ public class ArkeFragment extends Fragment {
         mConnectionError = rootView.findViewById(R.id.connection_error);
         // swipe refresh widget
         mSwipeRefreshLayout = rootView.findViewById(R.id.arke_swipe);
+        // disable swipe refresh until page loaded
+        mSwipeRefreshLayout.setEnabled(false);
         // Get a handler for the RecyclerView
         mRecyclerView = rootView.findViewById(R.id.arke_recyclerview);
         // Create an adapter and supply the data
@@ -139,6 +141,8 @@ public class ArkeFragment extends Fragment {
                     entriesList = response.body();
                     mAdapter.setEntries(entriesList);
                     fab.setVisibility(View.VISIBLE);
+                    rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
+                    mSwipeRefreshLayout.setEnabled(true);
                 }
             }
 
@@ -147,6 +151,8 @@ public class ArkeFragment extends Fragment {
                 Log.e(LOG_TAG, t.getMessage());
                 mConnectionError.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.INVISIBLE);
+                rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
+                mSwipeRefreshLayout.setEnabled(true);
             }
         });
 
@@ -156,11 +162,13 @@ public class ArkeFragment extends Fragment {
         /**
          * Refresh the fragment on swiping down
          */
+        // removed the icon spinner as using a progress icon
+        mSwipeRefreshLayout.setProgressViewEndTarget(false, 0);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                refreshEntriesList();
                 mSwipeRefreshLayout.setRefreshing(false);
-                refreshFragment();
             }
         });
 
@@ -253,7 +261,7 @@ public class ArkeFragment extends Fragment {
                     Toast.makeText(getActivity(),
                             "Entry added!",
                             Toast.LENGTH_SHORT).show();
-                    refreshFragment();
+                    refreshEntriesList();
                 }
             }
 
@@ -268,7 +276,14 @@ public class ArkeFragment extends Fragment {
     /**
      * This method refreshes the recycler view
      */
-    public void refreshFragment() {
+    public void refreshEntriesList() {
+
+        // show the loading indicator
+        getActivity().findViewById(R.id.loading_indicator).setVisibility(View.VISIBLE);
+        // set this to gone, whether or not it is already set as such
+        mConnectionError.setVisibility(View.GONE);
+        // disable refresh layout until loading completed
+        mSwipeRefreshLayout.setEnabled(false);
 
         Call<List<EntryItemRemote>> call = entryService.getEntries();
         call.enqueue(new Callback<List<EntryItemRemote>>() {
@@ -277,16 +292,29 @@ public class ArkeFragment extends Fragment {
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Entries called.");
                     mConnectionError.setVisibility(View.GONE);
+                    getActivity().findViewById(R.id.arke_fab).setVisibility(View.VISIBLE);
                     entriesList = response.body();
                     mAdapter.setEntries(entriesList);
+                    getActivity().findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                     // smooth scroll to position
                     mRecyclerView.smoothScrollToPosition(0);
+                    mSwipeRefreshLayout.setEnabled(true);
                 }
             }
 
+            /**
+             * If the entriesList contains items, it means items are showing,
+             * but there is a new error on refreshing, so a Toast is shown.
+             * Otherwise, the page was already blank from the start,
+             * so a connection error message is shown.
+             * @param call
+             * @param t
+             */
             @Override
             public void onFailure(Call<List<EntryItemRemote>> call, Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
+                getActivity().findViewById(R.id.loading_indicator).setVisibility(View.GONE);
+                mSwipeRefreshLayout.setEnabled(true);
                 if (entriesList.size() > 0) {
                     Toast.makeText(getActivity(),
                             "Connection error...",
