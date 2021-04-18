@@ -278,6 +278,7 @@ public class IrisFragment extends Fragment {
         // truncate table
         mIrisViewModel.deleteAll();
 
+        // TODO: this should only update the local database with the user's entries
         Call<List<EntryItemRemote>> call = entryService.getEntries();
         call.enqueue(new Callback<List<EntryItemRemote>>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -305,10 +306,7 @@ public class IrisFragment extends Fragment {
             }
 
             /**
-             * If the entriesList contains items, it means items are showing,
-             * but there is a new error on refreshing, so a Toast is shown.
-             * Otherwise, the page was already blank from the start,
-             * so a connection error message is shown.
+             * Show a connection error toast.
              * @param call
              * @param t
              */
@@ -336,7 +334,7 @@ public class IrisFragment extends Fragment {
                     Toast.makeText(getActivity(),
                             "Entry added!",
                             Toast.LENGTH_SHORT).show();
-                    //addLocalEntry(isPublic);
+                    //refreshLocalDatabase(isPublic);
                     refreshLocalDatabase();
                 }
             }
@@ -351,6 +349,5 @@ public class IrisFragment extends Fragment {
 
         });
     }
-
 
 }

@@ -1,5 +1,6 @@
 package com.example.arkyris;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -19,9 +21,7 @@ import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -50,7 +50,7 @@ public class ArkeFragment extends Fragment {
     private TextView mConnectionError;
 
     // all activity interactions are with the WordViewModel only
-    private ArkeViewModel mArkeViewModel;
+    private IrisViewModel mIrisViewModel;
 
     // Placeholder to test changing colours of entries
     private static final String[] mColourArray = {"red", "pink", "purple", "deep_purple",
@@ -82,6 +82,12 @@ public class ArkeFragment extends Fragment {
         if (getArguments() != null) {
             // Currently no arguments here.
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshEntriesList();
     }
 
     /**
@@ -157,7 +163,7 @@ public class ArkeFragment extends Fragment {
         });
 
         // associated the ViewModel with the controller, this persists through config changes
-        mArkeViewModel = ViewModelProviders.of(this).get(ArkeViewModel.class);
+        mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
 
         /**
          * Refresh the fragment on swiping down
@@ -217,7 +223,6 @@ public class ArkeFragment extends Fragment {
                 .setPositiveButton("ok", (dialog, selectedColor, allColors) -> {
                     // amend the colour to the chosen one
                     mColourName = selectedColor;
-                    addLocalEntry();
                     addRemoteEntry();
                 })
                 // otherwise exit
@@ -229,24 +234,53 @@ public class ArkeFragment extends Fragment {
     }
 
     /**
-     * Add colour choice to local database (SQLite)
+     * This will update the local database using the remote database
      */
-    public void addLocalEntry() {
-        // create timestamps
-        // TODO: make these obey local formatting
-        String timeStampDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-        String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
-        // add a new word to the List
-        EntryItem entryItem = new EntryItem(
-                1, // TODO: need to change this
-                mColourName,
-                timeStampDate,
-                timeStampTime,
-                1);
-        mArkeViewModel.insert(entryItem);
-        // smooth scroll to position
-        mRecyclerView.smoothScrollToPosition(0);
-    }
+    public void refreshLocalDatabase() {
+        // truncate table
+        mIrisViewModel.deleteAll();
+
+        // TODO: this should only update the local database with the user's entries
+        Call<List<EntryItemRemote>> call = entryService.getEntries();
+        call.enqueue(new Callback<List<EntryItemRemote>>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<List<EntryItemRemote>> call, Response<List<EntryItemRemote>> response) {
+                if (response.isSuccessful()) {
+                    Log.e(LOG_TAG, "Entries called.");
+                    entriesList = response.body();
+                    //Collections.reverse(entriesList);
+                    for (EntryItemRemote entry : entriesList) {
+                        EntryItem entryItem = new EntryItem(
+                                entry.getId(),
+                                entry.getColour(),
+                                entry.getDate(),
+                                entry.getTime(),
+                                entry.getIsPublic()
+                        );
+                        mIrisViewModel.insert(entryItem);
+                    }
+
+                    // smooth scroll to position
+                    mRecyclerView.smoothScrollToPosition(0);
+
+                }
+            }
+
+                /**
+                 * Show a connection error toast.
+                 * @param call
+                 * @param t
+                 */
+                @Override
+                public void onFailure(Call<List<EntryItemRemote>> call, Throwable t) {
+                    Log.e(LOG_TAG, t.getMessage());
+                    Toast.makeText(getActivity(),
+                            "Connection error...",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
     /**
      * Add colour to the backend postgreSQL database
@@ -263,6 +297,7 @@ public class ArkeFragment extends Fragment {
                             "Entry added!",
                             Toast.LENGTH_SHORT).show();
                     refreshEntriesList();
+                    refreshLocalDatabase();
                 }
             }
 
