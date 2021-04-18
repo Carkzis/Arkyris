@@ -12,12 +12,12 @@ class EntryCreate(generics.ListCreateAPIView):
 
 class EntryList(generics.ListAPIView):
     # Allows entries to be listed and viewed
-    queryset = Entry.objects.all()
+    queryset = Entry.objects.filter(deleted=0)
     serializer_class = EntrySerializer
 
 class EntryListPublic(generics.ListAPIView):
     # Allows entries to be listed and viewed
-    queryset = Entry.objects.filter(public=1).order_by('-date_time')
+    queryset = Entry.objects.filter(public=1, deleted=0).order_by('-date_time')
     serializer_class = EntrySerializer
 
 class EntryDetail(generics.RetrieveAPIView):

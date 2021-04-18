@@ -12,9 +12,10 @@ import java.time.format.DateTimeFormatter;
 
 public class EntryItemRemote {
 
-    @SerializedName("id")
+    // Note to self: calling it pk and also id is very confusing.
+    @SerializedName("pk")
     @Expose
-    private long id;
+    private String id;
 
     @SerializedName("user")
     @Expose
@@ -43,7 +44,7 @@ public class EntryItemRemote {
     }
 
     // getters and setters
-    public long getId() { return id; }
+    public String getId() { return id; }
 
     public int getColour() { return mColour; }
 

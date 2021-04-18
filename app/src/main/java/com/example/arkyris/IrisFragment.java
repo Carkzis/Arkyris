@@ -24,6 +24,7 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -258,17 +259,42 @@ public class IrisFragment extends Fragment {
                 } else if ("Delete this entry?".equals(choices[which])) {
                     // delete entry
                     // TODO: create an extra alert for deletion
-                    // TODO: change deletion to use deletion tag instead
-                    mIrisViewModel.deleteEntry(entryItem);
-                    Toast.makeText(getActivity(),
-                            "Entry deleted!",
-                            Toast.LENGTH_SHORT).show();
+                    Log.e(LOG_TAG, String.valueOf(entryItem.getEntryId()));
+                    deleteRemoteEntry(entryItem);
                 } else {
                     // Do nothing
                 }
             }
         });
         builder.show();
+    }
+
+    public void deleteRemoteEntry(EntryItem entryItem) {
+        // this will pass change the flag of an item to deleted, so it will stop
+        // being requested from REST
+        HashMap<String, String> deletedEntry = new HashMap<String, String>();
+        deletedEntry.put("deleted", "1");
+        Call<EntryItemRemote> call = entryService.updatePublic(entryItem.getRemoteId(), deletedEntry);
+        call.enqueue(new Callback<EntryItemRemote>() {
+            @Override
+            public void onResponse(Call<EntryItemRemote> call, Response<EntryItemRemote> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getActivity(),
+                            "Entry deleted!",
+                            Toast.LENGTH_SHORT).show();
+                    refreshLocalDatabase();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EntryItemRemote> call, Throwable throwable) {
+                Log.e(LOG_TAG, throwable.getMessage());
+                Toast.makeText(getActivity(),
+                        "Connection error...",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        });
     }
 
     /**
@@ -289,6 +315,7 @@ public class IrisFragment extends Fragment {
                     entriesList = response.body();
                     //Collections.reverse(entriesList);
                     for (EntryItemRemote entry: entriesList) {
+                        Log.e(LOG_TAG, String.valueOf(entry.getId()));
                         EntryItem entryItem = new EntryItem(
                                 entry.getId(),
                                 entry.getColour(),
