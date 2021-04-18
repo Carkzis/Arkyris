@@ -243,24 +243,15 @@ public class IrisFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if ("Make this entry public?".equals(choices[which])) {
-                    // if entry public, make private
-                    entryItem.setIsPublic(1);
-                    mIrisViewModel.updatePublic(entryItem);
-                    Toast.makeText(getActivity(),
-                            "To Arke it goes!",
-                            Toast.LENGTH_SHORT).show();
-                } else if ("Make this entry private?".equals(choices[which])) {
                     // if entry private, make public
-                    entryItem.setIsPublic(0);
-                    mIrisViewModel.updatePublic(entryItem);
-                    Toast.makeText(getActivity(),
-                            "Back from Arke it comes!",
-                            Toast.LENGTH_SHORT).show();
+                    deleteOrPublicRemoteEntry(entryItem, "public", 1);
+                } else if ("Make this entry private?".equals(choices[which])) {
+                    // if entry public, make private
+                    deleteOrPublicRemoteEntry(entryItem, "public", 0);
                 } else if ("Delete this entry?".equals(choices[which])) {
                     // delete entry
                     // TODO: create an extra alert for deletion
-                    Log.e(LOG_TAG, String.valueOf(entryItem.getEntryId()));
-                    deleteRemoteEntry(entryItem);
+                    deleteOrPublicRemoteEntry(entryItem, "deleted", 1);
                 } else {
                     // Do nothing
                 }
@@ -269,19 +260,36 @@ public class IrisFragment extends Fragment {
         builder.show();
     }
 
-    public void deleteRemoteEntry(EntryItem entryItem) {
+    /**
+     * Delete an entry, or toggle it between public and private depending on arguments passed.
+     * @param entryItem
+     * @param deleteOrPublic string to decide which field is being updated
+     * @param toggle this is 0 for making an entry private, or 1 for deleting or making entry public
+     */
+    public void deleteOrPublicRemoteEntry(EntryItem entryItem, String deleteOrPublic, int toggle) {
         // this will pass change the flag of an item to deleted, so it will stop
         // being requested from REST
-        HashMap<String, String> deletedEntry = new HashMap<String, String>();
-        deletedEntry.put("deleted", "1");
-        Call<EntryItemRemote> call = entryService.updatePublic(entryItem.getRemoteId(), deletedEntry);
+        HashMap<String, String> updateEntry = new HashMap<String, String>();
+        updateEntry.put(deleteOrPublic, String.valueOf(toggle));
+        Call<EntryItemRemote> call = entryService.updatePublic(entryItem.getRemoteId(), updateEntry);
         call.enqueue(new Callback<EntryItemRemote>() {
             @Override
             public void onResponse(Call<EntryItemRemote> call, Response<EntryItemRemote> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(getActivity(),
-                            "Entry deleted!",
-                            Toast.LENGTH_SHORT).show();
+                    if (deleteOrPublic == "deleted") {
+                        Toast.makeText(getActivity(),
+                                "Entry deleted!",
+                                Toast.LENGTH_SHORT).show();
+                    } else if (toggle == 0) {
+                        Toast.makeText(getActivity(),
+                                "Entry has been made private!",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(),
+                                "Entry has been made public!",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    // refresh after everything has been done
                     refreshLocalDatabase();
                 }
             }
