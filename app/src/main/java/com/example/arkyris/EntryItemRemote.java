@@ -43,6 +43,8 @@ public class EntryItemRemote {
     }
 
     // getters and setters
+    public long getId() { return id; }
+
     public int getColour() { return mColour; }
 
     public int getIsPublic() { return mIsPublic; }

@@ -14,6 +14,9 @@ public interface EntryService {
      * @return
      */
     @GET("public/")
+    Call<List<EntryItemRemote>> getPublicEntries();
+
+    @GET(".")
     Call<List<EntryItemRemote>> getEntries();
 
     @POST("create/")

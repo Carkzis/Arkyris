@@ -286,8 +286,10 @@ public class IrisFragment extends Fragment {
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
+                    //Collections.reverse(entriesList);
                     for (EntryItemRemote entry: entriesList) {
                         EntryItem entryItem = new EntryItem(
+                                entry.getId(),
                                 entry.getColour(),
                                 entry.getDate(),
                                 entry.getTime(),

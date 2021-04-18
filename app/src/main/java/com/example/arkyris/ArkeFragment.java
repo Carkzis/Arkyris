@@ -132,7 +132,7 @@ public class ArkeFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // This will load the items from the database
-        Call<List<EntryItemRemote>> call = entryService.getEntries();
+        Call<List<EntryItemRemote>> call = entryService.getPublicEntries();
         call.enqueue(new Callback<List<EntryItemRemote>>() {
             @Override
             public void onResponse(Call<List<EntryItemRemote>> call, Response<List<EntryItemRemote>> response) {
@@ -238,6 +238,7 @@ public class ArkeFragment extends Fragment {
         String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
         // add a new word to the List
         EntryItem entryItem = new EntryItem(
+                1, // TODO: need to change this
                 mColourName,
                 timeStampDate,
                 timeStampTime,
@@ -288,7 +289,7 @@ public class ArkeFragment extends Fragment {
         // disable refresh layout until loading completed
         mSwipeRefreshLayout.setEnabled(false);
 
-        Call<List<EntryItemRemote>> call = entryService.getEntries();
+        Call<List<EntryItemRemote>> call = entryService.getPublicEntries();
         call.enqueue(new Callback<List<EntryItemRemote>>() {
             @Override
             public void onResponse(Call<List<EntryItemRemote>> call, Response<List<EntryItemRemote>> response) {

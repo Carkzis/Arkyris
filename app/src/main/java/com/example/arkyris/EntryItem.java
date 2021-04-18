@@ -12,6 +12,9 @@ public class EntryItem {
     @ColumnInfo(name = "_entryId")
     public int mEntryId;
 
+    @ColumnInfo(name = "remoteId")
+    public long mRemoteId;
+
     @ColumnInfo(name = "colour")
     private int mColour;
 
@@ -26,8 +29,9 @@ public class EntryItem {
     // 0 for not public, 1 for public
     private int mIsPublic;
 
-    public EntryItem(int colour, String date, String time, int isPublic) {
+    public EntryItem(long remoteId, int colour, String date, String time, int isPublic) {
         mEntryId = 0;
+        mRemoteId = remoteId;
         mDate = date;
         mTime = time;
         mColour = colour;
@@ -40,6 +44,8 @@ public class EntryItem {
      */
 
     public Integer getEntryId() { return mEntryId; }
+
+    public long getRemoteId() { return mRemoteId; }
 
     public String getDate() {
         return mDate;
