@@ -268,6 +268,9 @@ public class ArkeFragment extends Fragment {
             @Override
             public void onFailure(Call<EntryItemRemote> call, Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
+                Toast.makeText(getActivity(),
+                        "Connection error...",
+                        Toast.LENGTH_SHORT).show();
             }
 
         });

@@ -2,13 +2,16 @@ package com.example.arkyris;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -20,10 +23,13 @@ import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,9 +38,13 @@ import java.util.Random;
  */
 public class IrisFragment extends Fragment {
 
+    private static final String LOG_TAG = IrisFragment.class.getSimpleName();
+
     private RecyclerView mRecyclerView;
     private IrisListAdapter mAdapter;
     private int mColourName;
+    EntryService entryService;
+    List<EntryItemRemote> entriesList = new ArrayList<EntryItemRemote>();
 
     // all activity interactions are with the WordViewModel only
     private IrisViewModel mIrisViewModel;
@@ -77,7 +87,7 @@ public class IrisFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_iris, container, false);
-
+        entryService = APIUtils.getEntryService();
         /**
          * This will add a colour entry into the diary.
          * It currently just shows a toast as a placeholder.
@@ -204,12 +214,9 @@ public class IrisFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (getString(R.string.iris_dialogue_yes).equals(choices[which])) {
-                    Toast.makeText(getActivity(),
-                            "To Arke it goes!",
-                            Toast.LENGTH_SHORT).show();
-                    postColour(1);
+                    addRemoteEntry(1);
                 } else if (getString(R.string.iris_dialogue_no).equals(choices[which])) {
-                    postColour(0);
+                    addRemoteEntry(0);
                 } else {
                     // Do nothing
                 }
@@ -264,21 +271,84 @@ public class IrisFragment extends Fragment {
         builder.show();
     }
 
-    public void postColour(int isPublic) {
-        // create timestamps
-        // TODO: make these obey local formatting
-        String timeStampDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-        String timeStampTime = new SimpleDateFormat("HH:mm").format(new Date());
-        // add a new item to the List
-        EntryItem entryItem = new EntryItem(
-                mColourName,
-                timeStampDate,
-                timeStampTime,
-                isPublic); // 0 for private post, 1 for public post (appears on both Arke and Iris)
-        // notify the adapter that data has changed
-        mIrisViewModel.insert(entryItem);
-        // smooth scroll to position
-        mRecyclerView.smoothScrollToPosition(0);
+    /**
+     * This will update the local database using the remote database
+     */
+    public void refreshLocalDatabase() {
+        // truncate table
+        mIrisViewModel.deleteAll();
+
+        Call<List<EntryItemRemote>> call = entryService.getEntries();
+        call.enqueue(new Callback<List<EntryItemRemote>>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<List<EntryItemRemote>> call, Response<List<EntryItemRemote>> response) {
+                if (response.isSuccessful()) {
+                    Log.e(LOG_TAG, "Entries called.");
+                    entriesList = response.body();
+                    for (EntryItemRemote entry: entriesList) {
+                        EntryItem entryItem = new EntryItem(
+                                entry.getColour(),
+                                entry.getDate(),
+                                entry.getTime(),
+                                entry.getIsPublic()
+                        );
+                        mIrisViewModel.insert(entryItem);
+                    }
+
+                    // smooth scroll to position
+                    mRecyclerView.smoothScrollToPosition(0);
+
+                }
+            }
+
+            /**
+             * If the entriesList contains items, it means items are showing,
+             * but there is a new error on refreshing, so a Toast is shown.
+             * Otherwise, the page was already blank from the start,
+             * so a connection error message is shown.
+             * @param call
+             * @param t
+             */
+            @Override
+            public void onFailure(Call<List<EntryItemRemote>> call, Throwable t) {
+                Log.e(LOG_TAG, t.getMessage());
+                Toast.makeText(getActivity(),
+                        "Connection error...",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
+    /**
+     * Add colour to the backend postgreSQL database
+     */
+    public void addRemoteEntry(int isPublic) {
+        // TODO: This will assign a member to the entry
+        EntryItemRemote entry = new EntryItemRemote("Carkzis", mColourName, isPublic);
+        Call<EntryItemRemote> call = entryService.addEntry(entry);
+        call.enqueue(new Callback<EntryItemRemote>() {
+            @Override
+            public void onResponse(Call<EntryItemRemote> call, Response<EntryItemRemote> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getActivity(),
+                            "Entry added!",
+                            Toast.LENGTH_SHORT).show();
+                    //addLocalEntry(isPublic);
+                    refreshLocalDatabase();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EntryItemRemote> call, Throwable throwable) {
+                Log.e(LOG_TAG, throwable.getMessage());
+                Toast.makeText(getActivity(),
+                        "Connection error...",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        });
+    }
+
 
 }
