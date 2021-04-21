@@ -139,12 +139,14 @@ public class ArkeFragment extends Fragment {
                     mSwipeRefreshLayout.setEnabled(true);
 
                     // refresh the local cache for Arke
-                    //refreshArkeCache();
+                    refreshArkeCache();
                 }
             }
 
             @Override
             public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
+
+                // TODO: need to load the cache instead
                 Log.e(LOG_TAG, t.getMessage());
                 mConnectionError.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.INVISIBLE);
@@ -155,6 +157,7 @@ public class ArkeFragment extends Fragment {
 
         // associated the ViewModel with the controller, this persists through config changes
         mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
+        mArkeViewModel = ViewModelProviders.of(this).get(ArkeViewModel.class);
 
         /**
          * Refresh the fragment on swiping down
@@ -277,8 +280,13 @@ public class ArkeFragment extends Fragment {
      * This will update the local database using the remote database
      */
     public void refreshArkeCache() {
-        // truncate table
-        mArkeViewModel.deleteAll();
+
+        try {
+            // truncate table
+            mArkeViewModel.deleteAll();
+        } catch (Exception NullPointerException) {
+            Log.e(LOG_TAG, "Nothing in database to delete.");
+        }
 
         // updates the Arke cache on load
         Call<List<ArkeEntryItem>> call = entryService.getEntries();
@@ -336,6 +344,7 @@ public class ArkeFragment extends Fragment {
                             Toast.LENGTH_SHORT).show();
                     refreshEntriesList();
                     refreshLocalDatabase();
+                    refreshArkeCache();
                 }
             }
 
@@ -376,6 +385,9 @@ public class ArkeFragment extends Fragment {
                     // smooth scroll to position
                     mRecyclerView.smoothScrollToPosition(0);
                     mSwipeRefreshLayout.setEnabled(true);
+
+                    // refresh the cache
+                    refreshArkeCache();
                 }
             }
 
