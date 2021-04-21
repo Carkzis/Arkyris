@@ -6,55 +6,48 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-public class IrisEntryRepository {
+public class ArkeEntryRepository {
 
     // add member variables for DAO and list of words
-    private IrisEntryDao mIrisEntryDao;
-    private LiveData<List<IrisEntryItem>> mAllEntries;
-    private LiveData<List<IrisEntryItem>> mPublicEntries;
+    private ArkeEntryDao mArkeEntryDao;
+    private LiveData<List<ArkeEntryItem>> mPublicEntries;
 
     // constructor to get handle to db and initialise member variables
-    IrisEntryRepository(Application application) {
+    ArkeEntryRepository(Application application) {
         ArkyrisRoomDatabase db = ArkyrisRoomDatabase.getDatabase(application);
-        mIrisEntryDao = db.irisEntryDao();
-        mAllEntries = mIrisEntryDao.getAllEntries();
-        mPublicEntries = mIrisEntryDao.getAllPublicEntries();
+        mArkeEntryDao = db.arkeEntryDao();
+        mPublicEntries = mArkeEntryDao.getAllPublicEntries();
     }
 
     // wrapper method to return cached words as LiveData
     // this is because room executes queries on a separate thread
-    LiveData<List<IrisEntryItem>> getAllEntries() {
-        return mAllEntries;
-    }
-
-    LiveData<List<IrisEntryItem>> getAllPublicEntries() {
+    LiveData<List<ArkeEntryItem>> getAllPublicEntries() {
         return mPublicEntries;
     }
 
     // wrapper for insert() using threads
-    public void insert(IrisEntryItem entry) {
+    public void insert(ArkeEntryItem entry) {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mIrisEntryDao.insert(entry);
+            mArkeEntryDao.insert(entry);
         });
     }
 
     public void deleteAll() {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mIrisEntryDao.deleteAll();
+            mArkeEntryDao.deleteAll();
         });
     }
 
-    public void deleteEntry(IrisEntryItem entry) {
+    public void deleteEntry(ArkeEntryItem entry) {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mIrisEntryDao.deleteEntry(entry);
+            mArkeEntryDao.deleteEntry(entry);
         });
     }
 
-    public void updatePublic(IrisEntryItem entry) {
+    public void updatePublic(ArkeEntryItem entry) {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mIrisEntryDao.updatePublic(entry);
+            mArkeEntryDao.updatePublic(entry);
         });
     }
-
 
 }

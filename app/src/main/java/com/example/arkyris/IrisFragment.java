@@ -124,6 +124,8 @@ public class IrisFragment extends Fragment {
         // associated the ViewModel with the controller, this persists through config changes
         mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
 
+        refreshLocalDatabase();
+
         // an observer sees when the data is changed while the activity is open,
         // and updates the data in the adapter
         mIrisViewModel.getAllEntries().observe(getActivity(), new Observer<List<IrisEntryItem>>() {
@@ -320,7 +322,7 @@ public class IrisFragment extends Fragment {
                     for (IrisEntryItem entry: entriesList) {
                         Log.e(LOG_TAG, String.valueOf(entry.getId()));
                         IrisEntryItem entryItem = new IrisEntryItem(
-                                entry.getId(),
+                                entry.getRemoteId(),
                                 entry.getDateTime(),
                                 entry.getColour(),
                                 entry.getIsPublic()

@@ -23,26 +23,32 @@ public class ArkeEntryItem {
 
     // Note to self: calling it pk and also id is very confusing.
     @SerializedName("pk")
+    @ColumnInfo(name = "remoteId")
     @Expose
     private String mRemoteId;
 
     @SerializedName("user")
+    @ColumnInfo(name = "user")
     @Expose
     private String mName;
 
     @SerializedName("colour")
+    @ColumnInfo(name = "colour")
     @Expose
     private int mColour;
 
     @SerializedName("date_time")
+    @ColumnInfo(name = "date_time")
     @Expose
     private String mDateTime;
 
     @SerializedName("deleted")
+    @ColumnInfo(name = "deleted")
     @Expose
     private int mIsDeleted;
 
     @SerializedName("public")
+    @ColumnInfo(name = "public")
     @Expose
     private int mIsPublic;
 
@@ -53,7 +59,11 @@ public class ArkeEntryItem {
     }
 
     // getters and setters
-    public String getId() { return mRemoteId; }
+    public int getId() { return mEntryId; }
+
+    public String getRemoteId() { return mRemoteId; }
+
+    public String getName() { return mName; }
 
     public int getColour() { return mColour; }
 
@@ -75,4 +85,19 @@ public class ArkeEntryItem {
         return localDateTime.format(formatter);
     }
 
+    public int getIsDeleted() {
+        return mIsDeleted;
+    }
+
+    public void setIsDeleted(int mIsDeleted) {
+        this.mIsDeleted = mIsDeleted;
+    }
+
+    public void setRemoteId(String mRemoteId) {
+        this.mRemoteId = mRemoteId;
+    }
+
+    public void setDateTime(String mDateTime) {
+        this.mDateTime = mDateTime;
+    }
 }

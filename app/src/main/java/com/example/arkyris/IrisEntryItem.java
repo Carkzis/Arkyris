@@ -66,7 +66,7 @@ public class IrisEntryItem {
      */
 
     // getters and setters
-    public String getId() { return mRemoteId; }
+    public int getId() { return mEntryId; }
 
     public String getName() { return mName; }
 

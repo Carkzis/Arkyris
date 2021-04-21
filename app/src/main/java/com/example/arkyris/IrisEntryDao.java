@@ -20,7 +20,7 @@ public interface IrisEntryDao {
     void deleteAll();
 
     // LiveData helps app respond to data changes
-    @Query("SELECT * FROM iris_entry_table ORDER BY _entryId DESC")
+    @Query("SELECT * FROM iris_entry_table ORDER BY date_time DESC")
     LiveData<List<IrisEntryItem>> getAllEntries();
 
     // Just get public entries
@@ -34,8 +34,7 @@ public interface IrisEntryDao {
     @Delete
     void deleteEntry(IrisEntryItem entry);
 
-    // TODO: This will toggle whether an item is consider public or not
-    // Needs looking into how this is achieved; it is incomplete
+    // Toggles whether an item is consider public or not
     @Update
     void updatePublic(IrisEntryItem entry);
 

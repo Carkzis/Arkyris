@@ -239,7 +239,7 @@ public class ArkeFragment extends Fragment {
                     //Collections.reverse(entriesList);
                     for (ArkeEntryItem entry : entriesList) {
                         IrisEntryItem entryItem = new IrisEntryItem(
-                                entry.getId(),
+                                entry.getRemoteId(),
                                 entry.getDateTime(),
                                 entry.getColour(),
                                 entry.getIsPublic()

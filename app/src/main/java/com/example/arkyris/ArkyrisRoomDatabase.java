@@ -11,11 +11,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {IrisEntryItem.class}, version = 8, exportSchema = false)
+@Database(entities = {IrisEntryItem.class, ArkeEntryItem.class}, version = 10, exportSchema = false)
 public abstract class ArkyrisRoomDatabase extends RoomDatabase {
 
     // abstract getting method for Dao
-    public abstract IrisEntryDao entryDao();
+    public abstract IrisEntryDao irisEntryDao();
+    public abstract ArkeEntryDao arkeEntryDao();
 
     // make volatile to ensure atomic access to variable, prevent
     // concurrency issues (volatile makes state true across all threads)
@@ -49,9 +50,16 @@ public abstract class ArkyrisRoomDatabase extends RoomDatabase {
 
             databaseWriteExecutor.execute(() -> {
                 // Populate database in the background
-                IrisEntryDao dao = INSTANCE.entryDao();
+                IrisEntryDao dao = INSTANCE.irisEntryDao();
 
             });
+
+            databaseWriteExecutor.execute(() -> {
+                // Populate database in the background
+                ArkeEntryDao dao = INSTANCE.arkeEntryDao();
+
+            });
+
         }
 
     };
