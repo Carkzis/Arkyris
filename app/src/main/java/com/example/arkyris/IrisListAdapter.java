@@ -1,6 +1,7 @@
 package com.example.arkyris;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -17,7 +19,7 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
     private static final String LOG_TAG = IrisListAdapter.class.getSimpleName();
 
     private final LayoutInflater mInflater;
-    private List<EntryItem> mEntries; // Cached copy of words
+    private List<IrisEntryItem> mEntries; // Cached copy of words
     private static ClickListener clickListener;
 
     public IrisListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
@@ -36,16 +38,17 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
         return new IrisViewHolder(mItemView, this);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull IrisListAdapter.IrisViewHolder holder, int position) {
-        EntryItem mCurrent = mEntries.get(position);
+        IrisEntryItem mCurrent = mEntries.get(position);
         holder.mImageView.setImageResource(R.drawable.colour_circle);
         holder.mImageView.setColorFilter(mCurrent.getColour());
         holder.mDateView.setText(mCurrent.getDate());
         holder.mTimeView.setText(mCurrent.getTime());
     }
 
-    void setEntries(List<EntryItem> entries){
+    void setEntries(List<IrisEntryItem> entries){
         mEntries = entries;
         notifyDataSetChanged();
     }
@@ -82,7 +85,7 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
         }
     }
 
-    public EntryItem getEntryAtPosition(int position) {
+    public IrisEntryItem getEntryAtPosition(int position) {
         return mEntries.get(position);
     }
 

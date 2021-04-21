@@ -17,15 +17,26 @@ public interface EntryService {
      * @return
      */
     @GET("public/")
-    Call<List<EntryItemRemote>> getPublicEntries();
+    Call<List<ArkeEntryItem>> getPublicEntries();
 
     @GET(".")
-    Call<List<EntryItemRemote>> getEntries();
+    Call<List<ArkeEntryItem>> getEntries();
 
     @POST("create/")
-    Call<EntryItemRemote> addEntry(@Body EntryItemRemote entry);
+    Call<ArkeEntryItem> addEntry(@Body ArkeEntryItem entry);
 
     @PATCH("update/{id}/")
-    Call<EntryItemRemote> updatePublic(@Path("id") String id, @Body HashMap<String, String> updateFields);
+    Call<IrisEntryItem> updatePublic(@Path("id") String id, @Body HashMap<String, String> updateFields);
+
+    /**
+     * This is only for private posts, i.e. Iris
+     * @return
+     */
+    @GET(".")
+    Call<List<IrisEntryItem>> getPrivateEntries();
+
+    // overloaded method
+    @POST("create/")
+    Call<IrisEntryItem> addEntry(@Body IrisEntryItem entry);
 
 }

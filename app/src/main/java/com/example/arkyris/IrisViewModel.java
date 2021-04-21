@@ -9,29 +9,29 @@ import java.util.List;
 
 public class IrisViewModel extends AndroidViewModel {
 
-    private EntryRepository mRepository;
-    private LiveData<List<EntryItem>> mAllEntries;
+    private IrisEntryRepository mRepository;
+    private LiveData<List<IrisEntryItem>> mAllEntries;
 
     public IrisViewModel (Application application) {
         super(application);
-        mRepository = new EntryRepository(application);
+        mRepository = new IrisEntryRepository(application);
         mAllEntries = mRepository.getAllEntries();
     }
 
     // getter method for getting all the words,
     // hides implementation from the UI
-    LiveData<List<EntryItem>> getAllEntries() { return mAllEntries; }
+    LiveData<List<IrisEntryItem>> getAllEntries() { return mAllEntries; }
 
     // wrapper for insert that calls Repository's insert() method,
     // hides implementation of insert() from UI
-    public void insert(EntryItem entry) { mRepository.insert(entry); }
+    public void insert(IrisEntryItem entry) { mRepository.insert(entry); }
 
     // This is only for testing purposes
     public void deleteAll() { mRepository.deleteAll(); }
 
     // Delete a single entry
-    public void deleteEntry(EntryItem entry) { mRepository.deleteEntry(entry); }
+    public void deleteEntry(IrisEntryItem entry) { mRepository.deleteEntry(entry); }
 
     // Toggle the public option for an individual entry on or off
-    public void updatePublic(EntryItem entry) { mRepository.updatePublic(entry); }
+    public void updatePublic(IrisEntryItem entry) { mRepository.updatePublic(entry); }
 }

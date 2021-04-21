@@ -32,11 +32,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link IrisFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class IrisFragment extends Fragment {
 
     private static final String LOG_TAG = IrisFragment.class.getSimpleName();
@@ -45,12 +40,12 @@ public class IrisFragment extends Fragment {
     private IrisListAdapter mAdapter;
     private int mColourName;
     EntryService entryService;
-    List<EntryItemRemote> entriesList = new ArrayList<EntryItemRemote>();
+    List<IrisEntryItem> entriesList = new ArrayList<IrisEntryItem>();
 
     // all activity interactions are with the WordViewModel only
     private IrisViewModel mIrisViewModel;
 
-    // Placeholder to test changing colours of entries
+    // Random colours
     private static final String[] mColourArray = {"red", "pink", "purple", "deep_purple",
             "indigo", "blue", "light_blue", "cyan", "teal", "green",
             "light_green", "lime", "yellow", "amber", "orange", "deep_orange",
@@ -131,9 +126,9 @@ public class IrisFragment extends Fragment {
 
         // an observer sees when the data is changed while the activity is open,
         // and updates the data in the adapter
-        mIrisViewModel.getAllEntries().observe(getActivity(), new Observer<List<EntryItem>>() {
+        mIrisViewModel.getAllEntries().observe(getActivity(), new Observer<List<IrisEntryItem>>() {
             @Override
-            public void onChanged(List<EntryItem> entries) {
+            public void onChanged(List<IrisEntryItem> entries) {
                 // update cached copy of words in adapter
                 mAdapter.setEntries(entries);
             }
@@ -141,7 +136,7 @@ public class IrisFragment extends Fragment {
 
         // delete an item on long click
         mAdapter.setOnItemClickListener((v, position) -> {
-            EntryItem entryItem = mAdapter.getEntryAtPosition(position);
+            IrisEntryItem entryItem = mAdapter.getEntryAtPosition(position);
 
             // call method to decide what to do with entry
             deleteOrPublicAlert(entryItem);
@@ -226,7 +221,7 @@ public class IrisFragment extends Fragment {
         builder.show();
     }
 
-    public void deleteOrPublicAlert(EntryItem entryItem) {
+    public void deleteOrPublicAlert(IrisEntryItem entryItem) {
         // initial choices
         String [] choices = {
                 "Make this entry public?",
@@ -266,15 +261,15 @@ public class IrisFragment extends Fragment {
      * @param deleteOrPublic string to decide which field is being updated
      * @param toggle this is 0 for making an entry private, or 1 for deleting or making entry public
      */
-    public void deleteOrPublicRemoteEntry(EntryItem entryItem, String deleteOrPublic, int toggle) {
+    public void deleteOrPublicRemoteEntry(IrisEntryItem entryItem, String deleteOrPublic, int toggle) {
         // this will pass change the flag of an item to deleted, so it will stop
         // being requested from REST
         HashMap<String, String> updateEntry = new HashMap<String, String>();
         updateEntry.put(deleteOrPublic, String.valueOf(toggle));
-        Call<EntryItemRemote> call = entryService.updatePublic(entryItem.getRemoteId(), updateEntry);
-        call.enqueue(new Callback<EntryItemRemote>() {
+        Call<IrisEntryItem> call = entryService.updatePublic(entryItem.getRemoteId(), updateEntry);
+        call.enqueue(new Callback<IrisEntryItem>() {
             @Override
-            public void onResponse(Call<EntryItemRemote> call, Response<EntryItemRemote> response) {
+            public void onResponse(Call<IrisEntryItem> call, Response<IrisEntryItem> response) {
                 if (response.isSuccessful()) {
                     if (deleteOrPublic == "deleted") {
                         Toast.makeText(getActivity(),
@@ -295,7 +290,7 @@ public class IrisFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<EntryItemRemote> call, Throwable throwable) {
+            public void onFailure(Call<IrisEntryItem> call, Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 Toast.makeText(getActivity(),
                         "Connection error...",
@@ -313,22 +308,21 @@ public class IrisFragment extends Fragment {
         mIrisViewModel.deleteAll();
 
         // TODO: this should only update the local database with the user's entries
-        Call<List<EntryItemRemote>> call = entryService.getEntries();
-        call.enqueue(new Callback<List<EntryItemRemote>>() {
+        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries();
+        call.enqueue(new Callback<List<IrisEntryItem>>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onResponse(Call<List<EntryItemRemote>> call, Response<List<EntryItemRemote>> response) {
+            public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
                     //Collections.reverse(entriesList);
-                    for (EntryItemRemote entry: entriesList) {
+                    for (IrisEntryItem entry: entriesList) {
                         Log.e(LOG_TAG, String.valueOf(entry.getId()));
-                        EntryItem entryItem = new EntryItem(
+                        IrisEntryItem entryItem = new IrisEntryItem(
                                 entry.getId(),
+                                entry.getDateTime(),
                                 entry.getColour(),
-                                entry.getDate(),
-                                entry.getTime(),
                                 entry.getIsPublic()
                         );
                         mIrisViewModel.insert(entryItem);
@@ -346,7 +340,7 @@ public class IrisFragment extends Fragment {
              * @param t
              */
             @Override
-            public void onFailure(Call<List<EntryItemRemote>> call, Throwable t) {
+            public void onFailure(Call<List<IrisEntryItem>> call, Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
                 Toast.makeText(getActivity(),
                         "Connection error...",
@@ -360,11 +354,11 @@ public class IrisFragment extends Fragment {
      */
     public void addRemoteEntry(int isPublic) {
         // TODO: This will assign a member to the entry
-        EntryItemRemote entry = new EntryItemRemote("Carkzis", mColourName, isPublic);
-        Call<EntryItemRemote> call = entryService.addEntry(entry);
-        call.enqueue(new Callback<EntryItemRemote>() {
+        ArkeEntryItem entry = new ArkeEntryItem("Carkzis", mColourName, isPublic);
+        Call<ArkeEntryItem> call = entryService.addEntry(entry);
+        call.enqueue(new Callback<ArkeEntryItem>() {
             @Override
-            public void onResponse(Call<EntryItemRemote> call, Response<EntryItemRemote> response) {
+            public void onResponse(Call<ArkeEntryItem> call, Response<ArkeEntryItem> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(getActivity(),
                             "Entry added!",
@@ -375,7 +369,7 @@ public class IrisFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<EntryItemRemote> call, Throwable throwable) {
+            public void onFailure(Call<ArkeEntryItem> call, Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 Toast.makeText(getActivity(),
                         "Connection error...",

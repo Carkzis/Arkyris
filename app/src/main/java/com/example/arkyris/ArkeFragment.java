@@ -29,12 +29,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ArkeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ArkeFragment extends Fragment {
 
     private static final String LOG_TAG = ArkeFragment.class.getSimpleName();
@@ -43,7 +37,7 @@ public class ArkeFragment extends Fragment {
     private ArkeListAdapter mAdapter;
     private int mColourName;
     EntryService entryService;
-    List<EntryItemRemote> entriesList = new ArrayList<EntryItemRemote>();
+    List<ArkeEntryItem> entriesList = new ArrayList<ArkeEntryItem>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     // textview for when there is a connection error
@@ -108,19 +102,12 @@ public class ArkeFragment extends Fragment {
 
         final FloatingActionButton fab = rootView.findViewById(R.id.arke_fab);
         fab.setOnClickListener(view -> {
-            // TODO: enter into a database
             // get a random colour, to initially display to the user in the color picker dialogue.
             mColourName = changeColour();
             // This will open a dialogue to enter a colour.
             openColourPickerDialogue();
 
         });
-
-        /**
-        // Create a placeholder list of words for RecycleView.
-        // TODO: obtain items from database
-        // TODO: show a different item for the end, "e.g. there are no more entries"
-         */
 
         // connection error text view
         mConnectionError = rootView.findViewById(R.id.connection_error);
@@ -138,10 +125,10 @@ public class ArkeFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // This will load the items from the database
-        Call<List<EntryItemRemote>> call = entryService.getPublicEntries();
-        call.enqueue(new Callback<List<EntryItemRemote>>() {
+        Call<List<ArkeEntryItem>> call = entryService.getPublicEntries();
+        call.enqueue(new Callback<List<ArkeEntryItem>>() {
             @Override
-            public void onResponse(Call<List<EntryItemRemote>> call, Response<List<EntryItemRemote>> response) {
+            public void onResponse(Call<List<ArkeEntryItem>> call, Response<List<ArkeEntryItem>> response) {
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
@@ -153,7 +140,7 @@ public class ArkeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<EntryItemRemote>> call, Throwable t) {
+            public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
                 mConnectionError.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.INVISIBLE);
@@ -241,21 +228,20 @@ public class ArkeFragment extends Fragment {
         mIrisViewModel.deleteAll();
 
         // TODO: this should only update the local database with the user's entries
-        Call<List<EntryItemRemote>> call = entryService.getEntries();
-        call.enqueue(new Callback<List<EntryItemRemote>>() {
+        Call<List<ArkeEntryItem>> call = entryService.getEntries();
+        call.enqueue(new Callback<List<ArkeEntryItem>>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onResponse(Call<List<EntryItemRemote>> call, Response<List<EntryItemRemote>> response) {
+            public void onResponse(Call<List<ArkeEntryItem>> call, Response<List<ArkeEntryItem>> response) {
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
                     //Collections.reverse(entriesList);
-                    for (EntryItemRemote entry : entriesList) {
-                        EntryItem entryItem = new EntryItem(
+                    for (ArkeEntryItem entry : entriesList) {
+                        IrisEntryItem entryItem = new IrisEntryItem(
                                 entry.getId(),
+                                entry.getDateTime(),
                                 entry.getColour(),
-                                entry.getDate(),
-                                entry.getTime(),
                                 entry.getIsPublic()
                         );
                         mIrisViewModel.insert(entryItem);
@@ -273,7 +259,7 @@ public class ArkeFragment extends Fragment {
                  * @param t
                  */
                 @Override
-                public void onFailure(Call<List<EntryItemRemote>> call, Throwable t) {
+                public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
                     Log.e(LOG_TAG, t.getMessage());
                     Toast.makeText(getActivity(),
                             "Connection error...",
@@ -287,11 +273,11 @@ public class ArkeFragment extends Fragment {
      */
     public void addRemoteEntry() {
         // TODO: This will assign a member to the entry
-        EntryItemRemote entry = new EntryItemRemote("Carkzis", mColourName, 1);
-        Call<EntryItemRemote> call = entryService.addEntry(entry);
-        call.enqueue(new Callback<EntryItemRemote>() {
+        ArkeEntryItem entry = new ArkeEntryItem("Carkzis", mColourName, 1);
+        Call<ArkeEntryItem> call = entryService.addEntry(entry);
+        call.enqueue(new Callback<ArkeEntryItem>() {
             @Override
-            public void onResponse(Call<EntryItemRemote> call, Response<EntryItemRemote> response) {
+            public void onResponse(Call<ArkeEntryItem> call, Response<ArkeEntryItem> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(getActivity(),
                             "Entry added!",
@@ -302,7 +288,7 @@ public class ArkeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<EntryItemRemote> call, Throwable throwable) {
+            public void onFailure(Call<ArkeEntryItem> call, Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 Toast.makeText(getActivity(),
                         "Connection error...",
@@ -324,10 +310,10 @@ public class ArkeFragment extends Fragment {
         // disable refresh layout until loading completed
         mSwipeRefreshLayout.setEnabled(false);
 
-        Call<List<EntryItemRemote>> call = entryService.getPublicEntries();
-        call.enqueue(new Callback<List<EntryItemRemote>>() {
+        Call<List<ArkeEntryItem>> call = entryService.getPublicEntries();
+        call.enqueue(new Callback<List<ArkeEntryItem>>() {
             @Override
-            public void onResponse(Call<List<EntryItemRemote>> call, Response<List<EntryItemRemote>> response) {
+            public void onResponse(Call<List<ArkeEntryItem>> call, Response<List<ArkeEntryItem>> response) {
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Entries called.");
                     mConnectionError.setVisibility(View.GONE);
@@ -350,7 +336,7 @@ public class ArkeFragment extends Fragment {
              * @param t
              */
             @Override
-            public void onFailure(Call<List<EntryItemRemote>> call, Throwable t) {
+            public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
                 getActivity().findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                 mSwipeRefreshLayout.setEnabled(true);

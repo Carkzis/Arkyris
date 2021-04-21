@@ -6,53 +6,53 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-public class EntryRepository {
+public class IrisEntryRepository {
 
     // add member variables for DAO and list of words
-    private EntryDao mEntryDao;
-    private LiveData<List<EntryItem>> mAllEntries;
-    private LiveData<List<EntryItem>> mPublicEntries;
+    private IrisEntryDao mIrisEntryDao;
+    private LiveData<List<IrisEntryItem>> mAllEntries;
+    private LiveData<List<IrisEntryItem>> mPublicEntries;
 
     // constructor to get handle to db and initialise member variables
-    EntryRepository(Application application) {
+    IrisEntryRepository(Application application) {
         ArkyrisRoomDatabase db = ArkyrisRoomDatabase.getDatabase(application);
-        mEntryDao = db.entryDao();
-        mAllEntries = mEntryDao.getAllEntries();
-        mPublicEntries = mEntryDao.getAllPublicEntries();
+        mIrisEntryDao = db.entryDao();
+        mAllEntries = mIrisEntryDao.getAllEntries();
+        mPublicEntries = mIrisEntryDao.getAllPublicEntries();
     }
 
     // wrapper method to return cached words as LiveData
     // this is because room executes queries on a separate thread
-    LiveData<List<EntryItem>> getAllEntries() {
+    LiveData<List<IrisEntryItem>> getAllEntries() {
         return mAllEntries;
     }
 
-    LiveData<List<EntryItem>> getAllPublicEntries() {
+    LiveData<List<IrisEntryItem>> getAllPublicEntries() {
         return mPublicEntries;
     }
 
     // wrapper for insert() using threads
-    public void insert(EntryItem entry) {
+    public void insert(IrisEntryItem entry) {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mEntryDao.insert(entry);
+            mIrisEntryDao.insert(entry);
         });
     }
 
     public void deleteAll() {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mEntryDao.deleteAll();
+            mIrisEntryDao.deleteAll();
         });
     }
 
-    public void deleteEntry(EntryItem entry) {
+    public void deleteEntry(IrisEntryItem entry) {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mEntryDao.deleteEntry(entry);
+            mIrisEntryDao.deleteEntry(entry);
         });
     }
 
-    public void updatePublic(EntryItem entry) {
+    public void updatePublic(IrisEntryItem entry) {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mEntryDao.updatePublic(entry);
+            mIrisEntryDao.updatePublic(entry);
         });
     }
 

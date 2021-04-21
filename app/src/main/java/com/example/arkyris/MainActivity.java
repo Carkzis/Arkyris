@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.arkyris.sandbox.SandboxActivity;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
@@ -84,8 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intentAbout);
                 return true;
             case R.id.menu_sandbox:
-                Intent intentSandbox = new Intent(MainActivity.this, SandboxActivity.class);
-                startActivity(intentSandbox);
+                Toast.makeText(this, "Sandbox removed for now...", Toast.LENGTH_SHORT).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);

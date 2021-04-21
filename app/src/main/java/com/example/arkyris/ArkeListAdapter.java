@@ -20,7 +20,7 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
 
     private final LayoutInflater mInflater;
     private Context context;
-    private List<EntryItemRemote> mEntries; // Cached copy of words
+    private List<ArkeEntryItem> mEntries; // Cached copy of words
 
     public ArkeListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
 
@@ -46,14 +46,14 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ArkeListAdapter.ArkeViewHolder holder, int position) {
-        EntryItemRemote mCurrent = mEntries.get(position);
+        ArkeEntryItem mCurrent = mEntries.get(position);
         holder.mImageView.setImageResource(R.drawable.colour_rectangle);
         holder.mImageView.setColorFilter(mCurrent.getColour());
         holder.mDateView.setText(mCurrent.getDate());
         holder.mTimeView.setText(mCurrent.getTime());
     }
 
-    void setEntries(List<EntryItemRemote> entries){
+    void setEntries(List<ArkeEntryItem> entries){
         mEntries = entries;
         notifyDataSetChanged();
     }

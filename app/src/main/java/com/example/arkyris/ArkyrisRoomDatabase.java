@@ -11,11 +11,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {EntryItem.class}, version = 7, exportSchema = false)
+@Database(entities = {IrisEntryItem.class}, version = 8, exportSchema = false)
 public abstract class ArkyrisRoomDatabase extends RoomDatabase {
 
     // abstract getting method for Dao
-    public abstract EntryDao entryDao();
+    public abstract IrisEntryDao entryDao();
 
     // make volatile to ensure atomic access to variable, prevent
     // concurrency issues (volatile makes state true across all threads)
@@ -33,7 +33,6 @@ public abstract class ArkyrisRoomDatabase extends RoomDatabase {
                             ArkyrisRoomDatabase.class, "arkyris_database")
                             // wipe and rebuild instead of migrating if no
                             // migration object
-                            // TODO: look into migrations
                             .fallbackToDestructiveMigration()
                             .addCallback(sRoomDatabaseCallback)
                             .build();
@@ -48,12 +47,9 @@ public abstract class ArkyrisRoomDatabase extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
 
-            // Placeholder to test changing colours of entries
-            Integer[] colourArray = {R.color.red, R.color.blue, R.color.green};
-
             databaseWriteExecutor.execute(() -> {
                 // Populate database in the background
-                EntryDao dao = INSTANCE.entryDao();
+                IrisEntryDao dao = INSTANCE.entryDao();
 
             });
         }
