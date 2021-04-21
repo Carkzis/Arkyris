@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -82,7 +83,7 @@ public class ArkeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        refreshEntriesList();
+        //refreshEntriesList();
     }
 
     /**
@@ -148,11 +149,22 @@ public class ArkeFragment extends Fragment {
 
                 // TODO: need to load the cache instead
                 Log.e(LOG_TAG, t.getMessage());
-                mConnectionError.setVisibility(View.VISIBLE);
+                //mConnectionError.setVisibility(View.VISIBLE);
                 fab.setVisibility(View.INVISIBLE);
                 rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                 mSwipeRefreshLayout.setEnabled(true);
+                // an observer sees when the data is changed while the activity is open,
+                // and updates the data in the adapter
+                mArkeViewModel.getPublicEntries().observe(getActivity(), new Observer<List<ArkeEntryItem>>() {
+                    @Override
+                    public void onChanged(List<ArkeEntryItem> entries) {
+                        // update cached copy of words in adapter
+                        mAdapter.setEntries(entries);
+                    }
+                });
+
             }
+
         });
 
         // associated the ViewModel with the controller, this persists through config changes
@@ -168,6 +180,8 @@ public class ArkeFragment extends Fragment {
             @Override
             public void onRefresh() {
                 refreshEntriesList();
+                // remove observers, as this was only for observing the cache when no connection
+                mArkeViewModel.getPublicEntries().removeObservers(getActivity());
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -366,8 +380,6 @@ public class ArkeFragment extends Fragment {
 
         // show the loading indicator
         getActivity().findViewById(R.id.loading_indicator).setVisibility(View.VISIBLE);
-        // set this to gone, whether or not it is already set as such
-        mConnectionError.setVisibility(View.GONE);
         // disable refresh layout until loading completed
         mSwipeRefreshLayout.setEnabled(false);
 
@@ -377,7 +389,7 @@ public class ArkeFragment extends Fragment {
             public void onResponse(Call<List<ArkeEntryItem>> call, Response<List<ArkeEntryItem>> response) {
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Entries called.");
-                    mConnectionError.setVisibility(View.GONE);
+                    ///mConnectionError.setVisibility(View.GONE);
                     getActivity().findViewById(R.id.arke_fab).setVisibility(View.VISIBLE);
                     entriesList = response.body();
                     mAdapter.setEntries(entriesList);
@@ -404,14 +416,11 @@ public class ArkeFragment extends Fragment {
                 Log.e(LOG_TAG, t.getMessage());
                 getActivity().findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                 mSwipeRefreshLayout.setEnabled(true);
-                if (entriesList.size() > 0) {
-                    Toast.makeText(getActivity(),
-                            "Connection error...",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    mConnectionError.setVisibility(View.VISIBLE);
+                Toast.makeText(getActivity(),
+                        "Connection error...",
+                        Toast.LENGTH_SHORT).show();
                 }
-            }
+
         });
 
     }
