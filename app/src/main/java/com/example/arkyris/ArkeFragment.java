@@ -45,6 +45,7 @@ public class ArkeFragment extends Fragment {
 
     // all activity interactions are with the WordViewModel only
     private IrisViewModel mIrisViewModel;
+    private ArkeViewModel mArkeViewModel;
 
     // Placeholder to test changing colours of entries
     private static final String[] mColourArray = {"red", "pink", "purple", "deep_purple",
@@ -136,6 +137,9 @@ public class ArkeFragment extends Fragment {
                     fab.setVisibility(View.VISIBLE);
                     rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                     mSwipeRefreshLayout.setEnabled(true);
+
+                    // refresh the local cache for Arke
+                    //refreshArkeCache();
                 }
             }
 
@@ -267,6 +271,54 @@ public class ArkeFragment extends Fragment {
                 }
             });
         }
+
+
+    /**
+     * This will update the local database using the remote database
+     */
+    public void refreshArkeCache() {
+        // truncate table
+        mArkeViewModel.deleteAll();
+
+        // updates the Arke cache on load
+        Call<List<ArkeEntryItem>> call = entryService.getEntries();
+        call.enqueue(new Callback<List<ArkeEntryItem>>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<List<ArkeEntryItem>> call, Response<List<ArkeEntryItem>> response) {
+                if (response.isSuccessful()) {
+                    Log.e(LOG_TAG, "Entries called.");
+                    entriesList = response.body();
+                    //Collections.reverse(entriesList);
+                    for (ArkeEntryItem entry : entriesList) {
+                        ArkeEntryItem entryItem = new ArkeEntryItem(
+                                entry.getRemoteId(),
+                                entry.getDateTime(),
+                                entry.getColour(),
+                                entry.getIsPublic()
+                        );
+                        mArkeViewModel.insert(entryItem);
+                    }
+
+                    // smooth scroll to position
+                    mRecyclerView.smoothScrollToPosition(0);
+                }
+            }
+
+            /**
+             * Show a connection error toast.
+             * @param call
+             * @param t
+             */
+            @Override
+            public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
+                Log.e(LOG_TAG, t.getMessage());
+                Toast.makeText(getActivity(),
+                        "Connection error...",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     /**
      * Add colour to the backend postgreSQL database

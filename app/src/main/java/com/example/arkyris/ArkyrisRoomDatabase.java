@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {IrisEntryItem.class, ArkeEntryItem.class}, version = 10, exportSchema = false)
+@Database(entities = {IrisEntryItem.class, ArkeEntryItem.class}, version = 12, exportSchema = false)
 public abstract class ArkyrisRoomDatabase extends RoomDatabase {
 
     // abstract getting method for Dao

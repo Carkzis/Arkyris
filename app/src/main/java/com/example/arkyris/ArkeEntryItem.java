@@ -5,6 +5,7 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
@@ -21,7 +22,7 @@ public class ArkeEntryItem {
     @ColumnInfo(name = "_entryId")
     public int mEntryId;
 
-    // Note to self: calling it pk and also id is very confusing.
+     //Note to self: calling it pk and also id is very confusing.
     @SerializedName("pk")
     @ColumnInfo(name = "remoteId")
     @Expose
@@ -52,11 +53,21 @@ public class ArkeEntryItem {
     @Expose
     private int mIsPublic;
 
+    @Ignore
+    public ArkeEntryItem(String remoteId, String dateTime, int colour, int isPublic) {
+            mEntryId = 0;
+            mRemoteId = remoteId;
+            mDateTime = dateTime;
+            mColour = colour;
+            mIsPublic = isPublic;
+        }
+
     public ArkeEntryItem(String name, int colour, int isPublic) {
-        mName = name;
-        mColour = colour;
-        mIsPublic = isPublic;
-    }
+            mEntryId = 0;
+            mName = name;
+            mColour = colour;
+            mIsPublic = isPublic;
+        }
 
     // getters and setters
     public int getId() { return mEntryId; }
@@ -100,4 +111,9 @@ public class ArkeEntryItem {
     public void setDateTime(String mDateTime) {
         this.mDateTime = mDateTime;
     }
+
+    public void setName(String mName) {
+        this.mName = mName;
+    }
+
 }
