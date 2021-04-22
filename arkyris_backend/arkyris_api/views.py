@@ -15,6 +15,11 @@ class EntryList(generics.ListAPIView):
     queryset = Entry.objects.filter(deleted=0).order_by('date_time')
     serializer_class = EntrySerializer
 
+class EntryListMember(generics.ListAPIView):
+    # Allows entries to be listed and viewed
+    queryset = Entry.objects.filter(deleted=0).order_by('-date_time')
+    serializer_class = EntrySerializer
+
 class EntryListPublic(generics.ListAPIView):
     # Allows entries to be listed and viewed
     queryset = Entry.objects.filter(public=1, deleted=0).order_by('-date_time')

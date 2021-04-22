@@ -19,7 +19,7 @@ public interface ArkeEntryDao {
     @Query("DELETE FROM arke_entry_table")
     void deleteAll();
 
-    @Query("SELECT * FROM arke_entry_table ORDER BY date_time DESC")
+    @Query("SELECT * FROM arke_entry_table WHERE public = 1 ORDER BY date_time DESC")
     LiveData<List<ArkeEntryItem>> getAllPublicEntries();
 
     @Query("SELECT * FROM arke_entry_table LIMIT 1")

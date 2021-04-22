@@ -32,7 +32,7 @@ public interface EntryService {
      * This is only for private posts, i.e. Iris
      * @return
      */
-    @GET(".")
+    @GET("private/")
     Call<List<IrisEntryItem>> getPrivateEntries();
 
     // overloaded method

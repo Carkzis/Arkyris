@@ -153,6 +153,8 @@ public class ArkeFragment extends Fragment {
                 fab.setVisibility(View.INVISIBLE);
                 rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                 mSwipeRefreshLayout.setEnabled(true);
+                fab.setVisibility(View.VISIBLE);
+                displayConnectionErrorMessage();
                 // an observer sees when the data is changed while the activity is open,
                 // and updates the data in the adapter
                 mArkeViewModel.getPublicEntries().observe(getActivity(), new Observer<List<ArkeEntryItem>>() {
@@ -244,7 +246,7 @@ public class ArkeFragment extends Fragment {
     /**
      * This will update the local database using the remote database
      */
-    public void refreshLocalDatabase() {
+    public void refreshIrisCache() {
         // truncate table
         mIrisViewModel.deleteAll();
 
@@ -282,9 +284,7 @@ public class ArkeFragment extends Fragment {
                 @Override
                 public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
                     Log.e(LOG_TAG, t.getMessage());
-                    Toast.makeText(getActivity(),
-                            "Connection error...",
-                            Toast.LENGTH_SHORT).show();
+                    displayConnectionErrorMessage();
                 }
             });
         }
@@ -335,9 +335,7 @@ public class ArkeFragment extends Fragment {
             @Override
             public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
-                Toast.makeText(getActivity(),
-                        "Connection error...",
-                        Toast.LENGTH_SHORT).show();
+                displayConnectionErrorMessage();
             }
         });
     }
@@ -357,7 +355,7 @@ public class ArkeFragment extends Fragment {
                             "Entry added!",
                             Toast.LENGTH_SHORT).show();
                     refreshEntriesList();
-                    refreshLocalDatabase();
+                    refreshIrisCache();
                     refreshArkeCache();
                 }
             }
@@ -365,9 +363,7 @@ public class ArkeFragment extends Fragment {
             @Override
             public void onFailure(Call<ArkeEntryItem> call, Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
-                Toast.makeText(getActivity(),
-                        "Connection error...",
-                        Toast.LENGTH_SHORT).show();
+                displayConnectionErrorMessage();
             }
 
         });
@@ -416,13 +412,18 @@ public class ArkeFragment extends Fragment {
                 Log.e(LOG_TAG, t.getMessage());
                 getActivity().findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                 mSwipeRefreshLayout.setEnabled(true);
-                Toast.makeText(getActivity(),
-                        "Connection error...",
-                        Toast.LENGTH_SHORT).show();
+                displayConnectionErrorMessage();
                 }
 
         });
 
     }
 
+    public void displayConnectionErrorMessage() {
+        Toast.makeText(getActivity(),
+                "Connection error...",
+                Toast.LENGTH_SHORT).show();
+    }
+
 }
+

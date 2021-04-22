@@ -124,17 +124,45 @@ public class IrisFragment extends Fragment {
         // associated the ViewModel with the controller, this persists through config changes
         mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
 
-        refreshLocalDatabase();
 
-        // an observer sees when the data is changed while the activity is open,
-        // and updates the data in the adapter
-        mIrisViewModel.getAllEntries().observe(getActivity(), new Observer<List<IrisEntryItem>>() {
-            @Override
-            public void onChanged(List<IrisEntryItem> entries) {
-                // update cached copy of words in adapter
-                mAdapter.setEntries(entries);
-            }
-        });
+
+        // This will load the items from the database
+        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries();
+        call.enqueue(new Callback<List<IrisEntryItem>>() {
+             @Override
+             public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {
+                 if (response.isSuccessful()) {
+                     Log.e(LOG_TAG, "Entries called.");
+                     entriesList = response.body();
+                     mAdapter.setEntries(entriesList);
+                     rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
+                     //mSwipeRefreshLayout.setEnabled(true);
+
+                     // refresh the local cache for Arke
+                     refreshIrisCache();
+                 }
+             }
+
+             @Override
+             public void onFailure(Call<List<IrisEntryItem>> call, Throwable t) {
+
+                 // TODO: need to load the cache instead
+                 Log.e(LOG_TAG, t.getMessage());
+                 //mConnectionError.setVisibility(View.VISIBLE);
+                 rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
+                 //mSwipeRefreshLayout.setEnabled(true);
+
+                 // an observer sees when the data is changed while the activity is open,
+                 // and updates the data in the adapter
+                 mIrisViewModel.getAllEntries().observe(getActivity(), new Observer<List<IrisEntryItem>>() {
+                     @Override
+                     public void onChanged(List<IrisEntryItem> entries) {
+                         // update cached copy of words in adapter
+                         mAdapter.setEntries(entries);
+                     }
+                 });
+             }
+         });
 
         // delete an item on long click
         mAdapter.setOnItemClickListener((v, position) -> {
@@ -286,26 +314,27 @@ public class IrisFragment extends Fragment {
                                 "Entry has been made public!",
                                 Toast.LENGTH_SHORT).show();
                     }
+                    refreshEntriesList();
+
                     // refresh after everything has been done
-                    refreshLocalDatabase();
+                    refreshIrisCache();
                 }
             }
 
             @Override
             public void onFailure(Call<IrisEntryItem> call, Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
-                Toast.makeText(getActivity(),
-                        "Connection error...",
-                        Toast.LENGTH_SHORT).show();
+                displayConnectionErrorMessage();
             }
 
         });
     }
 
+
     /**
      * This will update the local database using the remote database
      */
-    public void refreshLocalDatabase() {
+    public void refreshIrisCache() {
         // truncate table
         mIrisViewModel.deleteAll();
 
@@ -344,9 +373,7 @@ public class IrisFragment extends Fragment {
             @Override
             public void onFailure(Call<List<IrisEntryItem>> call, Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
-                Toast.makeText(getActivity(),
-                        "Connection error...",
-                        Toast.LENGTH_SHORT).show();
+                displayConnectionErrorMessage();
             }
         });
     }
@@ -365,20 +392,68 @@ public class IrisFragment extends Fragment {
                     Toast.makeText(getActivity(),
                             "Entry added!",
                             Toast.LENGTH_SHORT).show();
-                    //refreshLocalDatabase(isPublic);
-                    refreshLocalDatabase();
+                    refreshEntriesList();
+                    refreshIrisCache();
                 }
             }
 
             @Override
             public void onFailure(Call<ArkeEntryItem> call, Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
-                Toast.makeText(getActivity(),
-                        "Connection error...",
-                        Toast.LENGTH_SHORT).show();
+                displayConnectionErrorMessage();
             }
 
         });
+    }
+
+    /**
+     * This method refreshes the recycler view
+     */
+    public void refreshEntriesList() {
+
+        // show the loading indicator
+        getActivity().findViewById(R.id.loading_indicator).setVisibility(View.VISIBLE);
+
+        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries();
+        call.enqueue(new Callback<List<IrisEntryItem>>() {
+            @Override
+            public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {
+                if (response.isSuccessful()) {
+                    Log.e(LOG_TAG, "Entries called.");
+                    entriesList = response.body();
+                    mAdapter.setEntries(entriesList);
+                    getActivity().findViewById(R.id.loading_indicator).setVisibility(View.GONE);
+                    // smooth scroll to position
+                    mRecyclerView.smoothScrollToPosition(0);
+
+                    // refresh the cache
+                    refreshIrisCache();
+                }
+            }
+
+            /**
+             * If the entriesList contains items, it means items are showing,
+             * but there is a new error on refreshing, so a Toast is shown.
+             * Otherwise, the page was already blank from the start,
+             * so a connection error message is shown.
+             * @param call
+             * @param t
+             */
+            @Override
+            public void onFailure(Call<List<IrisEntryItem>> call, Throwable t) {
+                Log.e(LOG_TAG, t.getMessage());
+                getActivity().findViewById(R.id.loading_indicator).setVisibility(View.GONE);
+                displayConnectionErrorMessage();
+            }
+
+        });
+
+    }
+
+    public void displayConnectionErrorMessage() {
+        Toast.makeText(getActivity(),
+                "Connection error...",
+                Toast.LENGTH_SHORT).show();
     }
 
 }
