@@ -42,6 +42,8 @@ public class IrisFragment extends Fragment {
     EntryService entryService;
     List<IrisEntryItem> entriesList = new ArrayList<IrisEntryItem>();
 
+    private boolean cacheOnce = true;
+
     // all activity interactions are with the WordViewModel only
     private IrisViewModel mIrisViewModel;
 
@@ -75,6 +77,13 @@ public class IrisFragment extends Fragment {
         if (getArguments() != null) {
             // Currently no arguments here.
         }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshEntriesList();
 
     }
 
@@ -158,8 +167,14 @@ public class IrisFragment extends Fragment {
                      @Override
                      public void onChanged(List<IrisEntryItem> entries) {
                          // update cached copy of words in adapter
-                         mAdapter.setEntries(entries);
+                         // hacky way to only refresh adapter initially,
+                         // TODO: amend architecture so all requests are from
+                         if (cacheOnce == true) {
+                             mAdapter.setEntries(entries);
+                             cacheOnce = false;
+                         }
                      }
+
                  });
              }
          });
@@ -382,6 +397,7 @@ public class IrisFragment extends Fragment {
      * Add colour to the backend postgreSQL database
      */
     public void addRemoteEntry(int isPublic) {
+
         // TODO: This will assign a member to the entry
         ArkeEntryItem entry = new ArkeEntryItem("Carkzis", mColourName, isPublic);
         Call<ArkeEntryItem> call = entryService.addEntry(entry);
@@ -411,9 +427,6 @@ public class IrisFragment extends Fragment {
      */
     public void refreshEntriesList() {
 
-        // show the loading indicator
-        getActivity().findViewById(R.id.loading_indicator).setVisibility(View.VISIBLE);
-
         Call<List<IrisEntryItem>> call = entryService.getPrivateEntries();
         call.enqueue(new Callback<List<IrisEntryItem>>() {
             @Override
@@ -422,7 +435,6 @@ public class IrisFragment extends Fragment {
                     Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
                     mAdapter.setEntries(entriesList);
-                    getActivity().findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                     // smooth scroll to position
                     mRecyclerView.smoothScrollToPosition(0);
 
@@ -442,7 +454,6 @@ public class IrisFragment extends Fragment {
             @Override
             public void onFailure(Call<List<IrisEntryItem>> call, Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
-                getActivity().findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                 displayConnectionErrorMessage();
             }
 

@@ -22,4 +22,5 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('arkyris_api/', include('arkyris_api.urls')),
+    path('arkyris_api/', include('accounts.urls')),
 ]

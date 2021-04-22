@@ -83,7 +83,7 @@ public class ArkeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //refreshEntriesList();
+        refreshEntriesList();
     }
 
     /**

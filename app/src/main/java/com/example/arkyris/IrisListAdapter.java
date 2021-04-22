@@ -53,6 +53,11 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
         notifyDataSetChanged();
     }
 
+    void removeEntries(){
+        mEntries = null;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         if (mEntries != null) {
