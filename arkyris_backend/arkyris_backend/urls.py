@@ -23,5 +23,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('arkyris_api/', include('arkyris_api.urls')),
     path('arkyris_api/', include('accounts.urls')),
-    path('arkyris_api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
 ]

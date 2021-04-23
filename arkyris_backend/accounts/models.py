@@ -12,7 +12,7 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         "{}?token={}".format(reverse('password_reset:reset-password-request'),
         reset_password_token.key)
         
-    send_mail(
+    message = send_mail(
         'Password reset for the Arkyris app!',
         email_plaintext_message,
         'arkyris@gmail.com', # this isn't a thing
