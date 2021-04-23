@@ -250,7 +250,7 @@ public class ArkeFragment extends Fragment {
         // truncate table
         mIrisViewModel.deleteAll();
 
-        // TODO: this should only update the local database with the user's entries
+        // TODO: ALL THESE CALLS SHOULD GO IN A REPOSITORY INSTEAD!
         Call<List<ArkeEntryItem>> call = entryService.getEntries();
         call.enqueue(new Callback<List<ArkeEntryItem>>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
