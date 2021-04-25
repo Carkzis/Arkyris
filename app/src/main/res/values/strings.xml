@@ -37,4 +37,12 @@
     <string name="button_login">Login</string>
     <string name="button_register">Register</string>
     <string name="text_forgotten_password">Forgot your password?</string>
+    <string name="title_register">Create an account!</string>
+    <string name="text_username_alphanumerical">Must been between 8-20 characters, alphanumerical only!</string>
+    <string name="hint_reenter_password">Re-enter your password!</string>
+    <string name="hint_choose_username">Choose your username!</string>
+    <string name="text_password_requirements">Must be less than 50 characters, alphanumerical only!</string>
+    <string name="hint_email">Enter your email address!</string>
+    <string name="hint_choose_password">Choose a password!</string>
+    <string name="button_register_me">Register me!</string>
 </resources>
