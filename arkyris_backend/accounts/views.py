@@ -62,4 +62,3 @@ class ChangePasswordView(generics.UpdateAPIView):
             return Response(response)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
