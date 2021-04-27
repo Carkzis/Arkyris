@@ -23,10 +23,6 @@ public interface IrisEntryDao {
     @Query("SELECT * FROM iris_entry_table ORDER BY date_time DESC")
     LiveData<List<IrisEntryItem>> getAllEntries();
 
-    // Just get public entries
-    @Query("SELECT * FROM iris_entry_table WHERE public = 1 ORDER BY date_time DESC")
-    LiveData<List<IrisEntryItem>> getAllPublicEntries();
-
     // Test if there is anything in the table
     @Query("SELECT * FROM iris_entry_table LIMIT 1")
     IrisEntryItem[] getAnyItem();

@@ -11,24 +11,18 @@ public class IrisEntryRepository {
     // add member variables for DAO and list of words
     private IrisEntryDao mIrisEntryDao;
     private LiveData<List<IrisEntryItem>> mAllEntries;
-    private LiveData<List<IrisEntryItem>> mPublicEntries;
 
     // constructor to get handle to db and initialise member variables
     IrisEntryRepository(Application application) {
         ArkyrisRoomDatabase db = ArkyrisRoomDatabase.getDatabase(application);
         mIrisEntryDao = db.irisEntryDao();
         mAllEntries = mIrisEntryDao.getAllEntries();
-        mPublicEntries = mIrisEntryDao.getAllPublicEntries();
     }
 
     // wrapper method to return cached words as LiveData
     // this is because room executes queries on a separate thread
     LiveData<List<IrisEntryItem>> getAllEntries() {
         return mAllEntries;
-    }
-
-    LiveData<List<IrisEntryItem>> getAllPublicEntries() {
-        return mPublicEntries;
     }
 
     // wrapper for insert() using threads

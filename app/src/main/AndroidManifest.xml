@@ -23,15 +23,6 @@
 
         </activity>
 
-        <activity
-
-            android:name=".sandbox.SandboxActivity"
-            android:label="@string/sandbox_label"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.Arkyris">
-
-        </activity>
-
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait">
 
@@ -52,6 +43,12 @@
             </intent-filter>
 
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <meta-data android:name="preloaded_fonts" android:resource="@array/preloaded_fonts"/>
 
     </application>
 

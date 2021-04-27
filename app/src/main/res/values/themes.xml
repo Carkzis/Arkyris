@@ -20,7 +20,10 @@
         <item name="backgroundColor">@color/white</item>
         <item name="tabTextColor">?attr/colorPrimary</item>
         <item name="tabSelectedTextColor">@color/white</item>
+    </style>
 
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.DayNight.ActionBar">
+        <item name="android:fontFamily">@font/arizonia</item>
     </style>
 
     <!-- Color picker theme -->
