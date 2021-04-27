@@ -41,6 +41,13 @@ public class RegisterActivity extends AppCompatActivity {
         String password1 = mPassword1.getText().toString();
         String password2 = mPassword2.getText().toString();
 
+        if (username.equals("") || email.equals("") || password1.equals("") || password2.equals("")) {
+            Toast.makeText(
+                    this,
+                    "Not all the fields have been completed.",
+                    Toast.LENGTH_SHORT).show();
+        }
+
         boolean emailAuthenticated = mViewModel.testEmail(email);
         boolean passwordMatchAuthenticated = mViewModel.testPasswordMatch(password1, password2);
         boolean passwordFormatAuthenticated = mViewModel.testPasswordFormat(password1);
