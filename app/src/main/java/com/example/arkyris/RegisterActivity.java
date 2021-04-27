@@ -55,6 +55,13 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
             return;
         }
+
+        mViewModel.insertUser(username, email, password1);
+
+        Toast.makeText(
+                this,
+                "Account created, " + username + ", please login!",
+                Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }

@@ -1,11 +1,20 @@
 package com.example.arkyris;
 
-import androidx.lifecycle.ViewModel;
+import android.app.Application;
+
+import androidx.lifecycle.AndroidViewModel;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegisterViewModel extends ViewModel {
+public class RegisterViewModel extends AndroidViewModel {
+
+    private RegisterRepository mRepository;
+
+    public RegisterViewModel (Application application) {
+        super(application);
+        mRepository = new RegisterRepository(application);
+    }
 
     public boolean testEmail (String email) {
 
@@ -42,6 +51,13 @@ public class RegisterViewModel extends ViewModel {
             return "The password doesn't meet the requirements...";
         }
         return null;
+    }
+
+    // wrapper for insert that calls Repository's insert() method,
+    // hides implementation of insert() from UI
+    public void insertUser(String username, String email, String password) {
+        RegisterItem newUser = new RegisterItem(username, email, password);
+        mRepository.insertUser(newUser);
     }
 
 }
