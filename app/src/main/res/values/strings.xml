@@ -36,7 +36,7 @@
     <string name="hint_username">Username</string>
     <string name="button_login">Login</string>
     <string name="button_register">Register</string>
-    <string name="text_forgotten_password">Forgot your password?</string>
+    <string name="text_forgotten_password"><u>Forgot your password?</u></string>
     <string name="title_register">Create an account!</string>
     <string name="text_username_alphanumerical">Must been between 8-20 characters, alphanumerical only!</string>
     <string name="hint_reenter_password">Re-enter your password!</string>

@@ -1,10 +1,11 @@
 package com.example.arkyris;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -14,17 +15,15 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        final Button registerButton = findViewById(R.id.button_register);
+        mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
     }
 
-    //    public void registerScreen(View view) {
-//        FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
-//        Fragment registerFragment = new RegisterFragment();
-//        fragmentTransaction.replace(R.id.login_fragment, registerFragment).commit();
-//    }
+    public void registerScreen(View view) {
+
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
 
 }

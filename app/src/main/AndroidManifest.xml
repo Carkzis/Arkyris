@@ -13,11 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Arkyris"
         android:usesCleartextTraffic="true">
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/Theme.Arkyris.NoActionBar">
+            android:theme="@style/Theme.Arkyris.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
