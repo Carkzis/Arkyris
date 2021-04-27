@@ -13,25 +13,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Arkyris"
         android:usesCleartextTraffic="true">
-
+        <activity android:name=".RegisterActivity"></activity>
         <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.Arkyris.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".AboutActivity"
             android:label="@string/about_arkyris"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.Arkyris">
-
-        </activity>
-
-        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.Arkyris" />
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
-
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
-            <intent-filter>
                 <!-- intent with view actions -->
                 <action android:name="android.intent.action.VIEW" />
                 <!-- any implicit intent -->
@@ -41,15 +43,14 @@
                 <!-- URIs that contain scheme of http and host of developer.android.com -->
                 <data android:scheme="https" />
             </intent-filter>
-
         </activity>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
-        <meta-data android:name="preloaded_fonts" android:resource="@array/preloaded_fonts"/>
-
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
