@@ -1,7 +1,5 @@
 package com.example.arkyris;
 
-import android.util.Log;
-
 import androidx.lifecycle.ViewModel;
 
 import java.util.regex.Matcher;
@@ -17,13 +15,33 @@ public class RegisterViewModel extends ViewModel {
                         "[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(email);
-        if (matcher.matches() == true){
-            Log.e("HELP", "true");
-        } else {
-            Log.e("HELP", "false");
-        }
 
         return matcher.matches();
+    }
+
+    public boolean testPasswordMatch (String password1, String password2) {
+        return (password1.equals(password2));
+    }
+
+    public boolean testPasswordFormat (String password1) {
+
+        String passwordRegex = "[a-zA-Z1-9]{8,20}";
+        Pattern pattern = Pattern.compile(passwordRegex);
+        Matcher matcher = pattern.matcher(password1);
+
+        return matcher.matches();
+    }
+
+    public String failureMessage(boolean emailFormat,
+                                 boolean passwordMatch, boolean passwordFormat) {
+        if (!emailFormat) {
+            return "That is not an email...";
+        } else if (!passwordMatch) {
+            return "The password's don't match...";
+        } else if (!passwordFormat) {
+            return "The password doesn't meet the requirements...";
+        }
+        return null;
     }
 
 }

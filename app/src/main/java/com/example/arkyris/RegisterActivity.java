@@ -42,19 +42,19 @@ public class RegisterActivity extends AppCompatActivity {
         String password2 = mPassword2.getText().toString();
 
         boolean emailAuthenticated = mViewModel.testEmail(email);
+        boolean passwordMatchAuthenticated = mViewModel.testPasswordMatch(password1, password2);
+        boolean passwordFormatAuthenticated = mViewModel.testPasswordFormat(password1);
 
-        if (emailAuthenticated) {
+        String registerFailureMessage = mViewModel.failureMessage(emailAuthenticated,
+                passwordMatchAuthenticated, passwordFormatAuthenticated);
+
+        if (registerFailureMessage != null) {
             Toast.makeText(
-                    getApplicationContext(),
-                    "true",
+                    this,
+                    registerFailureMessage,
                     Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(
-                    getApplicationContext(),
-                    "false",
-                    Toast.LENGTH_SHORT).show();
+            return;
         }
-
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
