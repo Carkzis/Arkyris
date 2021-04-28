@@ -12,12 +12,13 @@ public class RegisterViewModel extends AndroidViewModel {
 
     private RegisterRepository mRepository;
     private MutableLiveData<Boolean> mConnectionError;
-
+    private MutableLiveData<Integer> mRegisterResponseCode;
 
     public RegisterViewModel (Application application) {
         super(application);
         mRepository = new RegisterRepository(application);
         mConnectionError = mRepository.getConnectionError();
+        mRegisterResponseCode = mRepository.getRegisterResponseCode();
     }
 
     // getter method for getting checking any correction error
@@ -27,6 +28,21 @@ public class RegisterViewModel extends AndroidViewModel {
             mConnectionError = new MutableLiveData<Boolean>();
         }
         return mConnectionError;
+    }
+
+    public MutableLiveData<Integer> getRegisterResponseCode() {
+        if (mRegisterResponseCode == null) {
+            mRegisterResponseCode = new MutableLiveData<Integer>();
+        }
+        return mRegisterResponseCode;
+    }
+
+    public boolean testUsername (String username) {
+        String usernameRegex = "[a-zA-Z1-9]{1,50}";
+        Pattern pattern = Pattern.compile(usernameRegex);
+        Matcher matcher = pattern.matcher(username);
+
+        return matcher.matches();
     }
 
     public boolean testEmail (String email) {
@@ -54,9 +70,11 @@ public class RegisterViewModel extends AndroidViewModel {
         return matcher.matches();
     }
 
-    public String failureMessage(boolean emailFormat,
+    public String failureMessage(boolean userFormat, boolean emailFormat,
                                  boolean passwordMatch, boolean passwordFormat) {
-        if (!emailFormat) {
+        if (!userFormat) {
+            return "User must be less than 50 characters, alphanumberical...";
+        } else if (!emailFormat) {
             return "That is not an email...";
         } else if (!passwordMatch) {
             return "The password's don't match...";
