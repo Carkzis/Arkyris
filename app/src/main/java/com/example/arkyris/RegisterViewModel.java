@@ -3,6 +3,7 @@ package com.example.arkyris;
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,10 +11,22 @@ import java.util.regex.Pattern;
 public class RegisterViewModel extends AndroidViewModel {
 
     private RegisterRepository mRepository;
+    private MutableLiveData<Boolean> mConnectionError;
+
 
     public RegisterViewModel (Application application) {
         super(application);
         mRepository = new RegisterRepository(application);
+        mConnectionError = mRepository.getConnectionError();
+    }
+
+    // getter method for getting checking any correction error
+    // hides implementation from the UI
+    public MutableLiveData<Boolean> getConnectionError() {
+        if (mConnectionError == null) {
+            mConnectionError = new MutableLiveData<Boolean>();
+        }
+        return mConnectionError;
     }
 
     public boolean testEmail (String email) {

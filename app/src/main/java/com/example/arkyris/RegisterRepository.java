@@ -3,7 +3,7 @@ package com.example.arkyris;
 import android.app.Application;
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import org.json.JSONObject;
 
@@ -15,11 +15,18 @@ public class RegisterRepository {
 
     private static final String LOG_TAG = RegisterRepository.class.getSimpleName();
     AccountService accountService = APIUtils.getAccountService();
+    private MutableLiveData<Boolean> mConnectionError;
 
-    private LiveData<String> mRegisterResponse;
+    public String mRegisterResponse;
 
     // constructor
     RegisterRepository(Application application) {
+        mConnectionError = new MutableLiveData<Boolean>();
+    }
+
+    // wrapper method to get connection error
+    public MutableLiveData<Boolean> getConnectionError() {
+        return mConnectionError;
     }
 
     public void insertUser(RegisterItem newUser) {
@@ -28,7 +35,8 @@ public class RegisterRepository {
             @Override
             public void onResponse(Call<RegisterItem> call, Response<RegisterItem> response) {
                 if (response.isSuccessful()) {
-                    Log.e(LOG_TAG, "Entered?");
+                    Log.e(LOG_TAG, "Entered!");
+                    mRegisterResponse = "Entered";
                 }
 
                 JSONObject jsonObject;
@@ -39,7 +47,7 @@ public class RegisterRepository {
                         String errorMessage = jsonObject.getString("username");
                         errorMessage = errorMessage.substring(1, errorMessage.length() - 1);
                         Log.e(LOG_TAG, errorMessage);
-                        //mRegisterResponse = errorMessage;
+                        mRegisterResponse = errorMessage;
                     } catch (Exception e) {
                         Log.e(LOG_TAG, "IO Exception...");
                     }
@@ -49,6 +57,7 @@ public class RegisterRepository {
             @Override
             public void onFailure(Call<RegisterItem> call, Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
+                mConnectionError.postValue(true);
             }
 
         });

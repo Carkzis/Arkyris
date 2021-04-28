@@ -1,12 +1,12 @@
 package com.example.arkyris;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -30,47 +30,74 @@ public class RegisterActivity extends AppCompatActivity {
         mPassword1 = findViewById(R.id.edittext_register_password1);
         mPassword2 = findViewById(R.id.edittext_register_password2);
 
+
+        mViewModel.getConnectionError().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean connectionError) {
+                // update cached copy of words in adapter
+                if (connectionError) {
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "Connection error...",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
-    public void loginScreen(View view) {
-        // This will need to be tested against the online database
-        String username = mUsername.getText().toString();
+    public void loginScreen(View view) throws InterruptedException {
+//        // This will need to be tested against the online database
+//        String username = mUsername.getText().toString();
+//
+//        // Can test locally
+//        String email = mEmail.getText().toString();
+//        String password1 = mPassword1.getText().toString();
+//        String password2 = mPassword2.getText().toString();
+//
+//        if (username.equals("") || email.equals("") || password1.equals("") || password2.equals("")) {
+//            Toast.makeText(
+//                    this,
+//                    "Not all the fields have been completed.",
+//                    Toast.LENGTH_SHORT).show();
+//        }
+//
+//        boolean emailAuthenticated = mViewModel.testEmail(email);
+//        boolean passwordMatchAuthenticated = mViewModel.testPasswordMatch(password1, password2);
+//        boolean passwordFormatAuthenticated = mViewModel.testPasswordFormat(password1);
+//
+//        String registerFailureMessage = mViewModel.failureMessage(emailAuthenticated,
+//                passwordMatchAuthenticated, passwordFormatAuthenticated);
+//
+//        if (registerFailureMessage != null) {
+//            Toast.makeText(
+//                    this,
+//                    registerFailureMessage,
+//                    Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
-        // Can test locally
-        String email = mEmail.getText().toString();
-        String password1 = mPassword1.getText().toString();
-        String password2 = mPassword2.getText().toString();
+        //mViewModel.insertUser(username, email, password1);
 
-        if (username.equals("") || email.equals("") || password1.equals("") || password2.equals("")) {
-            Toast.makeText(
-                    this,
-                    "Not all the fields have been completed.",
-                    Toast.LENGTH_SHORT).show();
-        }
+        // for testing
+        mViewModel.insertUser("Carkzis", "dragon@dragon.com", "nooooo");
 
-        boolean emailAuthenticated = mViewModel.testEmail(email);
-        boolean passwordMatchAuthenticated = mViewModel.testPasswordMatch(password1, password2);
-        boolean passwordFormatAuthenticated = mViewModel.testPasswordFormat(password1);
+        // This shows blank, or the failure message? BUT! Think we put LiveData observer in onCreate, after which the
+        // intent can be initialised or not! Remember to reset it!
+//        Toast.makeText(
+//                this,
+//                "Message.",
+//                Toast.LENGTH_SHORT).show();
+//        return;
 
-        String registerFailureMessage = mViewModel.failureMessage(emailAuthenticated,
-                passwordMatchAuthenticated, passwordFormatAuthenticated);
 
-        if (registerFailureMessage != null) {
-            Toast.makeText(
-                    this,
-                    registerFailureMessage,
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        mViewModel.insertUser(username, email, password1);
-
-        Toast.makeText(
-                this,
-                "Account created, " + username + ", please login!",
-                Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+//        // If we get here... success!
+//        Toast.makeText(
+//                this,
+//                "Account created, " + "username" + ", please login!",
+//                Toast.LENGTH_SHORT).show();
+//        Intent intent = new Intent(this, LoginActivity.class);
+//        startActivity(intent);
     }
 
 
