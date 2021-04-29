@@ -31,7 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
         mPassword1 = findViewById(R.id.edittext_register_password1);
         mPassword2 = findViewById(R.id.edittext_register_password2);
 
-
+        // This shows if there is no connection, the call to the database fails.
         mViewModel.getConnectionError().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean connectionError) {
@@ -45,6 +45,9 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        // Observes the server response code on attempting to register, 200 is a pass, 400
+        // is returned if the username already exists, any other errors (except no connection)
+        // show here
         mViewModel.getRegisterResponseCode().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer responseCode) {
@@ -71,6 +74,10 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Validates the registration inputs via the ViewModel and inserts the data
+     * @param view
+     */
     public void registerUser(View view) {
         // This will need to be tested against the online database
         String username = mUsername.getText().toString();

@@ -37,8 +37,7 @@ public class LoginViewModel extends AndroidViewModel {
     // wrapper for insert that calls Repository's insert() method,
     // hides implementation of insert() from UI
     public void authenticateUser(String username, String password) {
-        LoginItem login = new LoginItem(username, password);
-        mRepository.authenticateUser(login);
+        mRepository.authenticateUser(username, password);
     }
 
 }

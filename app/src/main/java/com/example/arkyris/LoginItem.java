@@ -18,4 +18,5 @@ public class LoginItem {
     public void setUsername(String username) { this.mUsername = username; }
     public void setPassword(String password) { this.mPassword = password; }
 
+    public String getUsername() { return mUsername; }
 }

@@ -7,6 +7,9 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import org.json.JSONObject;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,19 +38,30 @@ public class LoginRepository {
         mConnectionError = new MutableLiveData<Boolean>();
         mLoginResponseCode = new MutableLiveData<Integer>();
         preferences = PreferenceManager.getDefaultSharedPreferences(application);
-        editor = preferences.edit();
     }
 
-    public void authenticateUser(LoginItem login) {
-        Call<LoginItem> call = accountService.authenticateUser(login);
-        call.enqueue(new Callback<LoginItem>() {
+    public void authenticateUser(String username, String password) {
+        Call<ResponseBody> call = accountService.authenticateUser(username, password);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<LoginItem> call, Response<LoginItem> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                JSONObject jsonObject;
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Login success!");
                     mLoginResponseCode.postValue(response.code());  // this will be 200
+                    editor = preferences.edit();
+                    try {
+                        jsonObject = new JSONObject(response.body().string());
+                        String token = jsonObject.getString("token");
+                        Log.e(LOG_TAG, token);
+                        editor.putString("token", token);
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG, "IO Exception...");
+                    }
 
-                    // TODO: need to get JSON for sharepreferences
+                    editor.putString("username", username);
+                    editor.apply();
                 }
 
                 if (!response.isSuccessful()) {
@@ -58,7 +72,7 @@ public class LoginRepository {
             }
 
             @Override
-            public void onFailure(Call<LoginItem> call, Throwable throwable) {
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 mConnectionError.postValue(true);
             }
