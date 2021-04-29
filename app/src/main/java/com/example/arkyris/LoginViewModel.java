@@ -21,7 +21,7 @@ public class LoginViewModel extends AndroidViewModel {
         mLoginResponseCode = mRepository.getLoginResponseCode();
     }
 
-    // getter method for getting checking any correction error
+    // getter method for getting checking any connection error
     // hides implementation from the UI
     public MutableLiveData<Boolean> getConnectionError() {
         if (mConnectionError == null) {

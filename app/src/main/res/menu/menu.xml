@@ -13,10 +13,4 @@
         android:orderInCategory="20"
         android:actionMenuTextColor="@color/white"/>
 
-    <item
-        android:id="@+id/menu_sandbox"
-        android:title="@string/sandbox"
-        android:orderInCategory="30"
-        android:actionMenuTextColor="@color/white"/>
-
 </menu>
