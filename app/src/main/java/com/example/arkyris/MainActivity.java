@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         // this will set the login_fragment if no token in shared preferences
 
     }

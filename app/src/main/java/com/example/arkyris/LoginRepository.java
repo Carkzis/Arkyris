@@ -16,7 +16,7 @@ import retrofit2.Response;
 
 public class LoginRepository {
 
-    private static final String LOG_TAG = RegisterRepository.class.getSimpleName();
+    private static final String LOG_TAG = LoginRepository.class.getSimpleName();
     AccountService accountService = APIUtils.getAccountService();
     private MutableLiveData<Boolean> mConnectionError;
     private MutableLiveData<Integer> mLoginResponseCode;
@@ -38,6 +38,12 @@ public class LoginRepository {
         mConnectionError = new MutableLiveData<Boolean>();
         mLoginResponseCode = new MutableLiveData<Integer>();
         preferences = PreferenceManager.getDefaultSharedPreferences(application);
+    }
+
+    public String getToken() {
+        String token = preferences.getString("token", null);
+        Log.e(LOG_TAG, token);
+        return token;
     }
 
     public void authenticateUser(String username, String password) {

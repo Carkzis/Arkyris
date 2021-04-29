@@ -19,9 +19,17 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
         mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
+        //preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String token = mViewModel.getToken();
+        if (token != null) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        setContentView(R.layout.activity_login);
 
         // Initialise view variables
         mUsername = findViewById(R.id.edittext_username);
@@ -40,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        mViewModel.getRegisterResponseCode().observe(this, new Observer<Integer>() {
+        mViewModel.getLoginResponseCode().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer responseCode) {
                 if (responseCode == 200) {
@@ -48,8 +56,8 @@ public class LoginActivity extends AppCompatActivity {
                             getApplicationContext(),
                             "Success!",
                             Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-//                    startActivity(intent);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(
                             getApplicationContext(),

@@ -1,11 +1,14 @@
 package com.example.arkyris;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 public class LoginViewModel extends AndroidViewModel {
+
+    private static final String LOG_TAG = LoginViewModel.class.getSimpleName();
 
     private LoginRepository mRepository;
     private MutableLiveData<Boolean> mConnectionError;
@@ -27,11 +30,16 @@ public class LoginViewModel extends AndroidViewModel {
         return mConnectionError;
     }
 
-    public MutableLiveData<Integer> getRegisterResponseCode() {
+    public MutableLiveData<Integer> getLoginResponseCode() {
         if (mLoginResponseCode == null) {
             mLoginResponseCode = new MutableLiveData<Integer>();
         }
         return mLoginResponseCode;
+    }
+
+    public String getToken() {
+        Log.e(LOG_TAG, mRepository.getToken());
+        return mRepository.getToken();
     }
 
     // wrapper for insert that calls Repository's insert() method,
