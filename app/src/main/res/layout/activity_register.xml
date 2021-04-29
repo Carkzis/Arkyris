@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/button_register_me"
-        android:onClick="loginScreen"
+        android:onClick="registerUser"
         app:backgroundTint="@color/green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/edittext_register_password2"

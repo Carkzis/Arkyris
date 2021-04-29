@@ -67,6 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:text="@string/button_login"
+            android:onClick="loginUser"
             app:backgroundTint="@color/green"
             tools:layout_editor_absoluteX="101dp"
             tools:layout_editor_absoluteY="487dp" />

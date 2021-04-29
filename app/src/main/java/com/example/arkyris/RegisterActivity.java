@@ -71,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    public void loginScreen(View view) {
+    public void registerUser(View view) {
         // This will need to be tested against the online database
         String username = mUsername.getText().toString();
 
@@ -85,14 +85,15 @@ public class RegisterActivity extends AppCompatActivity {
                     this,
                     "Not all the fields have been completed.",
                     Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        boolean usernameAuthenicated = mViewModel.testUsername(username);
+        boolean usernameAuthenticated = mViewModel.testUsername(username);
         boolean emailAuthenticated = mViewModel.testEmail(email);
         boolean passwordMatchAuthenticated = mViewModel.testPasswordMatch(password1, password2);
         boolean passwordFormatAuthenticated = mViewModel.testPasswordFormat(password1);
 
-        String registerFailureMessage = mViewModel.failureMessage(usernameAuthenicated,
+        String registerFailureMessage = mViewModel.failureMessage(usernameAuthenticated,
                 emailAuthenticated, passwordMatchAuthenticated, passwordFormatAuthenticated);
 
         if (registerFailureMessage != null) {

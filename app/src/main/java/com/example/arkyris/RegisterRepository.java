@@ -16,8 +16,6 @@ public class RegisterRepository {
     private MutableLiveData<Boolean> mConnectionError;
     private MutableLiveData<Integer> mRegisterResponseCode;
 
-    public String mRegisterResponse;
-
     // constructor
     RegisterRepository(Application application) {
         mConnectionError = new MutableLiveData<Boolean>();
