@@ -24,4 +24,10 @@
 
     </style>
 
+    <!-- Color picker theme -->
+    <style name="ColorPickerDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@color/black</item>
+    </style>
+
 </resources>

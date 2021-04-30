@@ -23,9 +23,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Arkyris.NoActionBar">
             <intent-filter>
+
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
         <activity
