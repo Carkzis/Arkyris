@@ -42,7 +42,7 @@ public class LoginRepository {
 
     public String getToken() {
         String token = preferences.getString("token", null);
-        Log.e(LOG_TAG, token);
+        //Log.e(LOG_TAG, token);
         return token;
     }
 

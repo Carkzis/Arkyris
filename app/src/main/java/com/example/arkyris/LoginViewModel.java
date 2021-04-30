@@ -1,7 +1,6 @@
 package com.example.arkyris;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
@@ -38,7 +37,6 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     public String getToken() {
-        Log.e(LOG_TAG, mRepository.getToken());
         return mRepository.getToken();
     }
 

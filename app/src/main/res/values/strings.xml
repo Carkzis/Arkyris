@@ -60,4 +60,7 @@
     <string name="text_account_name">Name?</string>
     <string name="button_logout">Logout</string>
     <string name="button_change_password">Change Password</string>
+    <string name="logout_one">Logout on this device?</string>
+    <string name="logout_all">Logout of all devices?</string>
+    <string name="cancel_logout">Cancel</string>
 </resources>
