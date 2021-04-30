@@ -27,9 +27,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textSize="10sp"
-                tools:text="31/03/2021"
-                android:textColor="?colorOnPrimary"/>
+                android:textColor="?colorOnPrimary"
+                android:textSize="12sp"
+                tools:text="31/03/2021" />
 
             <TextView
                 android:id="@+id/arke_time"
@@ -37,9 +37,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textSize="10sp"
-                tools:text="23:11"
-                android:textColor="?colorOnPrimary"/>
+                android:textColor="?colorOnPrimary"
+                android:textSize="12sp"
+                tools:text="23:11" />
 
         </LinearLayout>
 

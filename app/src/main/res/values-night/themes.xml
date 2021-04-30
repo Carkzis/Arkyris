@@ -22,6 +22,8 @@
         <item name="tabTextColor">?attr/colorPrimary</item>
         <item name="tabSelectedTextColor">@color/white</item>
 
+        <item name="android:fontFamily">@font/annie_use_your_telescope</item>
+
     </style>
 
     <!-- Color picker theme -->

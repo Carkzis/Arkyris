@@ -20,10 +20,12 @@
         <item name="backgroundColor">@color/white</item>
         <item name="tabTextColor">?attr/colorPrimary</item>
         <item name="tabSelectedTextColor">@color/white</item>
+        <item name="android:fontFamily">@font/annie_use_your_telescope</item>
+
     </style>
 
     <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.DayNight.ActionBar">
-        <item name="android:fontFamily">@font/arizonia</item>
+        <item name="android:fontFamily">@font/annie_use_your_telescope</item>
     </style>
 
     <!-- Color picker theme -->

@@ -58,7 +58,7 @@
     <string name="new_password2">Re-enter your NEW password</string>
     <string name="change_your_password">Change Your Password</string>
     <string name="new_password_">Enter your NEW password</string>
-    <string name="text_password_requirements2">Must be less than 50 characters, <br/>alphanumerical only!</string>
+    <string name="text_password_requirements2">8-20 characters, alphanumerical!</string>
     <string name="change_it">Change it!</string>
     <string name="change_password_background">Change password background.</string>
 </resources>

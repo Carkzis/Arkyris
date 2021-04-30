@@ -15,7 +15,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".ChangePasswordActivity"
             android:label="@string/change_password"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".SettingsActivity"
             android:theme="@style/Theme.Arkyris" />
         <activity
             android:name=".RegisterActivity"

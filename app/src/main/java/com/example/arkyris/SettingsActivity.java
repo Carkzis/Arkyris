@@ -107,5 +107,8 @@ public class SettingsActivity extends AppCompatActivity {
         builder.show();
     }
 
-
+    public void changePasswordScreen(View view) {
+        Intent intent = new Intent(getApplicationContext(), ChangePasswordActivity.class);
+        startActivity(intent);
+    }
 }
