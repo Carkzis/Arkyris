@@ -46,21 +46,19 @@
     <string name="hint_choose_password">Choose a password!</string>
     <string name="button_register_me">Register me!</string>
     <string name="title_activity_login">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="text_account_name">Name?</string>
     <string name="button_logout">Logout</string>
     <string name="button_change_password">Change Password</string>
     <string name="logout_one">Logout on this device?</string>
     <string name="logout_all">Logout of all devices?</string>
     <string name="cancel_logout">Cancel</string>
+    <string name="change_password">Change Password</string>
+    <string name="old_password">Enter your OLD password</string>
+    <string name="new_password2">Re-enter your NEW password</string>
+    <string name="change_your_password">Change Your Password</string>
+    <string name="new_password_">Enter your NEW password</string>
+    <string name="text_password_requirements2">Must be less than 50 characters, <br/>alphanumerical only!</string>
+    <string name="change_it">Change it!</string>
+    <string name="change_password_background">Change password background.</string>
 </resources>

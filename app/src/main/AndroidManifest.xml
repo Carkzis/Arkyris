@@ -13,7 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Arkyris"
         android:usesCleartextTraffic="true">
-
+        <activity android:name=".ChangePasswordActivity"
+            android:label="@string/change_password"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.Arkyris" />
         <activity
             android:name=".RegisterActivity"
             android:screenOrientation="portrait" />
@@ -23,11 +26,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Arkyris.NoActionBar">
             <intent-filter>
-
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-
             </intent-filter>
         </activity>
         <activity
@@ -39,12 +40,11 @@
             android:name=".SettingsActivity"
             android:label="Settings"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.Arkyris"/>
+            android:theme="@style/Theme.Arkyris" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-
                 <!-- intent with view actions -->
                 <action android:name="android.intent.action.VIEW" />
                 <!-- any implicit intent -->
