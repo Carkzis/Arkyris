@@ -11,12 +11,14 @@ public class SettingsViewModel extends AndroidViewModel {
     private LogoutRepository mRepository;
     private MutableLiveData<String> mAccountName;
     private MutableLiveData<String> mLogoutSuccess;
+    private MutableLiveData<Boolean> mAutoLoggedOut;
 
     public SettingsViewModel (Application application) {
         super(application);
         mRepository = new LogoutRepository(application);
         mAccountName = mRepository.getAccountName();
         mLogoutSuccess = mRepository.getLogoutSuccess();
+        mAutoLoggedOut = mRepository.getAutoLoggedOut();
     }
 
     public MutableLiveData<String> getAccountName() {
@@ -33,12 +35,23 @@ public class SettingsViewModel extends AndroidViewModel {
         return mLogoutSuccess;
     }
 
+    public MutableLiveData<Boolean> getAutoLoggedOut() {
+        if (mAutoLoggedOut == null) {
+            mAutoLoggedOut = new MutableLiveData<Boolean>();
+        }
+        return mAutoLoggedOut;
+    }
+
     public void logout() {
         mRepository.logout();
     }
 
     public void logoutAll() {
         mRepository.logoutAll();
+    }
+
+    public void loggedIn() {
+        mRepository.loggedIn();
     }
 
 }

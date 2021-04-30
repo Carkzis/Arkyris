@@ -79,8 +79,9 @@ public class SettingsActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     if (loggedOut) {
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        // Need to prevent the user from going back to the logged in area!
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                        finish();
                     }
                 }
             }

@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -15,10 +18,33 @@ import com.google.android.material.tabs.TabLayout;
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private SettingsViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mViewModel = ViewModelProviders.of(this).get(SettingsViewModel.class);
+        // check if the member has been logged out
+        mViewModel.loggedIn();
+
+        mViewModel.getAutoLoggedOut().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean loggedOut) {
+                // update cached copy of words in adapter
+                if (loggedOut) {
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "You have been logged out!",
+                            Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    // Need to prevent the user from going back to the logged in area!
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    Log.e("WHY?", "SO ANNOYING");
+                }
+            }
+        });
         
         setContentView(R.layout.activity_main);
         Log.d(LOG_TAG, "-------");

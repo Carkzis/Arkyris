@@ -20,12 +20,14 @@ public class LogoutRepository {
     SharedPreferences.Editor editor;
     private MutableLiveData<String> mAccountName;
     private MutableLiveData<String> mLogoutSuccess;
+    private MutableLiveData<Boolean> mAutoLoggedOut;
     String token;
 
     LogoutRepository(Application application) {
         preferences = PreferenceManager.getDefaultSharedPreferences(application);
         mAccountName = new MutableLiveData<String>();
         mLogoutSuccess = new MutableLiveData<String>();
+        mAutoLoggedOut = new MutableLiveData<Boolean>();
         token = preferences.getString("token", null);
     }
 
@@ -39,6 +41,10 @@ public class LogoutRepository {
 
     public MutableLiveData<String> getLogoutSuccess() {
         return mLogoutSuccess;
+    }
+
+    public MutableLiveData<Boolean> getAutoLoggedOut() {
+        return mAutoLoggedOut;
     }
 
     public void logout() {
@@ -97,6 +103,32 @@ public class LogoutRepository {
                 Log.e(LOG_TAG, throwable.getMessage());
                 Log.e(LOG_TAG, "Not logged out anywhere as no connection.");
                 mLogoutSuccess.postValue("no_connection_all");
+            }
+        });
+    }
+
+    public void loggedIn() {
+        Call<ResponseBody> call = accountService.loggedIn("Token " + token);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                if (response.isSuccessful()) {
+                    Log.e(LOG_TAG, "Member is logged in.");
+                }
+
+                if (!response.isSuccessful()) {
+                    Log.e(LOG_TAG, "Member is logged out, so delete  token.");
+                    preferences.edit().clear().apply();
+                    mAutoLoggedOut.postValue(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                Log.e(LOG_TAG, throwable.getMessage());
+                Log.e(LOG_TAG, "No connection, so cannot check login status.");
+                // Do nothing here, won't log out users if they are not logged in.
             }
         });
     }
