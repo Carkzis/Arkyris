@@ -31,7 +31,6 @@ public class LogoutRepository {
         token = preferences.getString("token", null);
     }
 
-    // getter method for getting checking any correction error
     // hides implementation from the UI
     public MutableLiveData<String> getAccountName() {
         String username = preferences.getString("username", null);

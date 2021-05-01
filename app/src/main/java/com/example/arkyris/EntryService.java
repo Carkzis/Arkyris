@@ -9,6 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface EntryService {
 
@@ -25,15 +26,16 @@ public interface EntryService {
     @POST("create/")
     Call<ArkeEntryItem> addEntry(@Body ArkeEntryItem entry);
 
-    @PATCH("update/{id}/")
-    Call<IrisEntryItem> updatePublic(@Path("id") String id, @Body HashMap<String, String> updateFields);
-
     /**
      * This is only for private posts, i.e. Iris
      * @return
      */
-    @GET("private/")
-    Call<List<IrisEntryItem>> getPrivateEntries();
+
+    @PATCH("update/{id}/")
+    Call<IrisEntryItem> updatePublic(@Path("id") String id, @Body HashMap<String, String> updateFields);
+
+    @GET(".")
+    Call<List<IrisEntryItem>> getPrivateEntries(@Query("user") String user);
 
     // overloaded method
     @POST("create/")

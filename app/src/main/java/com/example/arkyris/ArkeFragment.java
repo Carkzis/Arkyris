@@ -40,6 +40,7 @@ public class ArkeFragment extends Fragment {
     EntryService entryService;
     List<ArkeEntryItem> entriesList = new ArrayList<ArkeEntryItem>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private String mAccountName;
 
     // textview for when there is a connection error
     private TextView mConnectionError;
@@ -101,6 +102,18 @@ public class ArkeFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_arke, container, false);
 
         entryService = APIUtils.getEntryService();
+
+        // associated the ViewModel with the controller, this persists through config changes
+        mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
+        mArkeViewModel = ViewModelProviders.of(this).get(ArkeViewModel.class);
+
+        mArkeViewModel.getAccountName().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String username) {
+                // update cached copy of words in adapter
+                mAccountName = username;
+            }
+        });
 
         final FloatingActionButton fab = rootView.findViewById(R.id.arke_fab);
         fab.setOnClickListener(view -> {
@@ -169,9 +182,6 @@ public class ArkeFragment extends Fragment {
 
         });
 
-        // associated the ViewModel with the controller, this persists through config changes
-        mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
-        mArkeViewModel = ViewModelProviders.of(this).get(ArkeViewModel.class);
 
         /**
          * Refresh the fragment on swiping down
@@ -345,7 +355,7 @@ public class ArkeFragment extends Fragment {
      */
     public void addRemoteEntry() {
         // TODO: This will assign a member to the entry
-        ArkeEntryItem entry = new ArkeEntryItem("Carkzis", mColourName, 1);
+        ArkeEntryItem entry = new ArkeEntryItem(mAccountName, mColourName, 1);
         Call<ArkeEntryItem> call = entryService.addEntry(entry);
         call.enqueue(new Callback<ArkeEntryItem>() {
             @Override

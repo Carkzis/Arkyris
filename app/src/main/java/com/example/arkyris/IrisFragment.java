@@ -136,7 +136,7 @@ public class IrisFragment extends Fragment {
 
 
         // This will load the items from the database
-        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries();
+        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries("Carkzis");
         call.enqueue(new Callback<List<IrisEntryItem>>() {
              @Override
              public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {
@@ -354,7 +354,7 @@ public class IrisFragment extends Fragment {
         mIrisViewModel.deleteAll();
 
         // TODO: this should only update the local database with the user's entries
-        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries();
+        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries("Carkzis");
         call.enqueue(new Callback<List<IrisEntryItem>>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -399,11 +399,11 @@ public class IrisFragment extends Fragment {
     public void addRemoteEntry(int isPublic) {
 
         // TODO: This will assign a member to the entry
-        ArkeEntryItem entry = new ArkeEntryItem("Carkzis", mColourName, isPublic);
-        Call<ArkeEntryItem> call = entryService.addEntry(entry);
-        call.enqueue(new Callback<ArkeEntryItem>() {
+        IrisEntryItem entry = new IrisEntryItem("Carkzis", mColourName, isPublic);
+        Call<IrisEntryItem> call = entryService.addEntry(entry);
+        call.enqueue(new Callback<IrisEntryItem>() {
             @Override
-            public void onResponse(Call<ArkeEntryItem> call, Response<ArkeEntryItem> response) {
+            public void onResponse(Call<IrisEntryItem> call, Response<IrisEntryItem> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(getActivity(),
                             "Entry added!",
@@ -414,7 +414,7 @@ public class IrisFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ArkeEntryItem> call, Throwable throwable) {
+            public void onFailure(Call<IrisEntryItem> call, Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 displayConnectionErrorMessage();
             }
@@ -427,7 +427,7 @@ public class IrisFragment extends Fragment {
      */
     public void refreshEntriesList() {
 
-        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries();
+        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries("Carkzis");
         call.enqueue(new Callback<List<IrisEntryItem>>() {
             @Override
             public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {
