@@ -42,6 +42,18 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/colour_circle" />
 
+        <TextView
+            android:id="@+id/text_no_entries"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/no_entries"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/chosen_colour"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Hacky way to make the RecyclerView wrap the content. -->

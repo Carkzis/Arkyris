@@ -22,8 +22,7 @@ class EntryListMember(generics.ListAPIView):
     def get_queryset(self):
         queryset = Entry.objects.filter(deleted=0).order_by('-date_time')
         user = self.request.query_params.get('user')
-        if user is not None:
-            queryset = queryset.filter(user=user)
+        queryset = queryset.filter(user=user)
         return queryset
     
 

@@ -150,6 +150,9 @@ public class IrisFragment extends Fragment {
                      mAdapter.setEntries(entriesList);
                      rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                      //mSwipeRefreshLayout.setEnabled(true);
+                     Log.e(LOG_TAG, String.valueOf(entriesList.size()));
+
+                     // TODO: need to sort out the entries and no entries message!
 
                      // refresh the local cache for Arke
                      refreshIrisCache();

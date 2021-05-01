@@ -61,4 +61,5 @@
     <string name="text_password_requirements2">8-20 characters, alphanumerical!</string>
     <string name="change_it">Change it!</string>
     <string name="change_password_background">Change password background.</string>
+    <string name="no_entries">You have no entries! Enter something below!</string>
 </resources>

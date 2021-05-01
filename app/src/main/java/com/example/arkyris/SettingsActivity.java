@@ -15,6 +15,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private TextView mUsername;
     private SettingsViewModel mViewModel;
+    private IrisViewModel mIrisViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
         mUsername = findViewById(R.id.text_settings_name);
 
         mViewModel = ViewModelProviders.of(this).get(SettingsViewModel.class);
+        mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
 
         mViewModel.getAccountName().observe(this, new Observer<String>() {
             @Override
@@ -79,6 +81,9 @@ public class SettingsActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     if (loggedOut) {
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        // Need to clear the user Room entries so they do not flash up for the
+                        // next user
+                        mIrisViewModel.deleteAll();
                         // Need to prevent the user from going back to the logged in area!
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
