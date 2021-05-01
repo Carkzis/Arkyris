@@ -41,6 +41,7 @@ public class IrisFragment extends Fragment {
     private int mColourName;
     EntryService entryService;
     List<IrisEntryItem> entriesList = new ArrayList<IrisEntryItem>();
+    private String mAccountName;
 
     private boolean cacheOnce = true;
 
@@ -93,12 +94,18 @@ public class IrisFragment extends Fragment {
 
         final View rootView = inflater.inflate(R.layout.fragment_iris, container, false);
         entryService = APIUtils.getEntryService();
-        /**
-         * This will add a colour entry into the diary.
-         * It currently just shows a toast as a placeholder.
-         *
-         * @param view is the ImageView that enters a particular colour to the diary.
-         */
+
+        // associated the ViewModel with the controller, this persists through config changes
+        mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
+
+        // Retrieve account name held in SharedPreferences
+        mIrisViewModel.getAccountName().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String username) {
+                // update cached copy of words in adapter
+                mAccountName = username;
+            }
+        });
 
         final FloatingActionButton fab = rootView.findViewById(R.id.iris_fab);
         fab.setOnClickListener(view -> {
@@ -130,13 +137,10 @@ public class IrisFragment extends Fragment {
                 false);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        // associated the ViewModel with the controller, this persists through config changes
-        mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
-
 
 
         // This will load the items from the database
-        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries("Carkzis");
+        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries(mAccountName);
         call.enqueue(new Callback<List<IrisEntryItem>>() {
              @Override
              public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {
@@ -353,8 +357,7 @@ public class IrisFragment extends Fragment {
         // truncate table
         mIrisViewModel.deleteAll();
 
-        // TODO: this should only update the local database with the user's entries
-        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries("Carkzis");
+        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries(mAccountName);
         call.enqueue(new Callback<List<IrisEntryItem>>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -398,8 +401,7 @@ public class IrisFragment extends Fragment {
      */
     public void addRemoteEntry(int isPublic) {
 
-        // TODO: This will assign a member to the entry
-        IrisEntryItem entry = new IrisEntryItem("Carkzis", mColourName, isPublic);
+        IrisEntryItem entry = new IrisEntryItem(mAccountName, mColourName, isPublic);
         Call<IrisEntryItem> call = entryService.addEntry(entry);
         call.enqueue(new Callback<IrisEntryItem>() {
             @Override
@@ -427,7 +429,7 @@ public class IrisFragment extends Fragment {
      */
     public void refreshEntriesList() {
 
-        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries("Carkzis");
+        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries(mAccountName);
         call.enqueue(new Callback<List<IrisEntryItem>>() {
             @Override
             public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {

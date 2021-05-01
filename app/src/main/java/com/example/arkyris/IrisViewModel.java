@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
@@ -11,11 +12,21 @@ public class IrisViewModel extends AndroidViewModel {
 
     private IrisEntryRepository mRepository;
     private LiveData<List<IrisEntryItem>> mAllEntries;
+    private MutableLiveData<String> mAccountName;
 
     public IrisViewModel (Application application) {
         super(application);
         mRepository = new IrisEntryRepository(application);
         mAllEntries = mRepository.getAllEntries();
+        mAccountName = mRepository.getAccountName();
+    }
+
+    // getter method to retrieve account name from repository shared preferences
+    public MutableLiveData<String> getAccountName() {
+        if (mAccountName == null) {
+            mAccountName = new MutableLiveData<String>();
+        }
+        return mAccountName;
     }
 
     // getter method for getting all the words,
@@ -29,9 +40,6 @@ public class IrisViewModel extends AndroidViewModel {
     // This is only for testing purposes
     public void deleteAll() { mRepository.deleteAll(); }
 
-    // Delete a single entry
-    public void deleteEntry(IrisEntryItem entry) { mRepository.deleteEntry(entry); }
 
-    // Toggle the public option for an individual entry on or off
-    public void updatePublic(IrisEntryItem entry) { mRepository.updatePublic(entry); }
+
 }

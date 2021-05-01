@@ -34,7 +34,7 @@ public interface EntryService {
     @PATCH("update/{id}/")
     Call<IrisEntryItem> updatePublic(@Path("id") String id, @Body HashMap<String, String> updateFields);
 
-    @GET(".")
+    @GET("private/")
     Call<List<IrisEntryItem>> getPrivateEntries(@Query("user") String user);
 
     // overloaded method
