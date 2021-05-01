@@ -8,6 +8,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 
 public interface AccountService {
 
@@ -27,4 +28,10 @@ public interface AccountService {
 
     @GET("user/")
     Call<ResponseBody> loggedIn(@Header("Authorization") String token);
+
+    @FormUrlEncoded
+    @PUT("change_password/")
+    Call<ResponseBody> changePassword(@Header("Authorization") String token,
+                                      @Field("old_password") String oldPassword,
+                                      @Field("new_password") String newPassword);
 }

@@ -11,11 +11,15 @@ import java.util.regex.Pattern;
 public class ChangePasswordViewModel extends AndroidViewModel {
 
     private static final String LOG_TAG = ChangePasswordViewModel.class.getSimpleName();
+    private ChangePasswordRepository mRepository;
     private MutableLiveData<String> mLocalPasswordTest;
+    private MutableLiveData<String> mChangePasswordSuccess;
 
     public ChangePasswordViewModel (Application application) {
         super(application);
         mLocalPasswordTest = new MutableLiveData<String>();
+        mRepository = new ChangePasswordRepository(application);
+        mChangePasswordSuccess = mRepository.getChangePasswordSuccess();
     }
 
     // getter method for getting checking any connection error
@@ -24,20 +28,32 @@ public class ChangePasswordViewModel extends AndroidViewModel {
         return mLocalPasswordTest;
     }
 
-    public void changePassword(String password1, String password2) {
+    public MutableLiveData<String> getChangePasswordSuccess() {
+        if (mChangePasswordSuccess == null) {
+            mChangePasswordSuccess = new MutableLiveData<String>();
+        }
+        return mChangePasswordSuccess;
+    }
+
+
+    public void changePassword(String oldPassword, String newPassword1, String newPassword2) {
 
         String passwordRegex = "[a-zA-Z1-9]{8,20}";
         Pattern pattern = Pattern.compile(passwordRegex);
-        Matcher matcher = pattern.matcher(password1);
+        Matcher matcher = pattern.matcher(newPassword1);
 
         // return if any of the local tests fail
-        if (!password1.equals(password2)) {
+        if (!newPassword1.equals(newPassword2)) {
             mLocalPasswordTest.postValue("not_equal");
             return;
         } else if (!matcher.matches()) {
             mLocalPasswordTest.postValue("incorrect_format");
             return;
         }
+
+        // pass in old password and one of the new password fields, as to get here,
+        // newPassword1 will need to equal newPassword2
+        mRepository.changePassword(oldPassword, newPassword1);
 
     }
 

@@ -1,5 +1,6 @@
 package com.example.arkyris;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -48,6 +49,28 @@ public class ChangePasswordActivity extends AppCompatActivity {
             }
         });
 
+        mViewModel.getChangePasswordSuccess().observe(this, response -> {
+            if (response.equals("failed")) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Something went wrong...",
+                        Toast.LENGTH_SHORT).show();
+            } else if (response.equals("no_connection")) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "No connection.",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Password changed successfully.",
+                        Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 
     public void changePassword(View view) {
@@ -65,7 +88,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         }
 
         // This will test passwords first
-        mViewModel.changePassword(newPassword1, newPassword2);
+        mViewModel.changePassword(oldPassword, newPassword1, newPassword2);
 
     }
 }

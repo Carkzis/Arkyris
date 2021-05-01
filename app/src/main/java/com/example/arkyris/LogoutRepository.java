@@ -107,6 +107,10 @@ public class LogoutRepository {
         });
     }
 
+    /**
+     * This will log the user out from the current device if they have been logged out remotely
+     * e.g. from logoutAll()
+     */
     public void loggedIn() {
         Call<ResponseBody> call = accountService.loggedIn("Token " + token);
         call.enqueue(new Callback<ResponseBody>() {
