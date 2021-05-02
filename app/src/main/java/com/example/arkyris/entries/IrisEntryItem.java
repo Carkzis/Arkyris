@@ -2,6 +2,7 @@ package com.example.arkyris.entries;
 
 import android.os.Build;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -17,12 +18,9 @@ import java.time.format.DateTimeFormatter;
 @Entity(tableName = "iris_entry_table")
 public class IrisEntryItem {
 
-    // Attributes for each entry
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "_entryId")
-    public int mEntryId;
-
     // Note to self: calling it pk and also id is very confusing.
+    @PrimaryKey
+    @NonNull
     @SerializedName("pk")
     @ColumnInfo(name = "remoteId")
     @Expose
@@ -55,7 +53,7 @@ public class IrisEntryItem {
 
     @Ignore
     public IrisEntryItem(String remoteId, String dateTime, int colour, int isPublic) {
-        mEntryId = 0;
+        //mEntryId = 0;
         mRemoteId = remoteId;
         mDateTime = dateTime;
         mColour = colour;
@@ -64,7 +62,7 @@ public class IrisEntryItem {
 
     //Overloaded for entries into the database
     public IrisEntryItem(String name, int colour, int isPublic) {
-        mEntryId = 0;
+        //mEntryId = 0;
         mName = name;
         mColour = colour;
         mIsPublic = isPublic;
@@ -76,7 +74,7 @@ public class IrisEntryItem {
      */
 
     // getters and setters
-    public int getId() { return mEntryId; }
+    //public int getId() { return mEntryId; }
 
     public String getName() { return mName; }
 

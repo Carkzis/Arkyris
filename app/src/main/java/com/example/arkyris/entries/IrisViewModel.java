@@ -7,18 +7,31 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
+import java.util.Random;
 
 public class IrisViewModel extends AndroidViewModel {
 
     private IrisEntryRepository mRepository;
     private LiveData<List<IrisEntryItem>> mAllEntries;
     private MutableLiveData<String> mAccountName;
+    private MutableLiveData<Boolean> mConnectionError;
+    private MutableLiveData<Boolean> mLoadingComplete;
+    private MutableLiveData<Boolean> mEntryAdded;
+
+    // Random colours
+    private static final String[] mColourArray = {"red", "pink", "purple", "deep_purple",
+            "indigo", "blue", "light_blue", "cyan", "teal", "green",
+            "light_green", "lime", "yellow", "amber", "orange", "deep_orange",
+            "brown", "grey", "blue_grey", "pink_dark"};
 
     public IrisViewModel (Application application) {
         super(application);
         mRepository = new IrisEntryRepository(application);
         mAllEntries = mRepository.getAllEntries();
         mAccountName = mRepository.getAccountName();
+        mConnectionError = mRepository.getConnectionError();
+        mLoadingComplete = mRepository.getLoadingComplete();
+        mEntryAdded = mRepository.getEntryAdded();
     }
 
     // getter method to retrieve account name from repository shared preferences
@@ -27,6 +40,27 @@ public class IrisViewModel extends AndroidViewModel {
             mAccountName = new MutableLiveData<String>();
         }
         return mAccountName;
+    }
+
+    public MutableLiveData<Boolean> getConnectionError() {
+        if (mConnectionError == null) {
+            mConnectionError = new MutableLiveData<Boolean>();
+        }
+        return mConnectionError;
+    }
+
+    public MutableLiveData<Boolean> getLoadingComplete() {
+        if (mLoadingComplete == null) {
+            mLoadingComplete = new MutableLiveData<Boolean>();
+        }
+        return mLoadingComplete;
+    }
+
+    public MutableLiveData<Boolean> getEntryAdded() {
+        if (mEntryAdded == null) {
+            mEntryAdded = new MutableLiveData<Boolean>();
+        }
+        return mEntryAdded;
     }
 
     // getter method for getting all the words,
@@ -40,6 +74,18 @@ public class IrisViewModel extends AndroidViewModel {
     // This is only for testing purposes
     public void deleteAll() { mRepository.deleteAll(); }
 
+    // refresh cache
+    public void refreshIrisCache() { mRepository.refreshIrisCache(); }
 
+    /**
+     * Method for generating a random color
+     * @return
+     */
+    public String randomColour() {
+        Random random = new Random();
+        // pick a random colour (using an index)
+        String colourName = mColourArray[random.nextInt(20)];
+        return colourName;
+    }
 
 }

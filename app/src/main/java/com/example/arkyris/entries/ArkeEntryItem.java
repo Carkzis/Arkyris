@@ -18,13 +18,6 @@ import java.time.format.DateTimeFormatter;
 @Entity(tableName = "arke_entry_table")
 public class ArkeEntryItem {
 
-//    // Attributes for each entry
-//    @PrimaryKey(autoGenerate = true)
-//    @ColumnInfo(name = "_entryId")
-//    public int mEntryId;
-
-     //Note to self: calling it pk and also id is very confusing.
-
     @PrimaryKey
     @NonNull
     @SerializedName("pk")

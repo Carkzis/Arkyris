@@ -3,17 +3,32 @@ package com.example.arkyris.entries;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.arkyris.APIUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class IrisEntryRepository {
+
+    private static final String LOG_TAG = IrisEntryRepository.class.getSimpleName();
 
     // add member variables for DAO and list of words
     private IrisEntryDao mIrisEntryDao;
     private LiveData<List<IrisEntryItem>> mAllEntries;
+    EntryService entryService = APIUtils.getEntryService();
+    List<IrisEntryItem> entriesList = new ArrayList<IrisEntryItem>();
+    private MutableLiveData<Boolean> mConnectionError;
+    private MutableLiveData<Boolean> mLoadingComplete;
+    private MutableLiveData<Boolean> mEntryAdded;
 
     SharedPreferences preferences;
     private MutableLiveData<String> mAccountName;
@@ -27,6 +42,9 @@ public class IrisEntryRepository {
         // Initialise variables for getting account name currently logged in
         preferences = PreferenceManager.getDefaultSharedPreferences(application);
         mAccountName = new MutableLiveData<String>();
+        mConnectionError = new MutableLiveData<Boolean>();
+        mLoadingComplete = new MutableLiveData<Boolean>();
+        mEntryAdded = new MutableLiveData<Boolean>();
     }
 
     // wrapper method to return cached words as LiveData
@@ -48,15 +66,9 @@ public class IrisEntryRepository {
         });
     }
 
-    public void deleteEntry(IrisEntryItem entry) {
+    public void insertAll(List<IrisEntryItem> entries) {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mIrisEntryDao.deleteEntry(entry);
-        });
-    }
-
-    public void updatePublic(IrisEntryItem entry) {
-        ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mIrisEntryDao.updatePublic(entry);
+            mIrisEntryDao.insertAll(entries);
         });
     }
 
@@ -65,6 +77,41 @@ public class IrisEntryRepository {
         String username = preferences.getString("username", null);
         mAccountName.postValue(username);
         return mAccountName;
+    }
+
+    public MutableLiveData<Boolean> getConnectionError() {
+        return mConnectionError;
+    }
+
+    public MutableLiveData<Boolean> getLoadingComplete() {
+        return mLoadingComplete;
+    }
+
+    public MutableLiveData<Boolean> getEntryAdded() {
+        return mEntryAdded;
+    }
+
+    public void refreshIrisCache() {
+        // This will load the items from the database
+        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries(mAccountName.getValue());
+        call.enqueue(new Callback<List<IrisEntryItem>>() {
+            @Override
+            public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {
+                if (response.isSuccessful()) {
+                    Log.e(LOG_TAG, "Entries called.");
+                    entriesList = response.body();
+                    insertAll(entriesList);
+                    mLoadingComplete.postValue(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<IrisEntryItem>> call, Throwable t) {
+                Log.e(LOG_TAG, t.getMessage());
+                mConnectionError.postValue(true);
+                mLoadingComplete.postValue(true);
+            }
+        });
     }
 
 }

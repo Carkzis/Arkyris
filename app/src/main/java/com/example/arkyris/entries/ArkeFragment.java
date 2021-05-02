@@ -1,15 +1,12 @@
 package com.example.arkyris.entries;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -26,10 +23,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ArkeFragment extends Fragment {
 
@@ -60,11 +53,6 @@ public class ArkeFragment extends Fragment {
         if (getArguments() != null) {
             // Currently no arguments here.
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     /**
@@ -168,6 +156,7 @@ public class ArkeFragment extends Fragment {
             public void onRefresh() {
                 rootView.findViewById(R.id.loading_indicator).setVisibility(View.VISIBLE);
                 mArkeViewModel.refreshArkeCache();
+                mIrisViewModel.refreshIrisCache();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -229,55 +218,8 @@ public class ArkeFragment extends Fragment {
     public void addRemoteEntry(int colour) {
         mArkeViewModel.addRemoteEntry(colour);
         getActivity().findViewById(R.id.loading_indicator).setVisibility(View.VISIBLE);
-        // TODO: change this to affect the iris repository instead
-        //refreshIrisCache();
-    }
-
-    // TODO: Needs replacing after the IrisFragment has been amended to correctly use repository
-    /**
-     * This will update the local database using the remote database
-     */
-    public void refreshIrisCache() {
-        // truncate table
-        mIrisViewModel.deleteAll();
-
-        // TODO: ALL THESE CALLS SHOULD GO IN A REPOSITORY INSTEAD!
-        Call<List<ArkeEntryItem>> call = entryService.getEntries();
-        call.enqueue(new Callback<List<ArkeEntryItem>>() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onResponse(Call<List<ArkeEntryItem>> call, Response<List<ArkeEntryItem>> response) {
-                if (response.isSuccessful()) {
-                    Log.e(LOG_TAG, "Entries called.");
-                    entriesList = response.body();
-                    //Collections.reverse(entriesList);
-                    for (ArkeEntryItem entry : entriesList) {
-                        IrisEntryItem entryItem = new IrisEntryItem(
-                                entry.getRemoteId(),
-                                entry.getDateTime(),
-                                entry.getColour(),
-                                entry.getIsPublic()
-                        );
-                        mIrisViewModel.insert(entryItem);
-                    }
-
-                    // smooth scroll to position
-                    mRecyclerView.smoothScrollToPosition(0);
-
-                }
-            }
-
-            /**
-             * Show a connection error toast.
-             * @param call
-             * @param t
-             */
-            @Override
-            public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
-                Log.e(LOG_TAG, t.getMessage());
-                //displayConnectionErrorMessage();
-            }
-        });
+        // refresh Iris Cache while we are at it
+        mIrisViewModel.refreshIrisCache();
     }
 
 }

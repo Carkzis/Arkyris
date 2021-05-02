@@ -68,7 +68,6 @@ public class ArkeViewModel extends AndroidViewModel {
         return mEntryAdded;
     }
 
-    // TODO: remove this
     // wrapper for insert that calls Repository's insert() method,
     // hides implementation of insert() from UI
     public void insert(ArkeEntryItem entry) { mRepository.insert(entry); }
@@ -85,7 +84,6 @@ public class ArkeViewModel extends AndroidViewModel {
 
     /**
      * Method for generating a random color
-     *
      * @return
      */
     public String randomColour() {

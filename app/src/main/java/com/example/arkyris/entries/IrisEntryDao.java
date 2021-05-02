@@ -16,6 +16,9 @@ public interface IrisEntryDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(IrisEntryItem entry);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<IrisEntryItem> entries);
+
     @Query("DELETE FROM iris_entry_table")
     void deleteAll();
 

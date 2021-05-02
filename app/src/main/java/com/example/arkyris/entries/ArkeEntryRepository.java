@@ -110,10 +110,7 @@ public class ArkeEntryRepository {
                 Log.e(LOG_TAG, t.getMessage());
                 mConnectionError.postValue(true);
                 mLoadingComplete.postValue(true);
-
             }
-
-
         });
     }
 

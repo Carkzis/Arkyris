@@ -84,13 +84,6 @@ public class IrisFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        refreshEntriesList();
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -139,54 +132,34 @@ public class IrisFragment extends Fragment {
                 false);
         mRecyclerView.setLayoutManager(layoutManager);
 
+        mIrisViewModel.refreshIrisCache();
 
+        // Observer for the entries to list in the recyclerview
+        mIrisViewModel.getAllEntries().observe(getActivity(), entries -> {
+            // update cached copy of words in adapter
+            mAdapter.setEntries(entries);
+            if (entries.size() < 1) {
+                rootView.findViewById(R.id.text_no_entries).setVisibility(View.VISIBLE);
+            } else {
+                rootView.findViewById(R.id.text_no_entries).setVisibility(View.GONE);
+            }
+        });
 
-        // This will load the items from the database
-        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries(mAccountName);
-        call.enqueue(new Callback<List<IrisEntryItem>>() {
-             @Override
-             public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {
-                 if (response.isSuccessful()) {
-                     Log.e(LOG_TAG, "Entries called.");
-                     entriesList = response.body();
-                     mAdapter.setEntries(entriesList);
-                     rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
-                     //mSwipeRefreshLayout.setEnabled(true);
-                     Log.e(LOG_TAG, String.valueOf(entriesList.size()));
+        // Observer for any connection error
+        mIrisViewModel.getConnectionError().observe(getActivity(), connectionError -> {
+            if (connectionError) {
+                Toast.makeText(getActivity(),
+                        "Connection error...",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
-                     // TODO: need to sort out the entries and no entries message!
-
-                     // refresh the local cache for Arke
-                     refreshIrisCache();
-                 }
-             }
-
-             @Override
-             public void onFailure(Call<List<IrisEntryItem>> call, Throwable t) {
-
-                 // TODO: need to load the cache instead
-                 Log.e(LOG_TAG, t.getMessage());
-                 //mConnectionError.setVisibility(View.VISIBLE);
-                 rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
-                 //mSwipeRefreshLayout.setEnabled(true);
-
-                 // an observer sees when the data is changed while the activity is open,
-                 // and updates the data in the adapter
-                 mIrisViewModel.getAllEntries().observe(getActivity(), new Observer<List<IrisEntryItem>>() {
-                     @Override
-                     public void onChanged(List<IrisEntryItem> entries) {
-                         // update cached copy of words in adapter
-                         // hacky way to only refresh adapter initially,
-                         // TODO: amend architecture so all requests are from
-                         if (cacheOnce == true) {
-                             mAdapter.setEntries(entries);
-                             cacheOnce = false;
-                         }
-                     }
-
-                 });
-             }
-         });
+        // Observer for whether loading has completed
+        mIrisViewModel.getLoadingComplete().observe(getActivity(), loadingComplete -> {
+            if (loadingComplete) {
+                rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
+            }
+        });
 
         // delete an item on long click
         mAdapter.setOnItemClickListener((v, position) -> {
@@ -372,7 +345,6 @@ public class IrisFragment extends Fragment {
                     entriesList = response.body();
                     //Collections.reverse(entriesList);
                     for (IrisEntryItem entry: entriesList) {
-                        Log.e(LOG_TAG, String.valueOf(entry.getId()));
                         IrisEntryItem entryItem = new IrisEntryItem(
                                 entry.getRemoteId(),
                                 entry.getDateTime(),
