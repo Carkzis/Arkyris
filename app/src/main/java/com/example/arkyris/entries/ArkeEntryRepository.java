@@ -26,6 +26,8 @@ public class ArkeEntryRepository {
     private LiveData<List<ArkeEntryItem>> mPublicEntries;
     EntryService entryService = APIUtils.getEntryService();
     private MutableLiveData<Boolean> mConnectionError;
+    private MutableLiveData<Boolean> mLoadingComplete;
+    private MutableLiveData<Boolean> mEntryAdded;
 
     SharedPreferences preferences;
     private MutableLiveData<String> mAccountName;
@@ -41,6 +43,8 @@ public class ArkeEntryRepository {
         preferences = PreferenceManager.getDefaultSharedPreferences(application);
         mAccountName = new MutableLiveData<String>();
         mConnectionError = new MutableLiveData<Boolean>();
+        mLoadingComplete = new MutableLiveData<Boolean>();
+        mEntryAdded = new MutableLiveData<Boolean>();
     }
 
     // wrapper method to return cached words as LiveData
@@ -75,6 +79,18 @@ public class ArkeEntryRepository {
         return mAccountName;
     }
 
+    public MutableLiveData<Boolean> getConnectionError() {
+        return mConnectionError;
+    }
+
+    public MutableLiveData<Boolean> getLoadingComplete() {
+        return mLoadingComplete;
+    }
+
+    public MutableLiveData<Boolean> getEntryAdded() {
+        return mEntryAdded;
+    }
+
     public void refreshArkeCache() {
         // This will load the items from the database
         Call<List<ArkeEntryItem>> call = entryService.getPublicEntries();
@@ -85,13 +101,40 @@ public class ArkeEntryRepository {
                     Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
                     insertAll(entriesList);
-                    // refresh the local cache for Arke
+                    mLoadingComplete.postValue(true);
                 }
             }
 
             @Override
             public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
+                mConnectionError.postValue(true);
+                mLoadingComplete.postValue(true);
+
+            }
+
+
+        });
+    }
+
+    /**
+     * Add colour to the backend postgreSQL database
+     */
+    public void addRemoteEntry(int colour) {
+        ArkeEntryItem entry = new ArkeEntryItem(mAccountName.getValue(), colour, 1);
+        Call<ArkeEntryItem> call = entryService.addEntry(entry);
+        call.enqueue(new Callback<ArkeEntryItem>() {
+            @Override
+            public void onResponse(Call<ArkeEntryItem> call, Response<ArkeEntryItem> response) {
+                if (response.isSuccessful()) {
+                    mEntryAdded.postValue(true);
+                    refreshArkeCache();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArkeEntryItem> call, Throwable throwable) {
+                Log.e(LOG_TAG, throwable.getMessage());
                 mConnectionError.postValue(true);
             }
 

@@ -26,7 +26,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,12 +49,6 @@ public class ArkeFragment extends Fragment {
     // all activity interactions are with the WordViewModel only
     private IrisViewModel mIrisViewModel;
     private ArkeViewModel mArkeViewModel;
-
-    // Placeholder to test changing colours of entries
-    private static final String[] mColourArray = {"red", "pink", "purple", "deep_purple",
-            "indigo", "blue", "light_blue", "cyan", "teal", "green",
-            "light_green", "lime", "yellow", "amber", "orange", "deep_orange",
-            "brown", "grey", "blue_grey", "pink_dark"};
 
     public ArkeFragment() {
         // Required empty public constructor
@@ -126,56 +119,32 @@ public class ArkeFragment extends Fragment {
         // Give RecyclerView a LayoutManager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        // This will load the items from the database
-//        Call<List<ArkeEntryItem>> call = entryService.getPublicEntries();
-//        call.enqueue(new Callback<List<ArkeEntryItem>>() {
-//            @Override
-//            public void onResponse(Call<List<ArkeEntryItem>> call, Response<List<ArkeEntryItem>> response) {
-//                if (response.isSuccessful()) {
-//                    Log.e(LOG_TAG, "Entries called.");
-//                    entriesList = response.body();
-//                    mAdapter.setEntries(entriesList);
-//                    fab.setVisibility(View.VISIBLE);
-//                    rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
-//                    mSwipeRefreshLayout.setEnabled(true);
-//
-//                    // refresh the local cache for Arke
-//                    refreshArkeCache();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
-//
-//                // TODO: need to load the cache instead
-//                Log.e(LOG_TAG, t.getMessage());
-//                //mConnectionError.setVisibility(View.VISIBLE);
-//                fab.setVisibility(View.INVISIBLE);
-//                rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
-//                mSwipeRefreshLayout.setEnabled(true);
-//                fab.setVisibility(View.VISIBLE);
-//                displayConnectionErrorMessage();
-//                // an observer sees when the data is changed while the activity is open,
-//                // and updates the data in the adapter
-//                mArkeViewModel.getPublicEntries().observe(getActivity(), new Observer<List<ArkeEntryItem>>() {
-//                    @Override
-//                    public void onChanged(List<ArkeEntryItem> entries) {
-//                        // update cached copy of words in adapter
-//                        mAdapter.setEntries(entries);
-//                    }
-//                });
-//
-//            }
-//
-//        });
-
         mArkeViewModel.refreshArkeCache();
 
-        mArkeViewModel.getPublicEntries().observe(getActivity(), new Observer<List<ArkeEntryItem>>() {
-            @Override
-            public void onChanged(List<ArkeEntryItem> entries) {
-                // update cached copy of words in adapter
-                mAdapter.setEntries(entries);
+        // Observer for the entries to list in the recyclerview
+        mArkeViewModel.getPublicEntries().observe(getActivity(), entries -> {
+            // update cached copy of words in adapter
+            mAdapter.setEntries(entries);
+            if (entries.size() < 1) {
+                rootView.findViewById(R.id.connection_error).setVisibility(View.VISIBLE);
+            } else {
+                rootView.findViewById(R.id.connection_error).setVisibility(View.GONE);
+            }
+        });
+
+        // Observer for any connection error
+        mArkeViewModel.getConnectionError().observe(getActivity(), connectionError -> {
+            if (connectionError) {
+                displayConnectionErrorMessage();
+            }
+        });
+
+        // Observer for whether loading has completed
+        mArkeViewModel.getLoadingComplete().observe(getActivity(), loadingComplete -> {
+            if (loadingComplete) {
+                rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
+                mSwipeRefreshLayout.setEnabled(true);
+                fab.setVisibility(View.VISIBLE);
             }
         });
 
@@ -183,14 +152,11 @@ public class ArkeFragment extends Fragment {
         /**
          * Refresh the fragment on swiping down
          */
-        // removed the icon spinner as using a progress icon
-        mSwipeRefreshLayout.setProgressViewEndTarget(false, 0);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                rootView.findViewById(R.id.loading_indicator).setVisibility(View.VISIBLE);
                 mArkeViewModel.refreshArkeCache();
-                // remove observers, as this was only for observing the cache when no connection
-                mArkeViewModel.getPublicEntries().removeObservers(getActivity());
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -200,17 +166,13 @@ public class ArkeFragment extends Fragment {
     }
 
     /**
-     * Method for generating a random color
-     *
+     * Method for applying random colour for the colour picker
      * @return
      */
     public int changeColour() {
-        Random random = new Random();
-        // pick a random colour (using an index)
-        String colourName = mColourArray[random.nextInt(20)];
-        // get resource identifier
-        int colourResourceName = getResources().getIdentifier(colourName, "color",
-                getActivity().getApplicationContext().getPackageName()); // look up the string colorName in the
+        int colourResourceName = getResources().getIdentifier(mArkeViewModel.randomColour(), "color",
+                getActivity().getApplicationContext().getPackageName());
+        // look up the string colorName in the
         // "color" resources
         // there are separate ints for both names and the values
         int colourRes = ContextCompat.getColor(getActivity(), colourResourceName);
@@ -248,9 +210,43 @@ public class ArkeFragment extends Fragment {
                 })
                 .build()
                 .show();
-
     }
 
+    /**
+     * Add colour to the backend postgreSQL database
+     */
+    public void addRemoteEntry() {
+        // TODO: This will assign a member to the entry
+        ArkeEntryItem entry = new ArkeEntryItem(mAccountName, mColourName, 1);
+        Call<ArkeEntryItem> call = entryService.addEntry(entry);
+        call.enqueue(new Callback<ArkeEntryItem>() {
+            @Override
+            public void onResponse(Call<ArkeEntryItem> call, Response<ArkeEntryItem> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getActivity(),
+                            "Entry added!",
+                            Toast.LENGTH_SHORT).show();
+                    refreshIrisCache();
+                    mArkeViewModel.refreshArkeCache();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArkeEntryItem> call, Throwable throwable) {
+                Log.e(LOG_TAG, throwable.getMessage());
+                displayConnectionErrorMessage();
+            }
+
+        });
+    }
+
+    public void displayConnectionErrorMessage() {
+        Toast.makeText(getActivity(),
+                "Connection error...",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    // TODO: Needs replacing after the IrisFragment has been amended to correctly use repository
     /**
      * This will update the local database using the remote database
      */
@@ -297,141 +293,4 @@ public class ArkeFragment extends Fragment {
         });
     }
 
-
-    /**
-     * This will update the local database using the remote database
-     */
-    public void refreshArkeCache() {
-
-        try {
-            // truncate table
-            mArkeViewModel.deleteAll();
-        } catch (Exception NullPointerException) {
-            Log.e(LOG_TAG, "Nothing in database to delete.");
-        }
-
-        // updates the Arke cache on load
-        Call<List<ArkeEntryItem>> call = entryService.getEntries();
-        call.enqueue(new Callback<List<ArkeEntryItem>>() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onResponse(Call<List<ArkeEntryItem>> call, Response<List<ArkeEntryItem>> response) {
-                if (response.isSuccessful()) {
-                    Log.e(LOG_TAG, "Entries called.");
-                    entriesList = response.body();
-                    //Collections.reverse(entriesList);
-                    for (ArkeEntryItem entry : entriesList) {
-                        ArkeEntryItem entryItem = new ArkeEntryItem(
-                                entry.getRemoteId(),
-                                entry.getDateTime(),
-                                entry.getColour(),
-                                entry.getIsPublic()
-                        );
-                        mArkeViewModel.insert(entryItem);
-                    }
-
-                    // smooth scroll to position
-                    mRecyclerView.smoothScrollToPosition(0);
-                }
-            }
-
-            /**
-             * Show a connection error toast.
-             * @param call
-             * @param t
-             */
-            @Override
-            public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
-                Log.e(LOG_TAG, t.getMessage());
-                displayConnectionErrorMessage();
-            }
-        });
-    }
-
-    /**
-     * Add colour to the backend postgreSQL database
-     */
-    public void addRemoteEntry() {
-        // TODO: This will assign a member to the entry
-        ArkeEntryItem entry = new ArkeEntryItem(mAccountName, mColourName, 1);
-        Call<ArkeEntryItem> call = entryService.addEntry(entry);
-        call.enqueue(new Callback<ArkeEntryItem>() {
-            @Override
-            public void onResponse(Call<ArkeEntryItem> call, Response<ArkeEntryItem> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(getActivity(),
-                            "Entry added!",
-                            Toast.LENGTH_SHORT).show();
-                    refreshEntriesList();
-                    refreshIrisCache();
-                    refreshArkeCache();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArkeEntryItem> call, Throwable throwable) {
-                Log.e(LOG_TAG, throwable.getMessage());
-                displayConnectionErrorMessage();
-            }
-
-        });
-    }
-
-    /**
-     * This method refreshes the recycler view
-     */
-    public void refreshEntriesList() {
-
-        // show the loading indicator
-        getActivity().findViewById(R.id.loading_indicator).setVisibility(View.VISIBLE);
-        // disable refresh layout until loading completed
-        mSwipeRefreshLayout.setEnabled(false);
-
-        Call<List<ArkeEntryItem>> call = entryService.getPublicEntries();
-        call.enqueue(new Callback<List<ArkeEntryItem>>() {
-            @Override
-            public void onResponse(Call<List<ArkeEntryItem>> call, Response<List<ArkeEntryItem>> response) {
-                if (response.isSuccessful()) {
-                    Log.e(LOG_TAG, "Entries called.");
-                    ///mConnectionError.setVisibility(View.GONE);
-                    getActivity().findViewById(R.id.arke_fab).setVisibility(View.VISIBLE);
-                    entriesList = response.body();
-                    mAdapter.setEntries(entriesList);
-                    getActivity().findViewById(R.id.loading_indicator).setVisibility(View.GONE);
-                    // smooth scroll to position
-                    mRecyclerView.smoothScrollToPosition(0);
-                    mSwipeRefreshLayout.setEnabled(true);
-
-                    // refresh the cache
-                    refreshArkeCache();
-                }
-            }
-
-            /**
-             * If the entriesList contains items, it means items are showing,
-             * but there is a new error on refreshing, so a Toast is shown.
-             * Otherwise, the page was already blank from the start,
-             * so a connection error message is shown.
-             * @param call
-             * @param t
-             */
-            @Override
-            public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
-                Log.e(LOG_TAG, t.getMessage());
-                getActivity().findViewById(R.id.loading_indicator).setVisibility(View.GONE);
-                mSwipeRefreshLayout.setEnabled(true);
-                displayConnectionErrorMessage();
-            }
-
-        });
-
-    }
-
-    public void displayConnectionErrorMessage() {
-        Toast.makeText(getActivity(),
-                "Connection error...",
-                Toast.LENGTH_SHORT).show();
-    }
-
 }
-

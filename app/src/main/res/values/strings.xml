@@ -30,7 +30,7 @@
     <string name="sandbox_label">Sandbox</string>
     <string name="sandbox_fab">Sandbox Fab</string>
     <string name="delete_all">Delete All</string>
-    <string name="arke_connection_error">OOPSY POOPY! SOMETHING WENT WRONG!</string>
+    <string name="arke_connection_error">Oopsy poopy! There is nothing to display! Are you connected to the internet? Are we? Is anyone?</string>
     <string name="login_title">Arkyris</string>
     <string name="hint_password">Password</string>
     <string name="hint_username">Username</string>
