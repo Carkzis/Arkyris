@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.arkyris.APIUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -29,6 +30,8 @@ public class IrisEntryRepository {
     private MutableLiveData<Boolean> mConnectionError;
     private MutableLiveData<Boolean> mLoadingComplete;
     private MutableLiveData<Boolean> mEntryAdded;
+    private MutableLiveData<Boolean> mEntryDeleted;
+    private MutableLiveData<Boolean> mIsPublic;
 
     SharedPreferences preferences;
     private MutableLiveData<String> mAccountName;
@@ -45,6 +48,8 @@ public class IrisEntryRepository {
         mConnectionError = new MutableLiveData<Boolean>();
         mLoadingComplete = new MutableLiveData<Boolean>();
         mEntryAdded = new MutableLiveData<Boolean>();
+        mEntryDeleted = new MutableLiveData<Boolean>();
+        mIsPublic = new MutableLiveData<Boolean>();
     }
 
     // wrapper method to return cached words as LiveData
@@ -91,6 +96,14 @@ public class IrisEntryRepository {
         return mEntryAdded;
     }
 
+    public MutableLiveData<Boolean> getEntryDeleted() {
+        return mEntryDeleted;
+    }
+
+    public MutableLiveData<Boolean> getIsPublic() {
+        return mIsPublic;
+    }
+
     public void refreshIrisCache() {
         // This will load the items from the database
         Call<List<IrisEntryItem>> call = entryService.getPrivateEntries(mAccountName.getValue());
@@ -100,6 +113,8 @@ public class IrisEntryRepository {
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
+                    // This could be replaced by a DiffUtil.
+                    deleteAll();
                     insertAll(entriesList);
                     mLoadingComplete.postValue(true);
                 }
@@ -140,4 +155,59 @@ public class IrisEntryRepository {
         });
     }
 
+    public void deleteRemoteEntry(IrisEntryItem entryItem) {
+        // this will pass change the flag of an item to deleted, so it will stop
+        // being requested from REST
+        HashMap<String, String> updateEntry = new HashMap<String, String>();
+        updateEntry.put("deleted", "1");
+        Call<IrisEntryItem> call = entryService.updatePublic(entryItem.getRemoteId(), updateEntry);
+        call.enqueue(new Callback<IrisEntryItem>() {
+            @Override
+            public void onResponse(Call<IrisEntryItem> call, Response<IrisEntryItem> response) {
+                if (response.isSuccessful()) {
+                    mEntryDeleted.postValue(true);
+                    // refresh after everything has been done
+                    refreshIrisCache();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<IrisEntryItem> call, Throwable throwable) {
+                Log.e(LOG_TAG, throwable.getMessage());
+                mConnectionError.postValue(true);
+                mLoadingComplete.postValue(true);
+            }
+
+        });
+    }
+
+    public void updateRemoteEntryPublicity(IrisEntryItem entryItem, int isPublic) {
+        // this will pass change the flag of an item to deleted, so it will stop
+        // being requested from REST
+        HashMap<String, String> updateEntry = new HashMap<String, String>();
+        updateEntry.put("public", String.valueOf(isPublic));
+        Call<IrisEntryItem> call = entryService.updatePublic(entryItem.getRemoteId(), updateEntry);
+        call.enqueue(new Callback<IrisEntryItem>() {
+            @Override
+            public void onResponse(Call<IrisEntryItem> call, Response<IrisEntryItem> response) {
+                if (response.isSuccessful()) {
+                    if (isPublic == 1) {
+                        mIsPublic.postValue(true);
+                    } else {
+                        mIsPublic.postValue(false);
+                    }
+                    // refresh after everything has been done
+                    refreshIrisCache();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<IrisEntryItem> call, Throwable throwable) {
+                Log.e(LOG_TAG, throwable.getMessage());
+                mConnectionError.postValue(true);
+                mLoadingComplete.postValue(true);
+            }
+
+        });
+    }
 }

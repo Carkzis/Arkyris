@@ -100,6 +100,8 @@ public class ArkeEntryRepository {
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
+                    // This could be replaced by a DiffUtil.
+                    deleteAll();
                     insertAll(entriesList);
                     mLoadingComplete.postValue(true);
                 }

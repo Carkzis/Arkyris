@@ -3,7 +3,6 @@ package com.example.arkyris.entries;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +23,7 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class IrisFragment extends Fragment {
 
@@ -145,6 +139,34 @@ public class IrisFragment extends Fragment {
             }
         });
 
+        mIrisViewModel.getEntryAdded().observe(getActivity(), entryAdded -> {
+            if (entryAdded) {
+                Toast.makeText(getActivity(),
+                        "Entry added!",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mIrisViewModel.getEntryDeleted().observe(getActivity(), entryDeleted -> {
+            if (entryDeleted) {
+                Toast.makeText(getActivity(),
+                        "Entry deleted!",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mIrisViewModel.getIsPublic().observe(getActivity(), isPublic -> {
+            if (isPublic) {
+                Toast.makeText(getActivity(),
+                        "Entry is now public!",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(),
+                        "Entry is now private!",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
         // delete an item on long click
         mAdapter.setOnItemClickListener((v, position) -> {
             IrisEntryItem entryItem = mAdapter.getEntryAtPosition(position);
@@ -237,14 +259,13 @@ public class IrisFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 if ("Make this entry public?".equals(choices[which])) {
                     // if entry private, make public
-                    deleteOrPublicRemoteEntry(entryItem, "public", 1);
+                    updateRemoteEntryPublicity(entryItem,1);
                 } else if ("Make this entry private?".equals(choices[which])) {
                     // if entry public, make private
-                    deleteOrPublicRemoteEntry(entryItem, "public", 0);
+                    updateRemoteEntryPublicity(entryItem, 0);
                 } else if ("Delete this entry?".equals(choices[which])) {
                     // delete entry
-                    // TODO: create an extra alert for deletion
-                    deleteOrPublicRemoteEntry(entryItem, "deleted", 1);
+                    deleteRemoteEntry(entryItem);
                 } else {
                     // Do nothing
                 }
@@ -253,48 +274,14 @@ public class IrisFragment extends Fragment {
         builder.show();
     }
 
-    /**
-     * Delete an entry, or toggle it between public and private depending on arguments passed.
-     * @param entryItem
-     * @param deleteOrPublic string to decide which field is being updated
-     * @param toggle this is 0 for making an entry private, or 1 for deleting or making entry public
-     */
-    public void deleteOrPublicRemoteEntry(IrisEntryItem entryItem, String deleteOrPublic, int toggle) {
-        // this will pass change the flag of an item to deleted, so it will stop
-        // being requested from REST
-        HashMap<String, String> updateEntry = new HashMap<String, String>();
-        updateEntry.put(deleteOrPublic, String.valueOf(toggle));
-        Call<IrisEntryItem> call = entryService.updatePublic(entryItem.getRemoteId(), updateEntry);
-        call.enqueue(new Callback<IrisEntryItem>() {
-            @Override
-            public void onResponse(Call<IrisEntryItem> call, Response<IrisEntryItem> response) {
-                if (response.isSuccessful()) {
-                    if (deleteOrPublic == "deleted") {
-                        Toast.makeText(getActivity(),
-                                "Entry deleted!",
-                                Toast.LENGTH_SHORT).show();
-                    } else if (toggle == 0) {
-                        Toast.makeText(getActivity(),
-                                "Entry has been made private!",
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getActivity(),
-                                "Entry has been made public!",
-                                Toast.LENGTH_SHORT).show();
-                    }
+    public void deleteRemoteEntry(IrisEntryItem entryItem) {
+        mIrisViewModel.deleteRemoteEntry(entryItem);
+        getActivity().findViewById(R.id.loading_indicator_iris).setVisibility(View.VISIBLE);
+    }
 
-                    // refresh after everything has been done
-                    mIrisViewModel.refreshIrisCache();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<IrisEntryItem> call, Throwable throwable) {
-                Log.e(LOG_TAG, throwable.getMessage());
-
-            }
-
-        });
+    public void updateRemoteEntryPublicity(IrisEntryItem entryItem, int isPublic) {
+        mIrisViewModel.updateRemoteEntryPublicity(entryItem, isPublic);
+        getActivity().findViewById(R.id.loading_indicator_iris).setVisibility(View.VISIBLE);
     }
 
     /**

@@ -17,6 +17,8 @@ public class IrisViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> mConnectionError;
     private MutableLiveData<Boolean> mLoadingComplete;
     private MutableLiveData<Boolean> mEntryAdded;
+    private MutableLiveData<Boolean> mEntryDeleted;
+    private MutableLiveData<Boolean> mIsPublic;
 
     // Random colours
     private static final String[] mColourArray = {"red", "pink", "purple", "deep_purple",
@@ -32,6 +34,8 @@ public class IrisViewModel extends AndroidViewModel {
         mConnectionError = mRepository.getConnectionError();
         mLoadingComplete = mRepository.getLoadingComplete();
         mEntryAdded = mRepository.getEntryAdded();
+        mEntryDeleted = mRepository.getEntryDeleted();
+        mIsPublic = mRepository.getIsPublic();
     }
 
     // getter method to retrieve account name from repository shared preferences
@@ -63,6 +67,20 @@ public class IrisViewModel extends AndroidViewModel {
         return mEntryAdded;
     }
 
+    public MutableLiveData<Boolean> getEntryDeleted() {
+        if (mEntryDeleted == null) {
+            mEntryDeleted = new MutableLiveData<Boolean>();
+        }
+        return mEntryDeleted;
+    }
+
+    public MutableLiveData<Boolean> getIsPublic() {
+        if (mIsPublic == null) {
+            mIsPublic = new MutableLiveData<Boolean>();
+        }
+        return mIsPublic;
+    }
+
     // getter method for getting all the words,
     // hides implementation from the UI
     LiveData<List<IrisEntryItem>> getAllEntries() { return mAllEntries; }
@@ -79,6 +97,14 @@ public class IrisViewModel extends AndroidViewModel {
 
     public void addRemoteEntry(int colour, int isPublic) {
         mRepository.addRemoteEntry(colour, isPublic);
+    }
+
+    public void deleteRemoteEntry(IrisEntryItem entryItem) {
+        mRepository.deleteRemoteEntry(entryItem);
+    }
+
+    public void updateRemoteEntryPublicity(IrisEntryItem entryItem, int isPublic) {
+        mRepository.updateRemoteEntryPublicity(entryItem, isPublic);
     }
 
     /**
