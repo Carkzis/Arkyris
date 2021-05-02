@@ -136,6 +136,7 @@ public class ArkeEntryRepository {
             public void onFailure(Call<ArkeEntryItem> call, Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 mConnectionError.postValue(true);
+                mLoadingComplete.postValue(true);
             }
 
         });

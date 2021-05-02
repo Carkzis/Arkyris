@@ -16,6 +16,7 @@ public class ArkeViewModel extends AndroidViewModel {
     private MutableLiveData<String> mAccountName;
     private MutableLiveData<Boolean> mConnectionError;
     private MutableLiveData<Boolean> mLoadingComplete;
+    private MutableLiveData<Boolean> mEntryAdded;
 
     // These set colours are for the random colour selected when the colour picker is
     // opened up
@@ -31,6 +32,7 @@ public class ArkeViewModel extends AndroidViewModel {
         mAccountName = mRepository.getAccountName();
         mConnectionError = mRepository.getConnectionError();
         mLoadingComplete = mRepository.getLoadingComplete();
+        mEntryAdded = mRepository.getEntryAdded();
     }
 
     // getter method for getting all the words,
@@ -59,12 +61,26 @@ public class ArkeViewModel extends AndroidViewModel {
         return mLoadingComplete;
     }
 
+    public MutableLiveData<Boolean> getEntryAdded() {
+        if (mEntryAdded == null) {
+            mEntryAdded = new MutableLiveData<Boolean>();
+        }
+        return mEntryAdded;
+    }
+
+    // TODO: remove this
     // wrapper for insert that calls Repository's insert() method,
     // hides implementation of insert() from UI
     public void insert(ArkeEntryItem entry) { mRepository.insert(entry); }
 
+    public void addRemoteEntry(int colour) {
+        mRepository.addRemoteEntry(colour);
+    }
+
+    // deletes local cache
     public void deleteAll() { mRepository.deleteAll(); }
 
+    // refresh cache
     public void refreshArkeCache() { mRepository.refreshArkeCache(); }
 
     /**

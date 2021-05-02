@@ -135,7 +135,9 @@ public class ArkeFragment extends Fragment {
         // Observer for any connection error
         mArkeViewModel.getConnectionError().observe(getActivity(), connectionError -> {
             if (connectionError) {
-                displayConnectionErrorMessage();
+                Toast.makeText(getActivity(),
+                        "Connection error...",
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -145,6 +147,15 @@ public class ArkeFragment extends Fragment {
                 rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                 mSwipeRefreshLayout.setEnabled(true);
                 fab.setVisibility(View.VISIBLE);
+            }
+        });
+
+        // Observer for any connection error
+        mArkeViewModel.getEntryAdded().observe(getActivity(), entryAdded -> {
+            if (entryAdded) {
+                Toast.makeText(getActivity(),
+                        "Entry added!",
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -203,7 +214,7 @@ public class ArkeFragment extends Fragment {
                 .setPositiveButton("ok", (dialog, selectedColor, allColors) -> {
                     // amend the colour to the chosen one
                     mColourName = selectedColor;
-                    addRemoteEntry();
+                    addRemoteEntry(mColourName);
                 })
                 // otherwise exit
                 .setNegativeButton("cancel", (dialog, which) -> {
@@ -215,35 +226,11 @@ public class ArkeFragment extends Fragment {
     /**
      * Add colour to the backend postgreSQL database
      */
-    public void addRemoteEntry() {
-        // TODO: This will assign a member to the entry
-        ArkeEntryItem entry = new ArkeEntryItem(mAccountName, mColourName, 1);
-        Call<ArkeEntryItem> call = entryService.addEntry(entry);
-        call.enqueue(new Callback<ArkeEntryItem>() {
-            @Override
-            public void onResponse(Call<ArkeEntryItem> call, Response<ArkeEntryItem> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(getActivity(),
-                            "Entry added!",
-                            Toast.LENGTH_SHORT).show();
-                    refreshIrisCache();
-                    mArkeViewModel.refreshArkeCache();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArkeEntryItem> call, Throwable throwable) {
-                Log.e(LOG_TAG, throwable.getMessage());
-                displayConnectionErrorMessage();
-            }
-
-        });
-    }
-
-    public void displayConnectionErrorMessage() {
-        Toast.makeText(getActivity(),
-                "Connection error...",
-                Toast.LENGTH_SHORT).show();
+    public void addRemoteEntry(int colour) {
+        mArkeViewModel.addRemoteEntry(colour);
+        getActivity().findViewById(R.id.loading_indicator).setVisibility(View.VISIBLE);
+        // TODO: change this to affect the iris repository instead
+        //refreshIrisCache();
     }
 
     // TODO: Needs replacing after the IrisFragment has been amended to correctly use repository
@@ -288,7 +275,7 @@ public class ArkeFragment extends Fragment {
             @Override
             public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
-                displayConnectionErrorMessage();
+                //displayConnectionErrorMessage();
             }
         });
     }
