@@ -84,7 +84,6 @@ public class ArkeEntryRepository {
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
-                    deleteAll();
                     insertAll(entriesList);
                     // refresh the local cache for Arke
                 }
