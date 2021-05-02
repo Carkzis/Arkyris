@@ -77,6 +77,10 @@ public class IrisViewModel extends AndroidViewModel {
     // refresh cache
     public void refreshIrisCache() { mRepository.refreshIrisCache(); }
 
+    public void addRemoteEntry(int colour, int isPublic) {
+        mRepository.addRemoteEntry(colour, isPublic);
+    }
+
     /**
      * Method for generating a random color
      * @return

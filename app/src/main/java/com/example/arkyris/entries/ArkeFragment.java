@@ -135,6 +135,8 @@ public class ArkeFragment extends Fragment {
                 rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                 mSwipeRefreshLayout.setEnabled(true);
                 fab.setVisibility(View.VISIBLE);
+                // refresh Iris Cache while we are at it
+                mIrisViewModel.refreshIrisCache();
             }
         });
 
@@ -218,8 +220,6 @@ public class ArkeFragment extends Fragment {
     public void addRemoteEntry(int colour) {
         mArkeViewModel.addRemoteEntry(colour);
         getActivity().findViewById(R.id.loading_indicator).setVisibility(View.VISIBLE);
-        // refresh Iris Cache while we are at it
-        mIrisViewModel.refreshIrisCache();
     }
 
 }

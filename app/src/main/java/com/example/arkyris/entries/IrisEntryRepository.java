@@ -114,4 +114,30 @@ public class IrisEntryRepository {
         });
     }
 
+    /**
+     * Add colour to the backend postgreSQL database
+     */
+    public void addRemoteEntry(int colour, int isPublic) {
+
+        IrisEntryItem entry = new IrisEntryItem(mAccountName.getValue(), colour, isPublic);
+        Call<IrisEntryItem> call = entryService.addEntry(entry);
+        call.enqueue(new Callback<IrisEntryItem>() {
+            @Override
+            public void onResponse(Call<IrisEntryItem> call, Response<IrisEntryItem> response) {
+                if (response.isSuccessful()) {
+                    mEntryAdded.postValue(true);
+                    refreshIrisCache();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<IrisEntryItem> call, Throwable throwable) {
+                Log.e(LOG_TAG, throwable.getMessage());
+                mConnectionError.postValue(true);
+                mLoadingComplete.postValue(true);
+            }
+
+        });
+    }
+
 }

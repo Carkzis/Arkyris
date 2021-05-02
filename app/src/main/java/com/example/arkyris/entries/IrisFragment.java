@@ -2,7 +2,6 @@ package com.example.arkyris.entries;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -28,7 +26,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,10 +42,9 @@ public class IrisFragment extends Fragment {
     List<IrisEntryItem> entriesList = new ArrayList<IrisEntryItem>();
     private String mAccountName;
 
-    private boolean cacheOnce = true;
-
     // all activity interactions are with the WordViewModel only
     private IrisViewModel mIrisViewModel;
+    private ArkeViewModel mArkeViewModel;
 
     // Random colours
     private static final String[] mColourArray = {"red", "pink", "purple", "deep_purple",
@@ -58,20 +54,6 @@ public class IrisFragment extends Fragment {
 
     public IrisFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment IrisFragment.
-     */
-    public static IrisFragment newInstance() {
-        IrisFragment fragment = new IrisFragment();
-        Bundle args = new Bundle();
-        // Currently no arguments here.
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -92,6 +74,7 @@ public class IrisFragment extends Fragment {
 
         // associated the ViewModel with the controller, this persists through config changes
         mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
+        mArkeViewModel = ViewModelProviders.of(this).get(ArkeViewModel.class);
 
         // Retrieve account name held in SharedPreferences
         mIrisViewModel.getAccountName().observe(getActivity(), new Observer<String>() {
@@ -157,7 +140,8 @@ public class IrisFragment extends Fragment {
         // Observer for whether loading has completed
         mIrisViewModel.getLoadingComplete().observe(getActivity(), loadingComplete -> {
             if (loadingComplete) {
-                rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
+                rootView.findViewById(R.id.loading_indicator_iris).setVisibility(View.GONE);
+                mArkeViewModel.refreshArkeCache();
             }
         });
 
@@ -172,19 +156,6 @@ public class IrisFragment extends Fragment {
         // Inflate the layout for this fragment
         return rootView;
 
-    }
-
-    public int changeColour() {
-        Random random = new Random();
-        // pick a random colour (using an index)
-        String colourName = mColourArray[random.nextInt(20)];
-        // get resource identifier
-        int colourResourceName = getResources().getIdentifier(colourName, "color",
-                getActivity().getApplicationContext().getPackageName()); // look up the string colorName in the
-        // "color" resources
-        // there are separate ints for both names and the values
-        int colourRes = ContextCompat.getColor(getActivity(), colourResourceName);
-        return colourRes;
     }
 
     /**
@@ -311,65 +282,18 @@ public class IrisFragment extends Fragment {
                                 "Entry has been made public!",
                                 Toast.LENGTH_SHORT).show();
                     }
-                    refreshEntriesList();
 
                     // refresh after everything has been done
-                    refreshIrisCache();
+                    mIrisViewModel.refreshIrisCache();
                 }
             }
 
             @Override
             public void onFailure(Call<IrisEntryItem> call, Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
-                displayConnectionErrorMessage();
+
             }
 
-        });
-    }
-
-
-    /**
-     * This will update the local database using the remote database
-     */
-    public void refreshIrisCache() {
-        // truncate table
-        mIrisViewModel.deleteAll();
-
-        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries(mAccountName);
-        call.enqueue(new Callback<List<IrisEntryItem>>() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {
-                if (response.isSuccessful()) {
-                    Log.e(LOG_TAG, "Entries called.");
-                    entriesList = response.body();
-                    //Collections.reverse(entriesList);
-                    for (IrisEntryItem entry: entriesList) {
-                        IrisEntryItem entryItem = new IrisEntryItem(
-                                entry.getRemoteId(),
-                                entry.getDateTime(),
-                                entry.getColour(),
-                                entry.getIsPublic()
-                        );
-                        mIrisViewModel.insert(entryItem);
-                    }
-
-                    // smooth scroll to position
-                    mRecyclerView.smoothScrollToPosition(0);
-
-                }
-            }
-
-            /**
-             * Show a connection error toast.
-             * @param call
-             * @param t
-             */
-            @Override
-            public void onFailure(Call<List<IrisEntryItem>> call, Throwable t) {
-                Log.e(LOG_TAG, t.getMessage());
-                displayConnectionErrorMessage();
-            }
         });
     }
 
@@ -377,73 +301,22 @@ public class IrisFragment extends Fragment {
      * Add colour to the backend postgreSQL database
      */
     public void addRemoteEntry(int isPublic) {
-
-        IrisEntryItem entry = new IrisEntryItem(mAccountName, mColourName, isPublic);
-        Call<IrisEntryItem> call = entryService.addEntry(entry);
-        call.enqueue(new Callback<IrisEntryItem>() {
-            @Override
-            public void onResponse(Call<IrisEntryItem> call, Response<IrisEntryItem> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(getActivity(),
-                            "Entry added!",
-                            Toast.LENGTH_SHORT).show();
-                    refreshEntriesList();
-                    refreshIrisCache();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<IrisEntryItem> call, Throwable throwable) {
-                Log.e(LOG_TAG, throwable.getMessage());
-                displayConnectionErrorMessage();
-            }
-
-        });
+        mIrisViewModel.addRemoteEntry(mColourName, isPublic);
+        getActivity().findViewById(R.id.loading_indicator_iris).setVisibility(View.VISIBLE);
     }
 
     /**
-     * This method refreshes the recycler view
+     * Method for applying random colour for the colour picker
+     * @return
      */
-    public void refreshEntriesList() {
-
-        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries(mAccountName);
-        call.enqueue(new Callback<List<IrisEntryItem>>() {
-            @Override
-            public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {
-                if (response.isSuccessful()) {
-                    Log.e(LOG_TAG, "Entries called.");
-                    entriesList = response.body();
-                    mAdapter.setEntries(entriesList);
-                    // smooth scroll to position
-                    mRecyclerView.smoothScrollToPosition(0);
-
-                    // refresh the cache
-                    refreshIrisCache();
-                }
-            }
-
-            /**
-             * If the entriesList contains items, it means items are showing,
-             * but there is a new error on refreshing, so a Toast is shown.
-             * Otherwise, the page was already blank from the start,
-             * so a connection error message is shown.
-             * @param call
-             * @param t
-             */
-            @Override
-            public void onFailure(Call<List<IrisEntryItem>> call, Throwable t) {
-                Log.e(LOG_TAG, t.getMessage());
-                displayConnectionErrorMessage();
-            }
-
-        });
-
-    }
-
-    public void displayConnectionErrorMessage() {
-        Toast.makeText(getActivity(),
-                "Connection error...",
-                Toast.LENGTH_SHORT).show();
+    public int changeColour() {
+        int colourResourceName = getResources().getIdentifier(mIrisViewModel.randomColour(), "color",
+                getActivity().getApplicationContext().getPackageName());
+        // look up the string colorName in the
+        // "color" resources
+        // there are separate ints for both names and the values
+        int colourRes = ContextCompat.getColor(getActivity(), colourResourceName);
+        return colourRes;
     }
 
 }

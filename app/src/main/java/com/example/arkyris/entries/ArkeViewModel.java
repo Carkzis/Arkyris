@@ -76,9 +76,6 @@ public class ArkeViewModel extends AndroidViewModel {
         mRepository.addRemoteEntry(colour);
     }
 
-    // deletes local cache
-    public void deleteAll() { mRepository.deleteAll(); }
-
     // refresh cache
     public void refreshArkeCache() { mRepository.refreshArkeCache(); }
 
