@@ -62,6 +62,12 @@ public class ArkeEntryRepository {
         });
     }
 
+    public void insertAll(List<ArkeEntryItem> entries) {
+        ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mArkeEntryDao.insertAll(entries);
+        });
+    }
+
     // wrapper for retrieving SharedPreference username
     public MutableLiveData<String> getAccountName() {
         String username = preferences.getString("username", null);
@@ -79,18 +85,8 @@ public class ArkeEntryRepository {
                     Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
                     deleteAll();
-                    for (ArkeEntryItem entry : entriesList) {
-                        ArkeEntryItem entryItem = new ArkeEntryItem(
-                                entry.getRemoteId(),
-                                entry.getDateTime(),
-                                entry.getColour(),
-                                entry.getIsPublic()
-                        );
-                        insert(entryItem);
-                    }
-
+                    insertAll(entriesList);
                     // refresh the local cache for Arke
-                    refreshArkeCache();
                 }
             }
 

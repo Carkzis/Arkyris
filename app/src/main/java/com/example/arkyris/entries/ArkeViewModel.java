@@ -39,4 +39,6 @@ public class ArkeViewModel extends AndroidViewModel {
 
     public void deleteAll() { mRepository.deleteAll(); }
 
+    public void refreshArkeCache() { mRepository.refreshArkeCache(); }
+
 }

@@ -128,46 +128,56 @@ public class ArkeFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // This will load the items from the database
-        Call<List<ArkeEntryItem>> call = entryService.getPublicEntries();
-        call.enqueue(new Callback<List<ArkeEntryItem>>() {
+//        Call<List<ArkeEntryItem>> call = entryService.getPublicEntries();
+//        call.enqueue(new Callback<List<ArkeEntryItem>>() {
+//            @Override
+//            public void onResponse(Call<List<ArkeEntryItem>> call, Response<List<ArkeEntryItem>> response) {
+//                if (response.isSuccessful()) {
+//                    Log.e(LOG_TAG, "Entries called.");
+//                    entriesList = response.body();
+//                    mAdapter.setEntries(entriesList);
+//                    fab.setVisibility(View.VISIBLE);
+//                    rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
+//                    mSwipeRefreshLayout.setEnabled(true);
+//
+//                    // refresh the local cache for Arke
+//                    refreshArkeCache();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
+//
+//                // TODO: need to load the cache instead
+//                Log.e(LOG_TAG, t.getMessage());
+//                //mConnectionError.setVisibility(View.VISIBLE);
+//                fab.setVisibility(View.INVISIBLE);
+//                rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
+//                mSwipeRefreshLayout.setEnabled(true);
+//                fab.setVisibility(View.VISIBLE);
+//                displayConnectionErrorMessage();
+//                // an observer sees when the data is changed while the activity is open,
+//                // and updates the data in the adapter
+//                mArkeViewModel.getPublicEntries().observe(getActivity(), new Observer<List<ArkeEntryItem>>() {
+//                    @Override
+//                    public void onChanged(List<ArkeEntryItem> entries) {
+//                        // update cached copy of words in adapter
+//                        mAdapter.setEntries(entries);
+//                    }
+//                });
+//
+//            }
+//
+//        });
+
+        mArkeViewModel.refreshArkeCache();
+
+        mArkeViewModel.getPublicEntries().observe(getActivity(), new Observer<List<ArkeEntryItem>>() {
             @Override
-            public void onResponse(Call<List<ArkeEntryItem>> call, Response<List<ArkeEntryItem>> response) {
-                if (response.isSuccessful()) {
-                    Log.e(LOG_TAG, "Entries called.");
-                    entriesList = response.body();
-                    mAdapter.setEntries(entriesList);
-                    fab.setVisibility(View.VISIBLE);
-                    rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
-                    mSwipeRefreshLayout.setEnabled(true);
-
-                    // refresh the local cache for Arke
-                    refreshArkeCache();
-                }
+            public void onChanged(List<ArkeEntryItem> entries) {
+                // update cached copy of words in adapter
+                mAdapter.setEntries(entries);
             }
-
-            @Override
-            public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
-
-                // TODO: need to load the cache instead
-                Log.e(LOG_TAG, t.getMessage());
-                //mConnectionError.setVisibility(View.VISIBLE);
-                fab.setVisibility(View.INVISIBLE);
-                rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
-                mSwipeRefreshLayout.setEnabled(true);
-                fab.setVisibility(View.VISIBLE);
-                displayConnectionErrorMessage();
-                // an observer sees when the data is changed while the activity is open,
-                // and updates the data in the adapter
-                mArkeViewModel.getPublicEntries().observe(getActivity(), new Observer<List<ArkeEntryItem>>() {
-                    @Override
-                    public void onChanged(List<ArkeEntryItem> entries) {
-                        // update cached copy of words in adapter
-                        mAdapter.setEntries(entries);
-                    }
-                });
-
-            }
-
         });
 
 
@@ -179,7 +189,7 @@ public class ArkeFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshEntriesList();
+                mArkeViewModel.refreshArkeCache();
                 // remove observers, as this was only for observing the cache when no connection
                 mArkeViewModel.getPublicEntries().removeObservers(getActivity());
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -192,6 +202,7 @@ public class ArkeFragment extends Fragment {
 
     /**
      * Method for generating a random color
+     *
      * @return
      */
     public int changeColour() {
@@ -274,18 +285,18 @@ public class ArkeFragment extends Fragment {
                 }
             }
 
-                /**
-                 * Show a connection error toast.
-                 * @param call
-                 * @param t
-                 */
-                @Override
-                public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
-                    Log.e(LOG_TAG, t.getMessage());
-                    displayConnectionErrorMessage();
-                }
-            });
-        }
+            /**
+             * Show a connection error toast.
+             * @param call
+             * @param t
+             */
+            @Override
+            public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
+                Log.e(LOG_TAG, t.getMessage());
+                displayConnectionErrorMessage();
+            }
+        });
+    }
 
 
     /**
@@ -411,7 +422,7 @@ public class ArkeFragment extends Fragment {
                 getActivity().findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                 mSwipeRefreshLayout.setEnabled(true);
                 displayConnectionErrorMessage();
-                }
+            }
 
         });
 

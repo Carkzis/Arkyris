@@ -2,6 +2,7 @@ package com.example.arkyris.entries;
 
 import android.os.Build;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -17,12 +18,15 @@ import java.time.format.DateTimeFormatter;
 @Entity(tableName = "arke_entry_table")
 public class ArkeEntryItem {
 
-    // Attributes for each entry
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "_entryId")
-    public int mEntryId;
+//    // Attributes for each entry
+//    @PrimaryKey(autoGenerate = true)
+//    @ColumnInfo(name = "_entryId")
+//    public int mEntryId;
 
      //Note to self: calling it pk and also id is very confusing.
+
+    @PrimaryKey
+    @NonNull
     @SerializedName("pk")
     @ColumnInfo(name = "remoteId")
     @Expose
@@ -55,7 +59,7 @@ public class ArkeEntryItem {
 
     @Ignore
     public ArkeEntryItem(String remoteId, String dateTime, int colour, int isPublic) {
-            mEntryId = 0;
+            //mEntryId = 0;
             mRemoteId = remoteId;
             mDateTime = dateTime;
             mColour = colour;
@@ -63,14 +67,14 @@ public class ArkeEntryItem {
         }
 
     public ArkeEntryItem(String name, int colour, int isPublic) {
-            mEntryId = 0;
+//            mEntryId = 0;
             mName = name;
             mColour = colour;
             mIsPublic = isPublic;
         }
 
     // getters and setters
-    public int getId() { return mEntryId; }
+//    public int getId() { return mEntryId; }
 
     public String getRemoteId() { return mRemoteId; }
 
