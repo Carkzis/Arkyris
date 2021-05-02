@@ -1,8 +1,10 @@
-package com.example.arkyris;
+package com.example.arkyris.about;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.arkyris.R;
 
 public class AboutActivity extends AppCompatActivity {
 

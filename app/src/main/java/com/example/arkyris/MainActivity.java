@@ -13,6 +13,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.arkyris.about.AboutActivity;
+import com.example.arkyris.accounts.LoginActivity;
+import com.example.arkyris.settings.SettingsActivity;
+import com.example.arkyris.settings.SettingsViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.example.arkyris;
+package com.example.arkyris.entries;
 
 import java.util.HashMap;
 import java.util.List;

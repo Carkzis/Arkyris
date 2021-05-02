@@ -1,4 +1,4 @@
-package com.example.arkyris;
+package com.example.arkyris.settings;
 
 import android.app.Application;
 

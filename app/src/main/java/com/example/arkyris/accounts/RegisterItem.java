@@ -1,4 +1,4 @@
-package com.example.arkyris;
+package com.example.arkyris.accounts;
 
 import com.google.gson.annotations.SerializedName;
 

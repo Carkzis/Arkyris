@@ -1,5 +1,8 @@
 package com.example.arkyris;
 
+import com.example.arkyris.accounts.AccountService;
+import com.example.arkyris.entries.EntryService;
+
 public class APIUtils {
 
     public APIUtils() {

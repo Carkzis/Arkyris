@@ -13,15 +13,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Arkyris"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ChangePasswordActivity"
+        <activity android:name=".settings.ChangePasswordActivity"
             android:label="@string/change_password"
-            android:parentActivityName=".SettingsActivity"
+            android:parentActivityName=".settings.SettingsActivity"
             android:theme="@style/Theme.Arkyris" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".accounts.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".accounts.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Arkyris.NoActionBar">
@@ -32,12 +32,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AboutActivity"
+            android:name=".about.AboutActivity"
             android:label="@string/about_arkyris"
             android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.Arkyris" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:label="Settings"
             android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.Arkyris" />

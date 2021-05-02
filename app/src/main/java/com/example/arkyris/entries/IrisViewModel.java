@@ -1,4 +1,4 @@
-package com.example.arkyris;
+package com.example.arkyris.entries;
 
 import android.app.Application;
 
@@ -8,22 +8,18 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
-public class ArkeViewModel extends AndroidViewModel {
+public class IrisViewModel extends AndroidViewModel {
 
-    private ArkeEntryRepository mRepository;
-    private LiveData<List<ArkeEntryItem>> mPublicEntries;
+    private IrisEntryRepository mRepository;
+    private LiveData<List<IrisEntryItem>> mAllEntries;
     private MutableLiveData<String> mAccountName;
 
-    public ArkeViewModel (Application application) {
+    public IrisViewModel (Application application) {
         super(application);
-        mRepository = new ArkeEntryRepository(application);
-        mPublicEntries = mRepository.getAllPublicEntries();
+        mRepository = new IrisEntryRepository(application);
+        mAllEntries = mRepository.getAllEntries();
         mAccountName = mRepository.getAccountName();
     }
-
-    // getter method for getting all the words,
-    // hides implementation from the UI
-    LiveData<List<ArkeEntryItem>> getPublicEntries() { return mPublicEntries; }
 
     // getter method to retrieve account name from repository shared preferences
     public MutableLiveData<String> getAccountName() {
@@ -33,10 +29,17 @@ public class ArkeViewModel extends AndroidViewModel {
         return mAccountName;
     }
 
+    // getter method for getting all the words,
+    // hides implementation from the UI
+    LiveData<List<IrisEntryItem>> getAllEntries() { return mAllEntries; }
+
     // wrapper for insert that calls Repository's insert() method,
     // hides implementation of insert() from UI
-    public void insert(ArkeEntryItem entry) { mRepository.insert(entry); }
+    public void insert(IrisEntryItem entry) { mRepository.insert(entry); }
 
+    // This is only for testing purposes
     public void deleteAll() { mRepository.deleteAll(); }
+
+
 
 }

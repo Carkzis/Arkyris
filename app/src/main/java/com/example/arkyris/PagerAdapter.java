@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.example.arkyris.entries.ArkeFragment;
+import com.example.arkyris.entries.IrisFragment;
+
 public class PagerAdapter extends FragmentStatePagerAdapter {
 
     int mNumOfTabs;

@@ -1,4 +1,4 @@
-package com.example.arkyris;
+package com.example.arkyris.entries;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.arkyris.APIUtils;
+import com.example.arkyris.R;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -57,20 +59,6 @@ public class ArkeFragment extends Fragment {
 
     public ArkeFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ArkeFragment.
-     */
-    public static ArkeFragment newInstance() {
-        ArkeFragment fragment = new ArkeFragment();
-        Bundle args = new Bundle();
-        // Currently no arguments here.
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override

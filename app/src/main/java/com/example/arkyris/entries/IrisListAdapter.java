@@ -1,4 +1,4 @@
-package com.example.arkyris;
+package com.example.arkyris.entries;
 
 import android.content.Context;
 import android.os.Build;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.arkyris.R;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.arkyris;
+package com.example.arkyris.settings;
 
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -6,6 +6,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
+
+import com.example.arkyris.APIUtils;
+import com.example.arkyris.accounts.AccountService;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

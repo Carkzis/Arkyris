@@ -1,4 +1,4 @@
-package com.example.arkyris;
+package com.example.arkyris.settings;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -10,6 +10,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+
+import com.example.arkyris.entries.IrisViewModel;
+import com.example.arkyris.R;
+import com.example.arkyris.accounts.LoginActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 

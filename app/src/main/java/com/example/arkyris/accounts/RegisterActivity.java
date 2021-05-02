@@ -1,4 +1,4 @@
-package com.example.arkyris;
+package com.example.arkyris.accounts;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+
+import com.example.arkyris.R;
 
 public class RegisterActivity extends AppCompatActivity {
 

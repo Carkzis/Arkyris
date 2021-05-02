@@ -1,4 +1,4 @@
-package com.example.arkyris;
+package com.example.arkyris.accounts;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
