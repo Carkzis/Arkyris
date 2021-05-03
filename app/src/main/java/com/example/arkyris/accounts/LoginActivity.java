@@ -1,5 +1,6 @@
 package com.example.arkyris.accounts;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -92,6 +93,18 @@ public class LoginActivity extends AppCompatActivity {
 
         mViewModel.authenticateUser(username, password);
 
+    }
+
+
+    /**
+     * Forgotten password functionality is not currently avaialable, but this may be replaced
+     * by social logins anyway.
+     */
+    public void forgottenPasswordAlert(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Forgot your password?")
+                .setMessage("That was silly!");
+        builder.show();
     }
 
 }
