@@ -1,10 +1,44 @@
 <resources>
     <string name="about_arkyris">About Arkyris</string>
     <string name="about_subtitle">Bringing more colour into our lives.</string>
-    <string name="about_text">Placeholder \"About\" text.\nhttps://github.com/Carkzis</string>
+    <string name="about_text"><u>Welcome to Arkyris!</u>\n
+        This is split up into two different sections, Arke and Iris.  Arke for the public "entries"
+        (this is what we call the colours you post), Iris is for the private entries.  As for what
+        each entry means, well, that can be whatever you want, whatever colour you are "feeling"
+        at the time, and you can either let everyone know, or keep it private (and you can change
+        this later if you so please!).\n
+        <u>Arke</u>\n
+        This shows everyone\'s public colour entries.  You can add a public entry here by clicking the
+        green circle in the bottom right corner.  This will open up a colour picker.  Select a
+        colour from the wheel, change the brightness if you so prefer and click OK!  This will post
+        the colour publicly.  Note: This will also post it to Iris, which is where your private
+        entries are displayed.  Your posts will always show in Iris, regardless of if they are
+        public or private.\n
+        <u>Iris</u>\n
+        This shows your private entries. The way you post here is slightly different; click on the
+        large circle in the centre of the screen which will open up the colour picker. Again, you
+        can select a colour from the wheel, change the brightness and click OK, however it is not
+        posted yet but the large circle will preview the desired colour for you.  If this is to
+        your liking, click the green button at the bottom of the screen, and you get the option to
+        either make this entry public or private.  You will then see this added to your entries at
+        the top of the screen.\n
+        <u>Changing Public Visiblity of Entries</u>\n
+        Just go into Iris, find the entry you wish to amend and press down on it and hold for a
+        second or so.  You then get the option to make it private (if it is already public), and it
+        will stop showing in Arke, or vice versa.\n
+        <u>Deleting Entries</u>\n
+        Similar to amending the visibility or entries, just go into Iris, find the entry you wish
+        to amend, press down on it and choose the deletion option.\n
+        <u>Accounts</u>\n
+        You can go into settings, where you can change your password (make sure you remember what
+        you changed it too!), or log out.  If you choose to logout, you can all request that this is
+        done across all your devices, and they will be logged out the next time the app is opened.\n
+        <u>Further Information</u>\n
+        Please check out https://github.com/Carkzis for more information on any planned updates to
+        the app, or any other apps currently under development!</string>
     <string name="app_name">Arkyris</string>
     <string name="arke">Arke</string>
-    <string name="button_camera">Take a picture...?</string>
+    <string name="button_camera">Take a picture…?</string>
     <string name="button_share">Share</string>
     <string name="colour_diary_entry">Colour of diary entry.</string>
     <string name="email_colour">E-mail your colour.</string>
@@ -30,7 +64,8 @@
     <string name="sandbox_label">Sandbox</string>
     <string name="sandbox_fab">Sandbox Fab</string>
     <string name="delete_all">Delete All</string>
-    <string name="arke_connection_error">Oopsy poopy! There is nothing to display! Are you connected to the internet? Are we? Is anyone?</string>
+    <string name="arke_connection_error">Oopsy poopy! There is nothing to display! Are you
+        connected to the internet? Are we? Is anyone?</string>
     <string name="login_title">Arkyris</string>
     <string name="hint_password">Password</string>
     <string name="hint_username">Username</string>
@@ -38,10 +73,12 @@
     <string name="button_register">Register</string>
     <string name="text_forgotten_password"><u>Forgot your password?</u></string>
     <string name="title_register">Create an account!</string>
-    <string name="text_username_alphanumerical">Must been between 8-20 characters, alphanumerical only!</string>
+    <string name="text_username_alphanumerical">Must been between 8-20 characters,
+        alphanumerical only!</string>
     <string name="hint_reenter_password">Re-enter your password!</string>
     <string name="hint_choose_username">Choose your username!</string>
-    <string name="text_password_requirements">Must be less than 50 characters, alphanumerical only!</string>
+    <string name="text_password_requirements">Must be less than 50 characters,
+        alphanumerical only!</string>
     <string name="hint_email">Enter your email address!</string>
     <string name="hint_choose_password">Choose a password!</string>
     <string name="button_register_me">Register me!</string>
@@ -58,7 +95,7 @@
     <string name="new_password2">Re-enter your NEW password</string>
     <string name="change_your_password">Change Your Password</string>
     <string name="new_password_">Enter your NEW password</string>
-    <string name="text_password_requirements2">8-20 characters, alphanumerical!</string>
+    <string name="text_password_requirements2">8–20 characters, alphanumerical!</string>
     <string name="change_it">Change it!</string>
     <string name="change_password_background">Change password background.</string>
     <string name="no_entries">You have no entries! Enter something below!</string>
