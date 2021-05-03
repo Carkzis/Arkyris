@@ -21,9 +21,6 @@ import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ArkeFragment extends Fragment {
 
     private static final String LOG_TAG = ArkeFragment.class.getSimpleName();
@@ -32,9 +29,9 @@ public class ArkeFragment extends Fragment {
     private ArkeListAdapter mAdapter;
     private int mColourName;
     EntryService entryService;
-    List<ArkeEntryItem> entriesList = new ArrayList<ArkeEntryItem>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private String mAccountName;
+    private int entryListSize;
 
     // textview for when there is a connection error
     private TextView mConnectionError;
@@ -113,11 +110,7 @@ public class ArkeFragment extends Fragment {
         mArkeViewModel.getPublicEntries().observe(getActivity(), entries -> {
             // update cached copy of words in adapter
             mAdapter.setEntries(entries);
-            if (entries.size() < 1) {
-                rootView.findViewById(R.id.connection_error).setVisibility(View.VISIBLE);
-            } else {
-                rootView.findViewById(R.id.connection_error).setVisibility(View.GONE);
-            }
+            entryListSize = entries.size();
         });
 
         // Observer for any connection error
@@ -135,6 +128,13 @@ public class ArkeFragment extends Fragment {
                 rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                 mSwipeRefreshLayout.setEnabled(true);
                 fab.setVisibility(View.VISIBLE);
+                // This will display a message to say there are entries to show on only
+                // after everything has loaded.
+                if (entryListSize < 1) {
+                    rootView.findViewById(R.id.connection_error).setVisibility(View.VISIBLE);
+                } else {
+                    rootView.findViewById(R.id.connection_error).setVisibility(View.GONE);
+                }
                 // refresh Iris Cache while we are at it
                 mIrisViewModel.refreshIrisCache();
             }

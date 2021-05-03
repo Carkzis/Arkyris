@@ -35,6 +35,7 @@ public class IrisFragment extends Fragment {
     EntryService entryService;
     List<IrisEntryItem> entriesList = new ArrayList<IrisEntryItem>();
     private String mAccountName;
+    private int entryListSize;
 
     // all activity interactions are with the WordViewModel only
     private IrisViewModel mIrisViewModel;
@@ -115,11 +116,9 @@ public class IrisFragment extends Fragment {
         mIrisViewModel.getAllEntries().observe(getActivity(), entries -> {
             // update cached copy of words in adapter
             mAdapter.setEntries(entries);
-            if (entries.size() < 1) {
-                rootView.findViewById(R.id.text_no_entries).setVisibility(View.VISIBLE);
-            } else {
-                rootView.findViewById(R.id.text_no_entries).setVisibility(View.GONE);
-            }
+            // We want the size, so that we can decide whether to provide a message
+            // saying there are no entries after loading has finished
+            entryListSize = entries.size();
         });
 
         // Observer for any connection error
@@ -136,6 +135,13 @@ public class IrisFragment extends Fragment {
             if (loadingComplete) {
                 rootView.findViewById(R.id.loading_indicator_iris).setVisibility(View.GONE);
                 mArkeViewModel.refreshArkeCache();
+                // This will display a message to say there are entries to show on only
+                // after everything has loaded.
+                if (entryListSize < 1) {
+                    rootView.findViewById(R.id.text_no_entries).setVisibility(View.VISIBLE);
+                } else {
+                    rootView.findViewById(R.id.text_no_entries).setVisibility(View.GONE);
+                }
             }
         });
 

@@ -16,7 +16,8 @@
         <activity android:name=".settings.ChangePasswordActivity"
             android:label="@string/change_password"
             android:parentActivityName=".settings.SettingsActivity"
-            android:theme="@style/Theme.Arkyris" />
+            android:theme="@style/Theme.Arkyris"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".accounts.RegisterActivity"
             android:screenOrientation="portrait" />
@@ -35,22 +36,18 @@
             android:name=".about.AboutActivity"
             android:label="@string/about_arkyris"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.Arkyris" />
+            android:theme="@style/Theme.Arkyris"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".settings.SettingsActivity"
             android:label="Settings"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.Arkyris" />
+            android:theme="@style/Theme.Arkyris"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <!-- intent with view actions -->
-                <action android:name="android.intent.action.VIEW" />
-                <!-- any implicit intent -->
-                <category android:name="android.intent.category.DEFAULT" />
-                <!-- requests for browsable links -->
-                <category android:name="android.intent.category.BROWSABLE" />
                 <!-- URIs that contain scheme of http and host of developer.android.com -->
                 <data android:scheme="https" />
             </intent-filter>
@@ -59,9 +56,7 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
+
     </application>
 
 </manifest>
