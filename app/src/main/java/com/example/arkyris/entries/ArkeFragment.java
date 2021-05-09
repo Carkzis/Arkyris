@@ -106,7 +106,10 @@ public class ArkeFragment extends Fragment {
             // update cached copy of words in adapter
             mAdapter.setEntries(entries);
             entryListSize = entries.size();
-
+            // Moved this here, so that the connection error never shows if there are any entries.
+            if (entryListSize > 0) {
+                rootView.findViewById(R.id.connection_error).setVisibility(View.GONE);
+            }
         });
 
         // Observer for any connection error
@@ -130,7 +133,6 @@ public class ArkeFragment extends Fragment {
                 if (entryListSize < 1) {
                     rootView.findViewById(R.id.connection_error).setVisibility(View.VISIBLE);
                 } else {
-                    rootView.findViewById(R.id.connection_error).setVisibility(View.GONE);
                     mRecyclerView.smoothScrollToPosition(0);
                 }
                 mIrisViewModel.refreshIrisCache();
