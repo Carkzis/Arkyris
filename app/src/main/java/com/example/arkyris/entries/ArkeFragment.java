@@ -1,6 +1,7 @@
 package com.example.arkyris.entries;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,14 +53,6 @@ public class ArkeFragment extends Fragment {
         }
     }
 
-    /**
-     * Note to self: for fragments, treat this as onCreate.
-     *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -68,8 +61,10 @@ public class ArkeFragment extends Fragment {
 
         entryService = APIUtils.getEntryService();
 
-        // associated the ViewModel with the controller, this persists through config changes
-        mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
+        // associated the ViewModel with the controller
+        // Note: IrisViewModel is shared between activities so Iris
+        // can display whether or not there are any user entries on launching the app.
+        mIrisViewModel = ViewModelProviders.of(getActivity()).get(IrisViewModel.class);
         mArkeViewModel = ViewModelProviders.of(this).get(ArkeViewModel.class);
 
         mArkeViewModel.getAccountName().observe(getActivity(), new Observer<String>() {
@@ -125,6 +120,7 @@ public class ArkeFragment extends Fragment {
 
         // Observer for whether loading has completed
         mArkeViewModel.getLoadingComplete().observe(getActivity(), loadingComplete -> {
+            Log.e(LOG_TAG, String.valueOf(entryListSize));
             if (loadingComplete) {
                 rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                 mSwipeRefreshLayout.setEnabled(true);
@@ -137,7 +133,6 @@ public class ArkeFragment extends Fragment {
                     rootView.findViewById(R.id.connection_error).setVisibility(View.GONE);
                     mRecyclerView.smoothScrollToPosition(0);
                 }
-                // refresh Iris Cache while we are at it
                 mIrisViewModel.refreshIrisCache();
             }
         });
@@ -160,7 +155,7 @@ public class ArkeFragment extends Fragment {
             public void onRefresh() {
                 rootView.findViewById(R.id.loading_indicator).setVisibility(View.VISIBLE);
                 mArkeViewModel.refreshArkeCache();
-                mIrisViewModel.refreshIrisCache();
+                //mIrisViewModel.refreshIrisCache();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });

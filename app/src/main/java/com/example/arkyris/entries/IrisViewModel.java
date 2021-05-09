@@ -11,6 +11,8 @@ import java.util.Random;
 
 public class IrisViewModel extends AndroidViewModel {
 
+    private static final String LOG_TAG = IrisViewModel.class.getSimpleName();
+
     private IrisEntryRepository mRepository;
     private LiveData<List<IrisEntryItem>> mAllEntries;
     private MutableLiveData<String> mAccountName;
@@ -87,13 +89,15 @@ public class IrisViewModel extends AndroidViewModel {
 
     // wrapper for insert that calls Repository's insert() method,
     // hides implementation of insert() from UI
-    public void insert(IrisEntryItem entry) { mRepository.insert(entry); }
+    public void insert(IrisEntryItem entry) {mRepository.insert(entry); }
 
     // This is only for testing purposes
     public void deleteAll() { mRepository.deleteAll(); }
 
     // refresh cache
-    public void refreshIrisCache() { mRepository.refreshIrisCache(); }
+    public void refreshIrisCache() {
+        mRepository.refreshIrisCache();
+    }
 
     public void addRemoteEntry(int colour, int isPublic) {
         mRepository.addRemoteEntry(colour, isPublic);

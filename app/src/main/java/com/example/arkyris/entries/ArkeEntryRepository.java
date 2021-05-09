@@ -107,7 +107,6 @@ public class ArkeEntryRepository {
             @Override
             public void onResponse(Call<List<ArkeEntryItem>> call, Response<List<ArkeEntryItem>> response) {
                 if (response.isSuccessful()) {
-                    Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
                     // This could be replaced by a DiffUtil.
                     //deleteAll();

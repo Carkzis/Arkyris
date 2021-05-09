@@ -3,6 +3,7 @@ package com.example.arkyris.entries;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,7 @@ public class IrisFragment extends Fragment {
         entryService = APIUtils.getEntryService();
 
         // associated the ViewModel with the controller, this persists through config changes
-        mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
+        mIrisViewModel = ViewModelProviders.of(getActivity()).get(IrisViewModel.class);
         mArkeViewModel = ViewModelProviders.of(this).get(ArkeViewModel.class);
 
         // Retrieve account name held in SharedPreferences
@@ -110,7 +111,7 @@ public class IrisFragment extends Fragment {
                 false);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mIrisViewModel.refreshIrisCache();
+        //mIrisViewModel.refreshIrisCache();
 
         // Observer for the entries to list in the recyclerview
         mIrisViewModel.getAllEntries().observe(getActivity(), entries -> {
@@ -132,6 +133,7 @@ public class IrisFragment extends Fragment {
 
         // Observer for whether loading has completed
         mIrisViewModel.getLoadingComplete().observe(getActivity(), loadingComplete -> {
+            Log.e(LOG_TAG, String.valueOf(entryListSize));
             if (loadingComplete) {
                 rootView.findViewById(R.id.loading_indicator_iris).setVisibility(View.GONE);
                 mArkeViewModel.refreshArkeCache();

@@ -120,7 +120,6 @@ public class IrisEntryRepository {
             @Override
             public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {
                 if (response.isSuccessful()) {
-                    Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
                     // This could be replaced by a DiffUtil.
                     //deleteAll();
@@ -141,7 +140,6 @@ public class IrisEntryRepository {
      * Add colour to the backend postgreSQL database
      */
     public void addRemoteEntry(int colour, int isPublic) {
-
         IrisEntryItem entry = new IrisEntryItem(mAccountName.getValue(), colour, isPublic);
         Call<IrisEntryItem> call = entryService.addEntry(entry);
         call.enqueue(new Callback<IrisEntryItem>() {
