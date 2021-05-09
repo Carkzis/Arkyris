@@ -68,6 +68,7 @@ public class ArkeEntryRepository {
 
     public void insertAll(List<ArkeEntryItem> entries) {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mArkeEntryDao.deleteAll();
             mArkeEntryDao.insertAll(entries);
         });
     }
@@ -101,7 +102,7 @@ public class ArkeEntryRepository {
                     Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
                     // This could be replaced by a DiffUtil.
-                    deleteAll();
+                    //deleteAll();
                     insertAll(entriesList);
                     mLoadingComplete.postValue(true);
                 }

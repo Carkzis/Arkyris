@@ -73,6 +73,7 @@ public class IrisEntryRepository {
 
     public void insertAll(List<IrisEntryItem> entries) {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mIrisEntryDao.deleteAll();
             mIrisEntryDao.insertAll(entries);
         });
     }
@@ -114,7 +115,7 @@ public class IrisEntryRepository {
                     Log.e(LOG_TAG, "Entries called.");
                     entriesList = response.body();
                     // This could be replaced by a DiffUtil.
-                    deleteAll();
+                    //deleteAll();
                     insertAll(entriesList);
                     mLoadingComplete.postValue(true);
                 }

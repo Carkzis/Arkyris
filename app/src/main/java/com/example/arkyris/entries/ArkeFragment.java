@@ -111,6 +111,7 @@ public class ArkeFragment extends Fragment {
             // update cached copy of words in adapter
             mAdapter.setEntries(entries);
             entryListSize = entries.size();
+
         });
 
         // Observer for any connection error
