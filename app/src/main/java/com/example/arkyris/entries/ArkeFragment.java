@@ -135,6 +135,7 @@ public class ArkeFragment extends Fragment {
                     rootView.findViewById(R.id.connection_error).setVisibility(View.VISIBLE);
                 } else {
                     rootView.findViewById(R.id.connection_error).setVisibility(View.GONE);
+                    mRecyclerView.smoothScrollToPosition(0);
                 }
                 // refresh Iris Cache while we are at it
                 mIrisViewModel.refreshIrisCache();
