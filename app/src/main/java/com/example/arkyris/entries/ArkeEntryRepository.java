@@ -70,6 +70,14 @@ public class ArkeEntryRepository {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
             mArkeEntryDao.deleteAll();
             mArkeEntryDao.insertAll(entries);
+            // Delay method to prevent loading complete value reaching the
+            // fragment until all the items/recycler view has been updated
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            mLoadingComplete.postValue(true);
         });
     }
 
@@ -104,7 +112,6 @@ public class ArkeEntryRepository {
                     // This could be replaced by a DiffUtil.
                     //deleteAll();
                     insertAll(entriesList);
-                    mLoadingComplete.postValue(true);
                 }
             }
 

@@ -75,6 +75,14 @@ public class IrisEntryRepository {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
             mIrisEntryDao.deleteAll();
             mIrisEntryDao.insertAll(entries);
+            // Delay method to prevent loading complete value reaching the
+            // fragment until all the items/recycler view has been updated
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            mLoadingComplete.postValue(true);
         });
     }
 
@@ -117,7 +125,6 @@ public class IrisEntryRepository {
                     // This could be replaced by a DiffUtil.
                     //deleteAll();
                     insertAll(entriesList);
-                    mLoadingComplete.postValue(true);
                 }
             }
 

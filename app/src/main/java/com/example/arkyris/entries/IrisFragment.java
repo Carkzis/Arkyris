@@ -35,7 +35,7 @@ public class IrisFragment extends Fragment {
     EntryService entryService;
     List<IrisEntryItem> entriesList = new ArrayList<IrisEntryItem>();
     private String mAccountName;
-    private int entryListSize;
+    private int entryListSize = 0;
 
     // all activity interactions are with the WordViewModel only
     private IrisViewModel mIrisViewModel;
@@ -137,7 +137,7 @@ public class IrisFragment extends Fragment {
                 mArkeViewModel.refreshArkeCache();
                 // This will display a message to say there are entries to show on only
                 // after everything has loaded.
-                if (entryListSize < 1) {
+                if (entryListSize == 0) {
                     rootView.findViewById(R.id.text_no_entries).setVisibility(View.VISIBLE);
                 } else {
                     rootView.findViewById(R.id.text_no_entries).setVisibility(View.GONE);
