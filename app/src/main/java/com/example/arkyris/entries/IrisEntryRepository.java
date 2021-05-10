@@ -115,6 +115,10 @@ public class IrisEntryRepository {
         return mIsPublic;
     }
 
+    /**
+     * Refresh the Iris cache when called via the Iris fragment, or within the
+     * IrisEntryRepository class.
+     */
     public void refreshIrisCache() {
         // This will load the items from the database
         Call<List<IrisEntryItem>> call = entryService.getPrivateEntries(username);
@@ -129,11 +133,36 @@ public class IrisEntryRepository {
                     insertAll(entriesList);
                 }
             }
-
             @Override
             public void onFailure(Call<List<IrisEntryItem>> call, Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
                 mConnectionError.postValue(true);
+                mLoadingComplete.postValue(true);
+            }
+        });
+    }
+
+    /**
+     * Refresh the Iris cache when called via Arke fragment, this will not result in
+     * posting a value to mConnectionError, as this is already done within the ArkeEntryRepository.
+     */
+    public void refreshIrisCacheFromArke() {
+        // This will load the items from the database
+        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries(username);
+        call.enqueue(new Callback<List<IrisEntryItem>>() {
+            @Override
+            public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {
+                if (response.isSuccessful()) {
+                    entriesList = response.body();
+                    // This could be replaced by a DiffUtil.
+                    //deleteAll();
+                    Log.e(LOG_TAG, String.valueOf(response.body()));
+                    insertAll(entriesList);
+                }
+            }
+            @Override
+            public void onFailure(Call<List<IrisEntryItem>> call, Throwable t) {
+                Log.e(LOG_TAG, t.getMessage());
                 mLoadingComplete.postValue(true);
             }
         });

@@ -139,8 +139,9 @@ public class ArkeFragment extends Fragment {
                     fab.setVisibility(View.VISIBLE);
                     mRecyclerView.smoothScrollToPosition(0);
                 }
+                // This could be added to a separate observer, for only successful loads.
                 if (!initialLoad) {
-                    mIrisViewModel.refreshIrisCache();
+                    mIrisViewModel.refreshIrisCacheFromArke();
                 } else {
                     initialLoad = false;
                 }
@@ -165,7 +166,6 @@ public class ArkeFragment extends Fragment {
             public void onRefresh() {
                 rootView.findViewById(R.id.loading_indicator).setVisibility(View.VISIBLE);
                 mArkeViewModel.refreshArkeCache();
-                //mIrisViewModel.refreshIrisCache();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });

@@ -99,6 +99,9 @@ public class IrisViewModel extends AndroidViewModel {
         mRepository.refreshIrisCache();
     }
 
+    // refresh cache, but when called from Arke as it acts very slightly differently.
+    public void refreshIrisCacheFromArke() { mRepository.refreshIrisCacheFromArke(); }
+
     public void addRemoteEntry(int colour, int isPublic) {
         mRepository.addRemoteEntry(colour, isPublic);
     }
