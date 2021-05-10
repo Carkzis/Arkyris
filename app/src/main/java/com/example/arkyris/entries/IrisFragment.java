@@ -22,6 +22,7 @@ import com.example.arkyris.R;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +112,7 @@ public class IrisFragment extends Fragment {
                 false);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        //mIrisViewModel.refreshIrisCache();
+        mIrisViewModel.refreshIrisCache();
 
         // Observer for the entries to list in the recyclerview
         mIrisViewModel.getAllEntries().observe(getActivity(), entries -> {
@@ -125,9 +126,11 @@ public class IrisFragment extends Fragment {
         // Observer for any connection error
         mIrisViewModel.getConnectionError().observe(getActivity(), connectionError -> {
             if (connectionError) {
-                Toast.makeText(getActivity(),
-                        "Connection error...",
-                        Toast.LENGTH_SHORT).show();
+                View tablayoutView = getActivity().findViewById(R.id.tab_layout);
+                Snackbar snackbar = Snackbar.make(rootView, "Connection error...",
+                        Snackbar.LENGTH_LONG);
+                snackbar.setAnchorView(tablayoutView);
+                snackbar.show();
             }
         });
 

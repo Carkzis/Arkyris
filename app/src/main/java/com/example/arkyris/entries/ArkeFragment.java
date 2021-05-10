@@ -21,6 +21,7 @@ import com.example.arkyris.R;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 public class ArkeFragment extends Fragment {
 
@@ -33,6 +34,7 @@ public class ArkeFragment extends Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private String mAccountName;
     private int entryListSize;
+    private boolean initialLoad = true;
 
     // textview for when there is a connection error
     private TextView mConnectionError;
@@ -115,9 +117,11 @@ public class ArkeFragment extends Fragment {
         // Observer for any connection error
         mArkeViewModel.getConnectionError().observe(getActivity(), connectionError -> {
             if (connectionError) {
-                Toast.makeText(getActivity(),
-                        "Connection error...",
-                        Toast.LENGTH_SHORT).show();
+                View tablayoutView = getActivity().findViewById(R.id.tab_layout);
+                Snackbar snackbar = Snackbar.make(rootView, "Connection error...",
+                        Snackbar.LENGTH_LONG);
+                snackbar.setAnchorView(tablayoutView);
+                snackbar.show();
             }
         });
 
@@ -127,15 +131,19 @@ public class ArkeFragment extends Fragment {
             if (loadingComplete) {
                 rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
                 mSwipeRefreshLayout.setEnabled(true);
-                fab.setVisibility(View.VISIBLE);
                 // This will display a message to say there are entries to show on only
                 // after everything has loaded.
                 if (entryListSize < 1) {
                     rootView.findViewById(R.id.connection_error).setVisibility(View.VISIBLE);
                 } else {
+                    fab.setVisibility(View.VISIBLE);
                     mRecyclerView.smoothScrollToPosition(0);
                 }
-                mIrisViewModel.refreshIrisCache();
+                if (!initialLoad) {
+                    mIrisViewModel.refreshIrisCache();
+                } else {
+                    initialLoad = false;
+                }
             }
         });
 

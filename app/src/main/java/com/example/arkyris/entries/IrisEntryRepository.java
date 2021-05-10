@@ -32,6 +32,7 @@ public class IrisEntryRepository {
     private MutableLiveData<Boolean> mEntryAdded;
     private MutableLiveData<Boolean> mEntryDeleted;
     private MutableLiveData<Boolean> mIsPublic;
+    String username;
 
     SharedPreferences preferences;
     private MutableLiveData<String> mAccountName;
@@ -45,6 +46,7 @@ public class IrisEntryRepository {
         // Initialise variables for getting account name currently logged in
         preferences = PreferenceManager.getDefaultSharedPreferences(application);
         mAccountName = new MutableLiveData<String>();
+        username = preferences.getString("username", null);
         mConnectionError = new MutableLiveData<Boolean>();
         mLoadingComplete = new MutableLiveData<Boolean>();
         mEntryAdded = new MutableLiveData<Boolean>();
@@ -75,6 +77,7 @@ public class IrisEntryRepository {
         ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
             mIrisEntryDao.deleteAll();
             mIrisEntryDao.insertAll(entries);
+
             // Delay method to prevent loading complete value reaching the
             // fragment until all the items/recycler view has been updated
             try {
@@ -88,7 +91,6 @@ public class IrisEntryRepository {
 
     // wrapper for retrieving SharedPreference username
     public MutableLiveData<String> getAccountName() {
-        String username = preferences.getString("username", null);
         mAccountName.postValue(username);
         return mAccountName;
     }
@@ -115,7 +117,7 @@ public class IrisEntryRepository {
 
     public void refreshIrisCache() {
         // This will load the items from the database
-        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries(mAccountName.getValue());
+        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries(username);
         call.enqueue(new Callback<List<IrisEntryItem>>() {
             @Override
             public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {
@@ -123,6 +125,7 @@ public class IrisEntryRepository {
                     entriesList = response.body();
                     // This could be replaced by a DiffUtil.
                     //deleteAll();
+                    Log.e(LOG_TAG, String.valueOf(response.body()));
                     insertAll(entriesList);
                 }
             }

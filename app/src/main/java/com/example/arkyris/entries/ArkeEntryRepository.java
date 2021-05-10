@@ -110,6 +110,7 @@ public class ArkeEntryRepository {
                     entriesList = response.body();
                     // This could be replaced by a DiffUtil.
                     //deleteAll();
+                    Log.e(LOG_TAG, String.valueOf(response.body()));
                     insertAll(entriesList);
                 }
             }
