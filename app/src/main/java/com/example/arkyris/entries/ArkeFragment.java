@@ -141,7 +141,7 @@ public class ArkeFragment extends Fragment {
                 }
                 // This could be added to a separate observer, for only successful loads.
                 if (!initialLoad) {
-                    mIrisViewModel.refreshIrisCacheFromArke();
+                    mIrisViewModel.refreshIrisCache(true);
                 } else {
                     initialLoad = false;
                 }

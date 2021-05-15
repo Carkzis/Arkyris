@@ -112,7 +112,7 @@ public class IrisFragment extends Fragment {
                 false);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mIrisViewModel.refreshIrisCache();
+        mIrisViewModel.refreshIrisCache(false);
 
         // Observer for the entries to list in the recyclerview
         mIrisViewModel.getAllEntries().observe(getActivity(), entries -> {
