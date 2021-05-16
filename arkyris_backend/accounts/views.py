@@ -32,7 +32,7 @@ class LoginAPI(KnoxLoginView):
         return super(LoginAPI, self).post(request, format=None)
 
 class UserAPI(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticated, ]
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = UserSerializer
 
     def get_object(self):
@@ -44,8 +44,7 @@ class ChangePasswordView(generics.UpdateAPIView):
     permissions_classes = (IsAuthenticated,)
 
     def get_object(self, queryset=None):
-        objectt = self.request.user
-        return objectt
+        return self.request.user
     
     def update(self, request, *args, **kwargs):
         self.object = self.get_object()
