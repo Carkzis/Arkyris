@@ -114,38 +114,38 @@ public class ArkeFragment extends Fragment {
             }
         });
 
-        // Observer for any connection error
-        mArkeViewModel.getConnectionError().observe(getActivity(), connectionError -> {
-            if (connectionError) {
+        // Observer for whether loading has completed
+        mArkeViewModel.getLoadingOutcome().observe(getActivity(), loadingOutcome -> {
+            Log.e(LOG_TAG, String.valueOf(entryListSize));
+            rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
+            mSwipeRefreshLayout.setEnabled(true);
+
+            // This will display a message to say there are entries to show on only
+            // after everything has loaded.
+            if (entryListSize < 1) {
+                rootView.findViewById(R.id.connection_error).setVisibility(View.VISIBLE);
+            } else {
+                fab.setVisibility(View.VISIBLE);
+            }
+
+            // If the loading outcome is "complete", scroll the view to the current position
+            // as that means the data has been updated.
+            if (loadingOutcome.equals("complete")) {
+                mRecyclerView.smoothScrollToPosition(0);
+                // If this is not the initial load, also update the Iris cache.
+                if (!initialLoad) {
+                    mIrisViewModel.refreshIrisCache(true);
+                } else {
+                    initialLoad = false;
+                }
+            } else {
                 View tablayoutView = getActivity().findViewById(R.id.tab_layout);
                 Snackbar snackbar = Snackbar.make(rootView, "Connection error...",
                         Snackbar.LENGTH_LONG);
                 snackbar.setAnchorView(tablayoutView);
                 snackbar.show();
             }
-        });
 
-        // Observer for whether loading has completed
-        mArkeViewModel.getLoadingComplete().observe(getActivity(), loadingComplete -> {
-            Log.e(LOG_TAG, String.valueOf(entryListSize));
-            if (loadingComplete) {
-                rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
-                mSwipeRefreshLayout.setEnabled(true);
-                // This will display a message to say there are entries to show on only
-                // after everything has loaded.
-                if (entryListSize < 1) {
-                    rootView.findViewById(R.id.connection_error).setVisibility(View.VISIBLE);
-                } else {
-                    fab.setVisibility(View.VISIBLE);
-                    mRecyclerView.smoothScrollToPosition(0);
-                }
-                // This could be added to a separate observer, for only successful loads.
-                if (!initialLoad) {
-                    mIrisViewModel.refreshIrisCache(true);
-                } else {
-                    initialLoad = false;
-                }
-            }
         });
 
         // Observer for any connection error

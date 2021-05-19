@@ -15,7 +15,7 @@ public class ArkeViewModel extends AndroidViewModel {
     private LiveData<List<ArkeEntryItem>> mPublicEntries;
     private MutableLiveData<String> mAccountName;
     private MutableLiveData<Boolean> mConnectionError;
-    private MutableLiveData<Boolean> mLoadingComplete;
+    private MutableLiveData<String> mLoadingOutcome;
     private MutableLiveData<Boolean> mEntryAdded;
 
     // These set colours are for the random colour selected when the colour picker is
@@ -31,7 +31,7 @@ public class ArkeViewModel extends AndroidViewModel {
         mPublicEntries = mRepository.getAllPublicEntries();
         mAccountName = mRepository.getAccountName();
         mConnectionError = mRepository.getConnectionError();
-        mLoadingComplete = mRepository.getLoadingComplete();
+        mLoadingOutcome = mRepository.getLoadingOutcome();
         mEntryAdded = mRepository.getEntryAdded();
     }
 
@@ -54,11 +54,11 @@ public class ArkeViewModel extends AndroidViewModel {
         return mConnectionError;
     }
 
-    public MutableLiveData<Boolean> getLoadingComplete() {
-        if (mLoadingComplete == null) {
-            mLoadingComplete = new MutableLiveData<Boolean>();
+    public MutableLiveData<String> getLoadingOutcome() {
+        if (mLoadingOutcome == null) {
+            mLoadingOutcome = new MutableLiveData<String>();
         }
-        return mLoadingComplete;
+        return mLoadingOutcome;
     }
 
     public MutableLiveData<Boolean> getEntryAdded() {

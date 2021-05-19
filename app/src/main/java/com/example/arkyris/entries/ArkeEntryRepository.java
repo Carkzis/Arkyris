@@ -26,7 +26,7 @@ public class ArkeEntryRepository {
     private LiveData<List<ArkeEntryItem>> mPublicEntries;
     EntryService entryService = APIUtils.getEntryService();
     private MutableLiveData<Boolean> mConnectionError;
-    private MutableLiveData<Boolean> mLoadingComplete;
+    private MutableLiveData<String> mLoadingOutcome;
     private MutableLiveData<Boolean> mEntryAdded;
 
     SharedPreferences preferences;
@@ -43,7 +43,7 @@ public class ArkeEntryRepository {
         preferences = PreferenceManager.getDefaultSharedPreferences(application);
         mAccountName = new MutableLiveData<String>();
         mConnectionError = new MutableLiveData<Boolean>();
-        mLoadingComplete = new MutableLiveData<Boolean>();
+        mLoadingOutcome = new MutableLiveData<String>();
         mEntryAdded = new MutableLiveData<Boolean>();
     }
 
@@ -77,7 +77,7 @@ public class ArkeEntryRepository {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            mLoadingComplete.postValue(true);
+            mLoadingOutcome.postValue("complete");
         });
     }
 
@@ -92,8 +92,8 @@ public class ArkeEntryRepository {
         return mConnectionError;
     }
 
-    public MutableLiveData<Boolean> getLoadingComplete() {
-        return mLoadingComplete;
+    public MutableLiveData<String> getLoadingOutcome() {
+        return mLoadingOutcome;
     }
 
     public MutableLiveData<Boolean> getEntryAdded() {
@@ -119,7 +119,7 @@ public class ArkeEntryRepository {
             public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
                 mConnectionError.postValue(true);
-                mLoadingComplete.postValue(true);
+                mLoadingOutcome.postValue("error");
             }
         });
     }
@@ -143,7 +143,7 @@ public class ArkeEntryRepository {
             public void onFailure(Call<ArkeEntryItem> call, Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 mConnectionError.postValue(true);
-                mLoadingComplete.postValue(true);
+                mLoadingOutcome.postValue("error");
             }
 
         });
