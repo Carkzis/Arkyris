@@ -38,6 +38,8 @@ public class IrisFragment extends Fragment {
     List<IrisEntryItem> entriesList = new ArrayList<IrisEntryItem>();
     private String mAccountName;
     private int entryListSize = 0;
+    // TODO: Do something about this to prevent multiple loads!
+    private boolean initialLoad = true;
 
     // all activity interactions are with the WordViewModel only
     private IrisViewModel mIrisViewModel;
@@ -131,10 +133,12 @@ public class IrisFragment extends Fragment {
                         Snackbar.LENGTH_LONG);
                 snackbar.setAnchorView(tablayoutView);
                 snackbar.show();
+                mIrisViewModel.connectionErrorNotified();
             }
         });
 
         // Observer for whether loading has completed
+        // TODO: Combine this with Connection error, like with ArkeFragment
         mIrisViewModel.getLoadingComplete().observe(getActivity(), loadingComplete -> {
             Log.e(LOG_TAG, String.valueOf(entryListSize));
             if (loadingComplete) {
@@ -155,6 +159,8 @@ public class IrisFragment extends Fragment {
                 Toast.makeText(getActivity(),
                         "Entry added!",
                         Toast.LENGTH_SHORT).show();
+                // Reset the entryAdded LiveData to false
+                mIrisViewModel.entryAddedComplete();
             }
         });
 
@@ -163,19 +169,21 @@ public class IrisFragment extends Fragment {
                 Toast.makeText(getActivity(),
                         "Entry deleted!",
                         Toast.LENGTH_SHORT).show();
+                mIrisViewModel.entryDeletedComplete();
             }
         });
 
         mIrisViewModel.getIsPublic().observe(getActivity(), isPublic -> {
-            if (isPublic) {
+            if (isPublic.equals("public")) {
                 Toast.makeText(getActivity(),
                         "Entry is now public!",
                         Toast.LENGTH_SHORT).show();
-            } else {
+            } else if (isPublic.equals("private")) {
                 Toast.makeText(getActivity(),
                         "Entry is now private!",
                         Toast.LENGTH_SHORT).show();
             }
+            mIrisViewModel.changedEntryPublicity();
         });
 
         // delete an item on long click

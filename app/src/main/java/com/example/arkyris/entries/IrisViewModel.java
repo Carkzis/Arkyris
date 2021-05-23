@@ -20,7 +20,7 @@ public class IrisViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> mLoadingComplete;
     private MutableLiveData<Boolean> mEntryAdded;
     private MutableLiveData<Boolean> mEntryDeleted;
-    private MutableLiveData<Boolean> mIsPublic;
+    private MutableLiveData<String> mPublicOrPrivate;
 
     // Random colours
     private static final String[] mColourArray = {"red", "pink", "purple", "deep_purple",
@@ -37,7 +37,7 @@ public class IrisViewModel extends AndroidViewModel {
         mLoadingComplete = mRepository.getLoadingComplete();
         mEntryAdded = mRepository.getEntryAdded();
         mEntryDeleted = mRepository.getEntryDeleted();
-        mIsPublic = mRepository.getIsPublic();
+        mPublicOrPrivate = mRepository.getIsPublic();
     }
 
     // getter method to retrieve account name from repository shared preferences
@@ -76,11 +76,27 @@ public class IrisViewModel extends AndroidViewModel {
         return mEntryDeleted;
     }
 
-    public MutableLiveData<Boolean> getIsPublic() {
-        if (mIsPublic == null) {
-            mIsPublic = new MutableLiveData<Boolean>();
+    public MutableLiveData<String> getIsPublic() {
+        if (mPublicOrPrivate == null) {
+            mPublicOrPrivate = new MutableLiveData<String>();
         }
-        return mIsPublic;
+        return mPublicOrPrivate;
+    }
+
+    public void entryAddedComplete() {
+        mEntryAdded.postValue(false);
+    }
+
+    public void entryDeletedComplete() {
+        mEntryDeleted.postValue(false);
+    }
+
+    public void connectionErrorNotified() {
+        mConnectionError.postValue(false);
+    }
+
+    public void changedEntryPublicity() {
+        mPublicOrPrivate.postValue("complete");
     }
 
     // getter method for getting all the words,

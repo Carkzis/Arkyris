@@ -144,6 +144,9 @@ public class ArkeFragment extends Fragment {
                         Snackbar.LENGTH_LONG);
                 snackbar.setAnchorView(tablayoutView);
                 snackbar.show();
+                // TODO:
+                // Reset the connectionError LiveData to false
+                mArkeViewModel.connectionErrorNotified();
             }
 
         });
@@ -154,6 +157,9 @@ public class ArkeFragment extends Fragment {
                 Toast.makeText(getActivity(),
                         "Entry added!",
                         Toast.LENGTH_SHORT).show();
+                // TODO:
+                // Reset the entryAdded LiveData to false
+                mArkeViewModel.entryAddedComplete();
             }
         });
 

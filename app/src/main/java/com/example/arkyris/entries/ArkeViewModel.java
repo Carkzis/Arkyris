@@ -68,6 +68,14 @@ public class ArkeViewModel extends AndroidViewModel {
         return mEntryAdded;
     }
 
+    public void entryAddedComplete() {
+        mEntryAdded.postValue(false);
+    }
+
+    public void connectionErrorNotified() {
+        mConnectionError.postValue(false);
+    }
+
     // wrapper for insert that calls Repository's insert() method,
     // hides implementation of insert() from UI
     public void insert(ArkeEntryItem entry) { mRepository.insert(entry); }

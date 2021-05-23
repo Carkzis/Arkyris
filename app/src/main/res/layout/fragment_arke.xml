@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/backgroundColor"
     tools:context=".entries.ArkeFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -54,7 +55,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:fontFamily="@font/arizonia"
                 android:gravity="center"
                 android:text="@string/arke_connection_error"
                 android:textSize="24sp"

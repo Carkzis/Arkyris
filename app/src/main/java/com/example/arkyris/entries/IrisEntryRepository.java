@@ -31,7 +31,7 @@ public class IrisEntryRepository {
     private MutableLiveData<Boolean> mLoadingComplete;
     private MutableLiveData<Boolean> mEntryAdded;
     private MutableLiveData<Boolean> mEntryDeleted;
-    private MutableLiveData<Boolean> mIsPublic;
+    private MutableLiveData<String> mPublicOrPrivate;
     String username;
 
     SharedPreferences preferences;
@@ -51,7 +51,7 @@ public class IrisEntryRepository {
         mLoadingComplete = new MutableLiveData<Boolean>();
         mEntryAdded = new MutableLiveData<Boolean>();
         mEntryDeleted = new MutableLiveData<Boolean>();
-        mIsPublic = new MutableLiveData<Boolean>();
+        mPublicOrPrivate = new MutableLiveData<String>();
     }
 
     // wrapper method to return cached words as LiveData
@@ -111,8 +111,8 @@ public class IrisEntryRepository {
         return mEntryDeleted;
     }
 
-    public MutableLiveData<Boolean> getIsPublic() {
-        return mIsPublic;
+    public MutableLiveData<String> getIsPublic() {
+        return mPublicOrPrivate;
     }
 
     /**
@@ -208,9 +208,9 @@ public class IrisEntryRepository {
             public void onResponse(Call<IrisEntryItem> call, Response<IrisEntryItem> response) {
                 if (response.isSuccessful()) {
                     if (isPublic == 1) {
-                        mIsPublic.postValue(true);
+                        mPublicOrPrivate.postValue("public");
                     } else {
-                        mIsPublic.postValue(false);
+                        mPublicOrPrivate.postValue("private");
                     }
                     // refresh after everything has been done
                     refreshIrisCache(false);
