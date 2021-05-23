@@ -7,7 +7,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.arkyris.R;
@@ -34,46 +33,42 @@ public class RegisterActivity extends AppCompatActivity {
         mPassword2 = findViewById(R.id.edittext_register_password2);
 
         // This shows if there is no connection, the call to the database fails.
-        mViewModel.getConnectionError().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean connectionError) {
-                // update cached copy of words in adapter
-                if (connectionError) {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Connection error...",
-                            Toast.LENGTH_SHORT).show();
-                }
+        mViewModel.getConnectionError().observe(this, connectionError -> {
+            // update cached copy of words in adapter
+            if (connectionError) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Connection error...",
+                        Toast.LENGTH_SHORT).show();
+                mViewModel.connectionErrorHandled();
             }
         });
 
         // Observes the server response code on attempting to register, 200 is a pass, 400
         // is returned if the username already exists, any other errors (except no connection)
         // show here
-        mViewModel.getRegisterResponseCode().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer responseCode) {
-                if (responseCode == 200) {
+        mViewModel.getRegisterResponseCode().observe(this, responseCode -> {
+            if (responseCode == 200) {
+            Toast.makeText(
+                getApplicationContext(),
+                "Account created, please login!",
+                Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            } else if (responseCode == 400) {
                 Toast.makeText(
-                    getApplicationContext(),
-                    "Account created, please login!",
-                    Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(intent);
-                } else if (responseCode == 400) {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "That username already exists...",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Apologies, something went wrong and we don't know why.",
-                            Toast.LENGTH_SHORT).show();
-                }
+                        getApplicationContext(),
+                        "That username already exists...",
+                        Toast.LENGTH_SHORT).show();
+                mViewModel.registerResponseHandled();
+            } else if (responseCode != -1) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Apologies, something went wrong and we don't know why.",
+                        Toast.LENGTH_SHORT).show();
+                mViewModel.registerResponseHandled();
             }
         });
-
     }
 
     /**
@@ -115,11 +110,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         mViewModel.insertUser(username, email, password1);
 
-        // for testing
-        //mViewModel.insertUser("MasterMan", "dragon@dragon.com", "nooooo");
-
     }
-
-
 
 }

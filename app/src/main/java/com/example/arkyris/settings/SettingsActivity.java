@@ -87,9 +87,8 @@ public class SettingsActivity extends AppCompatActivity {
                                 getApplicationContext(),
                                 toastMessage,
                                 Toast.LENGTH_SHORT).show();
+                        mViewModel.logoutSuccessHandled();
                     }
-
-                    mViewModel.logoutSuccessHandled();
 
                     if (loggedOut) {
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

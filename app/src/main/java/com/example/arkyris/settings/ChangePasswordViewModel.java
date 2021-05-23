@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 public class ChangePasswordViewModel extends AndroidViewModel {
 
     private static final String LOG_TAG = ChangePasswordViewModel.class.getSimpleName();
-    private ChangePasswordRepository mRepository;
-    private MutableLiveData<String> mLocalPasswordTest;
+    private final ChangePasswordRepository mRepository;
+    private final MutableLiveData<String> mLocalPasswordTest;
     private MutableLiveData<String> mChangePasswordSuccess;
 
     public ChangePasswordViewModel (Application application) {

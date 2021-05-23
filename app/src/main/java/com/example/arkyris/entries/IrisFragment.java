@@ -129,16 +129,18 @@ public class IrisFragment extends Fragment {
         mIrisViewModel.getConnectionError().observe(getActivity(), connectionError -> {
             // The connection error for IrisFragment should not occur when loading the
             // app, as this is already handled by ArkeFragment.
-            if (connectionError && !initialLoad) {
-                View tablayoutView = getActivity().findViewById(R.id.tab_layout);
-                Snackbar snackbar = Snackbar.make(rootView, "Connection error...",
-                        Snackbar.LENGTH_LONG);
-                snackbar.setAnchorView(tablayoutView);
-                snackbar.show();
-            } else {
-                initialLoad = false;
+            if (connectionError) {
+                mIrisViewModel.connectionErrorNotified();
+                if (!initialLoad) {
+                    View tablayoutView = getActivity().findViewById(R.id.tab_layout);
+                    Snackbar snackbar = Snackbar.make(rootView, "Connection error...",
+                            Snackbar.LENGTH_LONG);
+                    snackbar.setAnchorView(tablayoutView);
+                    snackbar.show();
+                }
+                mIrisViewModel.connectionErrorNotified();
             }
-            mIrisViewModel.connectionErrorNotified();
+            initialLoad = false;
         });
 
         // Observer for whether loading has completed
@@ -155,6 +157,9 @@ public class IrisFragment extends Fragment {
                     rootView.findViewById(R.id.text_no_entries).setVisibility(View.GONE);
                 }
             }
+            // I have added this again here, to avoid concurrency issues with the
+            // connectionError LiveData
+            initialLoad = false;
         });
 
         mIrisViewModel.getEntryAdded().observe(getActivity(), entryAdded -> {

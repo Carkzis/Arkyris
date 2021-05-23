@@ -37,6 +37,14 @@ public class RegisterViewModel extends AndroidViewModel {
         return mRegisterResponseCode;
     }
 
+    public void connectionErrorHandled() {
+        mConnectionError.postValue(false);
+    }
+
+    public void registerResponseHandled() {
+        mRegisterResponseCode.postValue(-1);
+    }
+
     public boolean testUsername (String username) {
         String usernameRegex = "[a-zA-Z1-9]{1,50}";
         Pattern pattern = Pattern.compile(usernameRegex);
