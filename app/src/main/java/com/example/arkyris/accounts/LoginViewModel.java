@@ -9,7 +9,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     private static final String LOG_TAG = LoginViewModel.class.getSimpleName();
 
-    private LoginRepository mRepository;
+    private final LoginRepository mRepository;
     private MutableLiveData<Boolean> mConnectionError;
     private MutableLiveData<Integer> mLoginResponseCode;
 
@@ -34,6 +34,14 @@ public class LoginViewModel extends AndroidViewModel {
             mLoginResponseCode = new MutableLiveData<Integer>();
         }
         return mLoginResponseCode;
+    }
+
+    public void connectionErrorHandled() {
+        mConnectionError.postValue(false);
+    }
+
+    public void loginResponseHandled() {
+        mLoginResponseCode.postValue(-1);
     }
 
     public String getToken() {

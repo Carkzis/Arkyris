@@ -35,6 +35,10 @@ public class SettingsViewModel extends AndroidViewModel {
         return mLogoutSuccess;
     }
 
+    public void logoutSuccessHandled() {
+        mLogoutSuccess.postValue("handled");
+    }
+
     public MutableLiveData<Boolean> getAutoLoggedOut() {
         if (mAutoLoggedOut == null) {
             mAutoLoggedOut = new MutableLiveData<Boolean>();

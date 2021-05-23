@@ -127,18 +127,21 @@ public class IrisFragment extends Fragment {
 
         // Observer for any connection error
         mIrisViewModel.getConnectionError().observe(getActivity(), connectionError -> {
-            if (connectionError) {
+            // The connection error for IrisFragment should not occur when loading the
+            // app, as this is already handled by ArkeFragment.
+            if (connectionError && !initialLoad) {
                 View tablayoutView = getActivity().findViewById(R.id.tab_layout);
                 Snackbar snackbar = Snackbar.make(rootView, "Connection error...",
                         Snackbar.LENGTH_LONG);
                 snackbar.setAnchorView(tablayoutView);
                 snackbar.show();
-                mIrisViewModel.connectionErrorNotified();
+            } else {
+                initialLoad = false;
             }
+            mIrisViewModel.connectionErrorNotified();
         });
 
         // Observer for whether loading has completed
-        // TODO: Combine this with Connection error, like with ArkeFragment
         mIrisViewModel.getLoadingComplete().observe(getActivity(), loadingComplete -> {
             Log.e(LOG_TAG, String.valueOf(entryListSize));
             if (loadingComplete) {

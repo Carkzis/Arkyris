@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,8 @@ public class ArkeFragment extends Fragment {
 
     // textview for when there is a connection error
     private TextView mConnectionError;
+    // progress bar to show if the loading indicator is displaying or not
+    private ProgressBar mLoadingIndicator;
 
     // all activity interactions are with the WordViewModel only
     private IrisViewModel mIrisViewModel;
@@ -88,6 +91,8 @@ public class ArkeFragment extends Fragment {
 
         // connection error text view
         mConnectionError = rootView.findViewById(R.id.connection_error);
+        // loading indicator
+        mLoadingIndicator = rootView.findViewById(R.id.loading_indicator);
         // swipe refresh widget
         mSwipeRefreshLayout = rootView.findViewById(R.id.arke_swipe);
         // disable swipe refresh until page loaded
@@ -110,7 +115,9 @@ public class ArkeFragment extends Fragment {
             entryListSize = entries.size();
             // Moved this here, so that the connection error never shows if there are any entries.
             if (entryListSize > 0) {
-                rootView.findViewById(R.id.connection_error).setVisibility(View.GONE);
+                mConnectionError.setVisibility(View.GONE);
+            } else if (mLoadingIndicator.getVisibility() == View.GONE) {
+                mConnectionError.setVisibility(View.VISIBLE);
             }
         });
 
@@ -120,13 +127,13 @@ public class ArkeFragment extends Fragment {
             rootView.findViewById(R.id.loading_indicator).setVisibility(View.GONE);
             mSwipeRefreshLayout.setEnabled(true);
 
-            // This will display a message to say there are entries to show on only
+            // This will display a message to say there are no entries to show only
             // after everything has loaded.
             if (entryListSize < 1) {
-                rootView.findViewById(R.id.connection_error).setVisibility(View.VISIBLE);
-            } else {
-                fab.setVisibility(View.VISIBLE);
+                mConnectionError.setVisibility(View.VISIBLE);
             }
+
+            fab.setVisibility(View.VISIBLE);
 
             // If the loading outcome is "complete", scroll the view to the current position
             // as that means the data has been updated.
@@ -138,13 +145,13 @@ public class ArkeFragment extends Fragment {
                 } else {
                     initialLoad = false;
                 }
-            } else {
+            } else { // loadingOutcome will equal "error"
                 View tablayoutView = getActivity().findViewById(R.id.tab_layout);
                 Snackbar snackbar = Snackbar.make(rootView, "Connection error...",
                         Snackbar.LENGTH_LONG);
                 snackbar.setAnchorView(tablayoutView);
                 snackbar.show();
-                // TODO:
+
                 // Reset the connectionError LiveData to false
                 mArkeViewModel.connectionErrorNotified();
             }
@@ -157,16 +164,13 @@ public class ArkeFragment extends Fragment {
                 Toast.makeText(getActivity(),
                         "Entry added!",
                         Toast.LENGTH_SHORT).show();
-                // TODO:
+
                 // Reset the entryAdded LiveData to false
                 mArkeViewModel.entryAddedComplete();
             }
         });
 
-
-        /**
-         * Refresh the fragment on swiping down
-         */
+        // Refresh the fragment on swiping down.
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -182,7 +186,7 @@ public class ArkeFragment extends Fragment {
 
     /**
      * Method for applying random colour for the colour picker
-     * @return
+     * @return the colour resources, colourRes
      */
     public int changeColour() {
         int colourResourceName = getResources().getIdentifier(mArkeViewModel.randomColour(), "color",

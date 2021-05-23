@@ -49,6 +49,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                         "New password requirements not met!",
                         Toast.LENGTH_SHORT).show();
             }
+            mViewModel.passwordTestHandled();
         });
 
         mViewModel.getChangePasswordSuccess().observe(this, response -> {
@@ -71,6 +72,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
+            mViewModel.changePasswordHandled();
         });
 
     }

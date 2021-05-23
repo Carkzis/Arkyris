@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.arkyris.MainActivity;
@@ -39,39 +38,34 @@ public class LoginActivity extends AppCompatActivity {
         mUsername = findViewById(R.id.edittext_username);
         mPassword = findViewById(R.id.edittext_password);
 
-        mViewModel.getConnectionError().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean connectionError) {
-                // update cached copy of words in adapter
-                if (connectionError) {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Connection error...",
-                            Toast.LENGTH_SHORT).show();
-                }
+        mViewModel.getConnectionError().observe(this, connectionError -> {
+            // update cached copy of words in adapter
+            if (connectionError) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Connection error...",
+                        Toast.LENGTH_SHORT).show();
+                mViewModel.connectionErrorHandled();
             }
         });
 
-        mViewModel.getLoginResponseCode().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer responseCode) {
-                if (responseCode == 200) {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Success!",
-                            Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Login failed, have you entered the correct details?",
-                            Toast.LENGTH_SHORT).show();
-                }
+        mViewModel.getLoginResponseCode().observe(this, responseCode -> {
+            if (responseCode == 200) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Success!",
+                        Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            } else if (responseCode != -1) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Login failed, have you entered the correct details?",
+                        Toast.LENGTH_SHORT).show();
+                mViewModel.loginResponseHandled();
             }
         });
-
     }
 
     public void registerScreen(View view) {

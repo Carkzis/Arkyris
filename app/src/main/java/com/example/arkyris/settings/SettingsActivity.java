@@ -53,7 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onChanged(String successString) {
                 // update cached copy of words in adapter
                 if (successString != null) {
-                    String toastMessage;
+                    String toastMessage = null;
                     boolean loggedOut = false;
                     switch (successString) {
                         case "success_one":
@@ -76,13 +76,21 @@ public class SettingsActivity extends AppCompatActivity {
                             toastMessage = "Could not log out of all accounts, " +
                                     "there is no connection.";
                             break;
+                        case "handled":
+                            break;
                         default:
                             throw new IllegalStateException("Unexpected value: " + successString);
                     }
-                    Toast.makeText(
-                            getApplicationContext(),
-                            toastMessage,
-                            Toast.LENGTH_SHORT).show();
+
+                    if (!successString.equals("handled")) {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                toastMessage,
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    mViewModel.logoutSuccessHandled();
+
                     if (loggedOut) {
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                         // Need to clear the user Room entries so they do not flash up for the

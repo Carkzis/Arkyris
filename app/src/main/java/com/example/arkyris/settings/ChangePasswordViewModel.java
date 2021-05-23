@@ -35,6 +35,14 @@ public class ChangePasswordViewModel extends AndroidViewModel {
         return mChangePasswordSuccess;
     }
 
+    public void passwordTestHandled() {
+        mLocalPasswordTest.postValue("handled");
+    }
+
+    public void changePasswordHandled() {
+        mChangePasswordSuccess.postValue("handled");
+    }
+
 
     public void changePassword(String oldPassword, String newPassword1, String newPassword2) {
 
