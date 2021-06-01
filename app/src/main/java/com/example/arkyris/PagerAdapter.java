@@ -8,16 +8,18 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.example.arkyris.entries.ArkeFragment;
 import com.example.arkyris.entries.IrisFragment;
 
+import org.jetbrains.annotations.NotNull;
+
 public class PagerAdapter extends FragmentStatePagerAdapter {
 
-    int mNumOfTabs;
+    private final int mNumOfTabs;
 
     public PagerAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
         this.mNumOfTabs = 2;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public Fragment getItem(int position) {
         switch (position) {
@@ -25,7 +27,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 return new ArkeFragment();
             case 1:
                 return new IrisFragment();
-            default: return null;
+            default: throw new IllegalArgumentException(
+                    "Something went wrong with the PagerAdapter.");
         }
     }
 

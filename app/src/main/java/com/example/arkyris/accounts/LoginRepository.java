@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.arkyris.APIUtils;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import okhttp3.ResponseBody;
@@ -19,12 +20,17 @@ import retrofit2.Response;
 public class LoginRepository {
 
     private static final String LOG_TAG = LoginRepository.class.getSimpleName();
-    AccountService accountService = APIUtils.getAccountService();
-    private MutableLiveData<Boolean> mConnectionError;
-    private MutableLiveData<Integer> mLoginResponseCode;
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
 
+    private final AccountService mAccountService = APIUtils.getAccountService();
+    private final MutableLiveData<Boolean> mConnectionError;
+    private final MutableLiveData<Integer> mLoginResponseCode;
+    private final SharedPreferences mPreferences;
+
+    LoginRepository(Application application) {
+        mConnectionError = new MutableLiveData<>();
+        mLoginResponseCode = new MutableLiveData<>();
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(application);
+    }
 
     // wrapper method to get connection error
     public MutableLiveData<Boolean> getConnectionError() {
@@ -35,31 +41,24 @@ public class LoginRepository {
         return mLoginResponseCode;
     }
 
-    // constructor
-    LoginRepository(Application application) {
-        mConnectionError = new MutableLiveData<Boolean>();
-        mLoginResponseCode = new MutableLiveData<Integer>();
-        preferences = PreferenceManager.getDefaultSharedPreferences(application);
-    }
-
     public String getToken() {
-        String token = preferences.getString("token", null);
-        //Log.e(LOG_TAG, token);
-        return token;
+        return mPreferences.getString("token", null);
     }
 
     public void authenticateUser(String username, String password) {
-        Call<ResponseBody> call = accountService.authenticateUser(username, password);
+        Call<ResponseBody> call = mAccountService.authenticateUser(username, password);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call,
+                                   @NotNull Response<ResponseBody> response) {
 
                 JSONObject jsonObject;
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Login success!");
                     mLoginResponseCode.postValue(response.code());  // this will be 200
-                    editor = preferences.edit();
+                    SharedPreferences.Editor editor = mPreferences.edit();
                     try {
+                        assert response.body() != null;
                         jsonObject = new JSONObject(response.body().string());
                         String token = jsonObject.getString("token");
                         Log.e(LOG_TAG, token);
@@ -80,7 +79,7 @@ public class LoginRepository {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 mConnectionError.postValue(true);
             }

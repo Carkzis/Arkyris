@@ -88,8 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         mViewModel.authenticateUser(username, password);
 
     }
-
-
+    
     /**
      * Forgotten password functionality is not currently avaialable, but this may be replaced
      * by social logins anyway.

@@ -73,7 +73,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     /**
      * Validates the registration inputs via the ViewModel and inserts the data
-     * @param view
      */
     public void registerUser(View view) {
         // This will need to be tested against the online database
@@ -84,7 +83,8 @@ public class RegisterActivity extends AppCompatActivity {
         String password1 = mPassword1.getText().toString();
         String password2 = mPassword2.getText().toString();
 
-        if (username.equals("") || email.equals("") || password1.equals("") || password2.equals("")) {
+        if (username.equals("") || email.equals("") || password1.equals("")
+                || password2.equals("")) {
             Toast.makeText(
                     this,
                     "Not all the fields have been completed.",

@@ -10,13 +10,13 @@ import java.util.regex.Pattern;
 
 public class RegisterViewModel extends AndroidViewModel {
 
-    private RegisterRepository mRepository;
+    private final RegisterRepository mRepository;
     private MutableLiveData<Boolean> mConnectionError;
     private MutableLiveData<Integer> mRegisterResponseCode;
 
     public RegisterViewModel (Application application) {
         super(application);
-        mRepository = new RegisterRepository(application);
+        mRepository = new RegisterRepository();
         mConnectionError = mRepository.getConnectionError();
         mRegisterResponseCode = mRepository.getRegisterResponseCode();
     }
@@ -25,14 +25,14 @@ public class RegisterViewModel extends AndroidViewModel {
     // hides implementation from the UI
     public MutableLiveData<Boolean> getConnectionError() {
         if (mConnectionError == null) {
-            mConnectionError = new MutableLiveData<Boolean>();
+            mConnectionError = new MutableLiveData<>();
         }
         return mConnectionError;
     }
 
     public MutableLiveData<Integer> getRegisterResponseCode() {
         if (mRegisterResponseCode == null) {
-            mRegisterResponseCode = new MutableLiveData<Integer>();
+            mRegisterResponseCode = new MutableLiveData<>();
         }
         return mRegisterResponseCode;
     }
