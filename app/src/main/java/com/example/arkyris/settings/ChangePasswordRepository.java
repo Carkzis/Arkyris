@@ -10,6 +10,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.arkyris.APIUtils;
 import com.example.arkyris.accounts.AccountService;
 
+import org.jetbrains.annotations.NotNull;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,16 +20,15 @@ import retrofit2.Response;
 public class ChangePasswordRepository {
 
     private static final String LOG_TAG = LogoutRepository.class.getSimpleName();
-    AccountService accountService = APIUtils.getAccountService();
-    SharedPreferences preferences;
-    private MutableLiveData<String> mChangePasswordSuccess;
-    private String token;
+    private final AccountService mAccountService = APIUtils.getAccountService();
+    private final MutableLiveData<String> mChangePasswordSuccess;
+    private final String mToken;
 
 
     ChangePasswordRepository(Application application) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(application);
-        token = preferences.getString("token", null);
-        mChangePasswordSuccess = new MutableLiveData<String>();
+        SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(application);
+        mToken = mPreferences.getString("mToken", null);
+        mChangePasswordSuccess = new MutableLiveData<>();
     }
 
     public MutableLiveData<String> getChangePasswordSuccess() {
@@ -36,15 +37,14 @@ public class ChangePasswordRepository {
 
     /**
      * Change the password in the remote database, and return response.
-     * @param oldPassword
-     * @param newPassword
      */
     public void changePassword(String oldPassword, String newPassword) {
-        Call<ResponseBody> call = accountService.changePassword(
-                "Token " + token, oldPassword, newPassword);
+        Call<ResponseBody> call = mAccountService.changePassword(
+                "Token " + mToken, oldPassword, newPassword);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call,
+                                   @NotNull Response<ResponseBody> response) {
 
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Password changed.");
@@ -58,7 +58,8 @@ public class ChangePasswordRepository {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+            public void onFailure(@NotNull Call<ResponseBody> call,
+                                  @NotNull Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 Log.e(LOG_TAG, "No connection.");
                 mChangePasswordSuccess.postValue("no_connection");

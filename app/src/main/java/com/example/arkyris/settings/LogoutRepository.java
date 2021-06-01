@@ -10,6 +10,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.arkyris.APIUtils;
 import com.example.arkyris.accounts.AccountService;
 
+import org.jetbrains.annotations.NotNull;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,25 +20,24 @@ import retrofit2.Response;
 public class LogoutRepository {
 
     private static final String LOG_TAG = LogoutRepository.class.getSimpleName();
-    AccountService accountService = APIUtils.getAccountService();
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
-    private MutableLiveData<String> mAccountName;
-    private MutableLiveData<String> mLogoutSuccess;
-    private MutableLiveData<Boolean> mAutoLoggedOut;
-    String token;
+    private final AccountService mAccountService = APIUtils.getAccountService();
+    private final SharedPreferences mPreferences;
+    private final MutableLiveData<String> mAccountName;
+    private final MutableLiveData<String> mLogoutSuccess;
+    private final MutableLiveData<Boolean> mAutoLoggedOut;
+    private final String token;
 
     LogoutRepository(Application application) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(application);
-        mAccountName = new MutableLiveData<String>();
-        mLogoutSuccess = new MutableLiveData<String>();
-        mAutoLoggedOut = new MutableLiveData<Boolean>();
-        token = preferences.getString("token", null);
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(application);
+        mAccountName = new MutableLiveData<>();
+        mLogoutSuccess = new MutableLiveData<>();
+        mAutoLoggedOut = new MutableLiveData<>();
+        token = mPreferences.getString("token", null);
     }
 
     // hides implementation from the UI
     public MutableLiveData<String> getAccountName() {
-        String username = preferences.getString("username", null);
+        String username = mPreferences.getString("username", null);
         mAccountName.postValue(username);
         return mAccountName;
     }
@@ -50,47 +51,49 @@ public class LogoutRepository {
     }
 
     public void logout() {
-        Call<ResponseBody> call = accountService.logout("Token " + token);
+        Call<ResponseBody> call = mAccountService.logout("Token " + token);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call,
+                                   @NotNull Response<ResponseBody> response) {
 
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Logged out normally.");
-                    preferences.edit().clear().apply();
+                    mPreferences.edit().clear().apply();
                     mLogoutSuccess.postValue("success_one");
                 }
 
                 if (!response.isSuccessful()) {
                     Log.e(LOG_TAG, "Logged out locally only as token mismatch or absent.");
-                    preferences.edit().clear().apply();
+                    mPreferences.edit().clear().apply();
                     // considered a success as if there is no token to remove, no harm
                     mLogoutSuccess.postValue("success_one");
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 // Note: this will log out regardless of connection, as it just deletes the token
                 // however, more security could be added to remove the token once a connection
                 // is available again
                 Log.e(LOG_TAG, "Logged out locally as no connection.");
-                preferences.edit().clear().apply();
+                mPreferences.edit().clear().apply();
                 mLogoutSuccess.postValue("no_connection_one");
             }
         });
     }
 
     public void logoutAll() {
-        Call<ResponseBody> call = accountService.logoutAll("Token " + token);
+        Call<ResponseBody> call = mAccountService.logoutAll("Token " + token);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call,
+                                   @NotNull Response<ResponseBody> response) {
 
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Logged out normally.");
-                    preferences.edit().clear().apply();
+                    mPreferences.edit().clear().apply();
                     mLogoutSuccess.postValue("success_all");
                 }
 
@@ -101,7 +104,7 @@ public class LogoutRepository {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 Log.e(LOG_TAG, "Not logged out anywhere as no connection.");
                 mLogoutSuccess.postValue("no_connection_all");
@@ -114,10 +117,11 @@ public class LogoutRepository {
      * e.g. from logoutAll()
      */
     public void loggedIn() {
-        Call<ResponseBody> call = accountService.loggedIn("Token " + token);
+        Call<ResponseBody> call = mAccountService.loggedIn("Token " + token);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call,
+                                   @NotNull Response<ResponseBody> response) {
 
                 if (response.isSuccessful()) {
                     Log.e(LOG_TAG, "Member is logged in.");
@@ -125,13 +129,13 @@ public class LogoutRepository {
 
                 if (!response.isSuccessful()) {
                     Log.e(LOG_TAG, "Member is logged out, so delete  token.");
-                    preferences.edit().clear().apply();
+                    mPreferences.edit().clear().apply();
                     mAutoLoggedOut.postValue(true);
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 Log.e(LOG_TAG, "No connection, so cannot check login status.");
                 // Do nothing here, won't log out users if they are not logged in.

@@ -7,8 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 public class SettingsViewModel extends AndroidViewModel {
 
-    private static final String LOG_TAG = SettingsViewModel.class.getSimpleName();
-    private LogoutRepository mRepository;
+    private final LogoutRepository mRepository;
     private MutableLiveData<String> mAccountName;
     private MutableLiveData<String> mLogoutSuccess;
     private MutableLiveData<Boolean> mAutoLoggedOut;
@@ -23,14 +22,14 @@ public class SettingsViewModel extends AndroidViewModel {
 
     public MutableLiveData<String> getAccountName() {
         if (mAccountName == null) {
-            mAccountName = new MutableLiveData<String>();
+            mAccountName = new MutableLiveData<>();
         }
         return mAccountName;
     }
 
     public MutableLiveData<String> getLogoutSuccess() {
         if (mLogoutSuccess == null) {
-            mLogoutSuccess = new MutableLiveData<String>();
+            mLogoutSuccess = new MutableLiveData<>();
         }
         return mLogoutSuccess;
     }
@@ -41,7 +40,7 @@ public class SettingsViewModel extends AndroidViewModel {
 
     public MutableLiveData<Boolean> getAutoLoggedOut() {
         if (mAutoLoggedOut == null) {
-            mAutoLoggedOut = new MutableLiveData<Boolean>();
+            mAutoLoggedOut = new MutableLiveData<>();
         }
         return mAutoLoggedOut;
     }

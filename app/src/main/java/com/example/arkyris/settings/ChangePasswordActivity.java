@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.arkyris.R;
 
+import java.util.Objects;
+
 public class ChangePasswordActivity extends AppCompatActivity {
 
     private ChangePasswordViewModel mViewModel;
@@ -27,7 +29,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         mViewModel = ViewModelProviders.of(this).get(ChangePasswordViewModel.class);
