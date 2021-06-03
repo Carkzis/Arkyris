@@ -10,6 +10,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.arkyris.APIUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,16 +24,17 @@ public class ArkeEntryRepository {
     private static final String LOG_TAG = ArkeEntryRepository.class.getSimpleName();
 
     // add member variables for DAO and list of words
-    private ArkeEntryDao mArkeEntryDao;
-    private LiveData<List<ArkeEntryItem>> mPublicEntries;
-    EntryService entryService = APIUtils.getEntryService();
-    private MutableLiveData<Boolean> mConnectionError;
-    private MutableLiveData<String> mLoadingOutcome;
-    private MutableLiveData<Boolean> mEntryAdded;
+    private final ArkeEntryDao mArkeEntryDao;
+    private final EntryService mEntryService = APIUtils.getEntryService();
+    private final SharedPreferences mPreferences;
 
-    SharedPreferences preferences;
-    private MutableLiveData<String> mAccountName;
-    List<ArkeEntryItem> entriesList = new ArrayList<ArkeEntryItem>();
+    private final MutableLiveData<Boolean> mConnectionError;
+    private final MutableLiveData<String> mLoadingOutcome;
+    private final MutableLiveData<Boolean> mEntryAdded;
+    private final MutableLiveData<String> mAccountName;
+
+    private List<ArkeEntryItem> mEntriesList = new ArrayList<>();
+    private final LiveData<List<ArkeEntryItem>> mPublicEntries;
 
     // constructor to get handle to db and initialise member variables
     ArkeEntryRepository(Application application) {
@@ -40,11 +43,11 @@ public class ArkeEntryRepository {
         mPublicEntries = mArkeEntryDao.getAllPublicEntries();
 
         // Initialise variables for getting account name currently logged in
-        preferences = PreferenceManager.getDefaultSharedPreferences(application);
-        mAccountName = new MutableLiveData<String>();
-        mConnectionError = new MutableLiveData<Boolean>();
-        mLoadingOutcome = new MutableLiveData<String>();
-        mEntryAdded = new MutableLiveData<Boolean>();
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(application);
+        mAccountName = new MutableLiveData<>();
+        mConnectionError = new MutableLiveData<>();
+        mLoadingOutcome = new MutableLiveData<>();
+        mEntryAdded = new MutableLiveData<>();
     }
 
     // wrapper method to return cached words as LiveData
@@ -55,15 +58,7 @@ public class ArkeEntryRepository {
 
     // wrapper for insert() using threads
     public void insert(ArkeEntryItem entry) {
-        ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mArkeEntryDao.insert(entry);
-        });
-    }
-
-    public void deleteAll() {
-        ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mArkeEntryDao.deleteAll();
-        });
+        ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> mArkeEntryDao.insert(entry));
     }
 
     public void insertAll(List<ArkeEntryItem> entries) {
@@ -83,7 +78,7 @@ public class ArkeEntryRepository {
 
     // wrapper for retrieving SharedPreference username
     public MutableLiveData<String> getAccountName() {
-        String username = preferences.getString("username", null);
+        String username = mPreferences.getString("username", null);
         mAccountName.postValue(username);
         return mAccountName;
     }
@@ -102,21 +97,22 @@ public class ArkeEntryRepository {
 
     public void refreshArkeCache() {
         // This will load the items from the database
-        Call<List<ArkeEntryItem>> call = entryService.getPublicEntries();
+        Call<List<ArkeEntryItem>> call = mEntryService.getPublicEntries();
         call.enqueue(new Callback<List<ArkeEntryItem>>() {
             @Override
-            public void onResponse(Call<List<ArkeEntryItem>> call, Response<List<ArkeEntryItem>> response) {
+            public void onResponse(@NotNull Call<List<ArkeEntryItem>> call,
+                                   @NotNull Response<List<ArkeEntryItem>> response) {
                 if (response.isSuccessful()) {
-                    entriesList = response.body();
+                    mEntriesList = response.body();
                     // This could be replaced by a DiffUtil.
                     //deleteAll();
                     Log.e(LOG_TAG, String.valueOf(response.body()));
-                    insertAll(entriesList);
+                    insertAll(mEntriesList);
                 }
             }
 
             @Override
-            public void onFailure(Call<List<ArkeEntryItem>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<ArkeEntryItem>> call, @NotNull Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
                 mConnectionError.postValue(true);
                 mLoadingOutcome.postValue("error");
@@ -129,10 +125,11 @@ public class ArkeEntryRepository {
      */
     public void addRemoteEntry(int colour) {
         ArkeEntryItem entry = new ArkeEntryItem(mAccountName.getValue(), colour, 1);
-        Call<ArkeEntryItem> call = entryService.addEntry(entry);
+        Call<ArkeEntryItem> call = mEntryService.addEntry(entry);
         call.enqueue(new Callback<ArkeEntryItem>() {
             @Override
-            public void onResponse(Call<ArkeEntryItem> call, Response<ArkeEntryItem> response) {
+            public void onResponse(@NotNull Call<ArkeEntryItem> call,
+                                   @NotNull Response<ArkeEntryItem> response) {
                 if (response.isSuccessful()) {
                     mEntryAdded.postValue(true);
                     refreshArkeCache();
@@ -140,7 +137,8 @@ public class ArkeEntryRepository {
             }
 
             @Override
-            public void onFailure(Call<ArkeEntryItem> call, Throwable throwable) {
+            public void onFailure(@NotNull Call<ArkeEntryItem> call,
+                                  @NotNull Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 mConnectionError.postValue(true);
                 mLoadingOutcome.postValue("error");

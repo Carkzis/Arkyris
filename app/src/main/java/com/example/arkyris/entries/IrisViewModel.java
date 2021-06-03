@@ -11,10 +11,8 @@ import java.util.Random;
 
 public class IrisViewModel extends AndroidViewModel {
 
-    private static final String LOG_TAG = IrisViewModel.class.getSimpleName();
-
-    private IrisEntryRepository mRepository;
-    private LiveData<List<IrisEntryItem>> mAllEntries;
+    private final IrisEntryRepository mRepository;
+    private final LiveData<List<IrisEntryItem>> mAllEntries;
     private MutableLiveData<String> mAccountName;
     private MutableLiveData<Boolean> mConnectionError;
     private MutableLiveData<Boolean> mLoadingComplete;
@@ -43,42 +41,42 @@ public class IrisViewModel extends AndroidViewModel {
     // getter method to retrieve account name from repository shared preferences
     public MutableLiveData<String> getAccountName() {
         if (mAccountName == null) {
-            mAccountName = new MutableLiveData<String>();
+            mAccountName = new MutableLiveData<>();
         }
         return mAccountName;
     }
 
     public MutableLiveData<Boolean> getConnectionError() {
         if (mConnectionError == null) {
-            mConnectionError = new MutableLiveData<Boolean>();
+            mConnectionError = new MutableLiveData<>();
         }
         return mConnectionError;
     }
 
     public MutableLiveData<Boolean> getLoadingComplete() {
         if (mLoadingComplete == null) {
-            mLoadingComplete = new MutableLiveData<Boolean>();
+            mLoadingComplete = new MutableLiveData<>();
         }
         return mLoadingComplete;
     }
 
     public MutableLiveData<Boolean> getEntryAdded() {
         if (mEntryAdded == null) {
-            mEntryAdded = new MutableLiveData<Boolean>();
+            mEntryAdded = new MutableLiveData<>();
         }
         return mEntryAdded;
     }
 
     public MutableLiveData<Boolean> getEntryDeleted() {
         if (mEntryDeleted == null) {
-            mEntryDeleted = new MutableLiveData<Boolean>();
+            mEntryDeleted = new MutableLiveData<>();
         }
         return mEntryDeleted;
     }
 
     public MutableLiveData<String> getIsPublic() {
         if (mPublicOrPrivate == null) {
-            mPublicOrPrivate = new MutableLiveData<String>();
+            mPublicOrPrivate = new MutableLiveData<>();
         }
         return mPublicOrPrivate;
     }
@@ -129,13 +127,11 @@ public class IrisViewModel extends AndroidViewModel {
 
     /**
      * Method for generating a random color
-     * @return
      */
     public String randomColour() {
         Random random = new Random();
         // pick a random colour (using an index)
-        String colourName = mColourArray[random.nextInt(20)];
-        return colourName;
+        return mColourArray[random.nextInt(20)];
     }
 
 }

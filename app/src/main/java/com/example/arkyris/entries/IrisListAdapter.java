@@ -18,8 +18,6 @@ import java.util.List;
 
 public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisViewHolder> {
 
-    private static final String LOG_TAG = IrisListAdapter.class.getSimpleName();
-
     private final LayoutInflater mInflater;
     private List<IrisEntryItem> mEntries; // Cached copy of words
     private static ClickListener clickListener;
@@ -29,9 +27,6 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
     /**
      * This inflates the item layout and returns a ViewHolder with the layout and the adapter.
      * It is similar to the onCreate method.
-     * @param parent
-     * @param viewType
-     * @return
      */
     @NonNull
     @Override
@@ -55,11 +50,6 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
         notifyDataSetChanged();
     }
 
-    void removeEntries(){
-        mEntries = null;
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getItemCount() {
         if (mEntries != null) {
@@ -68,7 +58,7 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
         return 0;
     }
 
-    class IrisViewHolder extends RecyclerView.ViewHolder {
+    static class IrisViewHolder extends RecyclerView.ViewHolder {
 
         public final ImageView mImageView;
         public final TextView mDateView;

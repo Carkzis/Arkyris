@@ -18,10 +18,7 @@ import java.util.List;
 
 public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeViewHolder> {
 
-    private static final String LOG_TAG = ArkeListAdapter.class.getSimpleName();
-
     private final LayoutInflater mInflater;
-    private Context context;
     private List<ArkeEntryItem> mEntries; // Cached copy of words
 
     public ArkeListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
@@ -29,9 +26,6 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
     /**
      * This inflates the item layout and returns a ViewHolder with the layout and the adapter.
      * It is similar to the onCreate method.
-     * @param parent
-     * @param viewType
-     * @return
      */
     @NonNull
     @Override
@@ -42,8 +36,6 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
 
     /**
      * Connects your data to the view holder.
-     * @param holder
-     * @param position
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -68,7 +60,7 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
             return 0;
     }
 
-    class ArkeViewHolder extends RecyclerView.ViewHolder {
+    static class ArkeViewHolder extends RecyclerView.ViewHolder {
 
         public final ImageView mImageView;
         public final TextView mDateView;

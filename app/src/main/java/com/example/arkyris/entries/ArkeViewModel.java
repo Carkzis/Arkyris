@@ -11,8 +11,8 @@ import java.util.Random;
 
 public class ArkeViewModel extends AndroidViewModel {
 
-    private ArkeEntryRepository mRepository;
-    private LiveData<List<ArkeEntryItem>> mPublicEntries;
+    private final ArkeEntryRepository mRepository;
+    private final LiveData<List<ArkeEntryItem>> mPublicEntries;
     private MutableLiveData<String> mAccountName;
     private MutableLiveData<Boolean> mConnectionError;
     private MutableLiveData<String> mLoadingOutcome;
@@ -37,33 +37,33 @@ public class ArkeViewModel extends AndroidViewModel {
 
     // getter method for getting all the words,
     // hides implementation from the UI
-    LiveData<List<ArkeEntryItem>> getPublicEntries() { return mPublicEntries; }
+    public LiveData<List<ArkeEntryItem>> getPublicEntries() { return mPublicEntries; }
 
     // getter method to retrieve account name from repository shared preferences
     public MutableLiveData<String> getAccountName() {
         if (mAccountName == null) {
-            mAccountName = new MutableLiveData<String>();
+            mAccountName = new MutableLiveData<>();
         }
         return mAccountName;
     }
 
     public MutableLiveData<Boolean> getConnectionError() {
         if (mConnectionError == null) {
-            mConnectionError = new MutableLiveData<Boolean>();
+            mConnectionError = new MutableLiveData<>();
         }
         return mConnectionError;
     }
 
     public MutableLiveData<String> getLoadingOutcome() {
         if (mLoadingOutcome == null) {
-            mLoadingOutcome = new MutableLiveData<String>();
+            mLoadingOutcome = new MutableLiveData<>();
         }
         return mLoadingOutcome;
     }
 
     public MutableLiveData<Boolean> getEntryAdded() {
         if (mEntryAdded == null) {
-            mEntryAdded = new MutableLiveData<Boolean>();
+            mEntryAdded = new MutableLiveData<>();
         }
         return mEntryAdded;
     }
@@ -89,13 +89,11 @@ public class ArkeViewModel extends AndroidViewModel {
 
     /**
      * Method for generating a random color
-     * @return
      */
     public String randomColour() {
         Random random = new Random();
         // pick a random colour (using an index)
-        String colourName = mColourArray[random.nextInt(20)];
-        return colourName;
+        return mColourArray[random.nextInt(20)];
     }
 
 }

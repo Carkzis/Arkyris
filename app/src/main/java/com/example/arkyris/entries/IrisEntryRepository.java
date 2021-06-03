@@ -10,6 +10,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.arkyris.APIUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,19 +25,20 @@ public class IrisEntryRepository {
     private static final String LOG_TAG = IrisEntryRepository.class.getSimpleName();
 
     // add member variables for DAO and list of words
-    private IrisEntryDao mIrisEntryDao;
-    private LiveData<List<IrisEntryItem>> mAllEntries;
-    EntryService entryService = APIUtils.getEntryService();
-    List<IrisEntryItem> entriesList = new ArrayList<IrisEntryItem>();
-    private MutableLiveData<Boolean> mConnectionError;
-    private MutableLiveData<Boolean> mLoadingComplete;
-    private MutableLiveData<Boolean> mEntryAdded;
-    private MutableLiveData<Boolean> mEntryDeleted;
-    private MutableLiveData<String> mPublicOrPrivate;
-    String username;
+    private final IrisEntryDao mIrisEntryDao;
+    private final EntryService mEntryService = APIUtils.getEntryService();
 
-    SharedPreferences preferences;
-    private MutableLiveData<String> mAccountName;
+    private final MutableLiveData<Boolean> mConnectionError;
+    private final MutableLiveData<Boolean> mLoadingComplete;
+    private final MutableLiveData<Boolean> mEntryAdded;
+    private final MutableLiveData<Boolean> mEntryDeleted;
+    private final MutableLiveData<String> mPublicOrPrivate;
+    private final MutableLiveData<String> mAccountName;
+
+    private List<IrisEntryItem> mEntriesList = new ArrayList<>();
+    private final LiveData<List<IrisEntryItem>> mAllEntries;
+
+    private final String mUsername;
 
     // constructor to get handle to db and initialise member variables
     IrisEntryRepository(Application application) {
@@ -44,14 +47,14 @@ public class IrisEntryRepository {
         mAllEntries = mIrisEntryDao.getAllEntries();
 
         // Initialise variables for getting account name currently logged in
-        preferences = PreferenceManager.getDefaultSharedPreferences(application);
-        mAccountName = new MutableLiveData<String>();
-        username = preferences.getString("username", null);
-        mConnectionError = new MutableLiveData<Boolean>();
-        mLoadingComplete = new MutableLiveData<Boolean>();
-        mEntryAdded = new MutableLiveData<Boolean>();
-        mEntryDeleted = new MutableLiveData<Boolean>();
-        mPublicOrPrivate = new MutableLiveData<String>();
+        SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(application);
+        mUsername = mPreferences.getString("username", null);
+        mAccountName = new MutableLiveData<>();
+        mConnectionError = new MutableLiveData<>();
+        mLoadingComplete = new MutableLiveData<>();
+        mEntryAdded = new MutableLiveData<>();
+        mEntryDeleted = new MutableLiveData<>();
+        mPublicOrPrivate = new MutableLiveData<>();
     }
 
     // wrapper method to return cached words as LiveData
@@ -62,15 +65,11 @@ public class IrisEntryRepository {
 
     // wrapper for insert() using threads
     public void insert(IrisEntryItem entry) {
-        ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mIrisEntryDao.insert(entry);
-        });
+        ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> mIrisEntryDao.insert(entry));
     }
 
     public void deleteAll() {
-        ArkyrisRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mIrisEntryDao.deleteAll();
-        });
+        ArkyrisRoomDatabase.databaseWriteExecutor.execute(mIrisEntryDao::deleteAll);
     }
 
     public void insertAll(List<IrisEntryItem> entries) {
@@ -91,7 +90,7 @@ public class IrisEntryRepository {
 
     // wrapper for retrieving SharedPreference username
     public MutableLiveData<String> getAccountName() {
-        mAccountName.postValue(username);
+        mAccountName.postValue(mUsername);
         return mAccountName;
     }
 
@@ -121,20 +120,22 @@ public class IrisEntryRepository {
      */
     public void refreshIrisCache(boolean fromArke) {
         // This will load the items from the database
-        Call<List<IrisEntryItem>> call = entryService.getPrivateEntries(username);
+        Call<List<IrisEntryItem>> call = mEntryService.getPrivateEntries(mUsername);
         call.enqueue(new Callback<List<IrisEntryItem>>() {
             @Override
-            public void onResponse(Call<List<IrisEntryItem>> call, Response<List<IrisEntryItem>> response) {
+            public void onResponse(@NotNull Call<List<IrisEntryItem>> call,
+                                   @NotNull Response<List<IrisEntryItem>> response) {
                 if (response.isSuccessful()) {
-                    entriesList = response.body();
+                    mEntriesList = response.body();
                     // This could be replaced by a DiffUtil.
                     //deleteAll();
                     Log.e(LOG_TAG, String.valueOf(response.body()));
-                    insertAll(entriesList);
+                    insertAll(mEntriesList);
                 }
             }
             @Override
-            public void onFailure(Call<List<IrisEntryItem>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<IrisEntryItem>> call,
+                                  @NotNull Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
                 // If this method is called from the Arke fragment, a connection error will
                 // have already been generated.
@@ -151,10 +152,11 @@ public class IrisEntryRepository {
      */
     public void addRemoteEntry(int colour, int isPublic) {
         IrisEntryItem entry = new IrisEntryItem(mAccountName.getValue(), colour, isPublic);
-        Call<IrisEntryItem> call = entryService.addEntry(entry);
+        Call<IrisEntryItem> call = mEntryService.addEntry(entry);
         call.enqueue(new Callback<IrisEntryItem>() {
             @Override
-            public void onResponse(Call<IrisEntryItem> call, Response<IrisEntryItem> response) {
+            public void onResponse(@NotNull Call<IrisEntryItem> call,
+                                   @NotNull Response<IrisEntryItem> response) {
                 if (response.isSuccessful()) {
                     mEntryAdded.postValue(true);
                     refreshIrisCache(false);
@@ -162,7 +164,8 @@ public class IrisEntryRepository {
             }
 
             @Override
-            public void onFailure(Call<IrisEntryItem> call, Throwable throwable) {
+            public void onFailure(@NotNull Call<IrisEntryItem> call,
+                                  @NotNull Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 mConnectionError.postValue(true);
                 mLoadingComplete.postValue(true);
@@ -174,12 +177,13 @@ public class IrisEntryRepository {
     public void deleteRemoteEntry(IrisEntryItem entryItem) {
         // this will pass change the flag of an item to deleted, so it will stop
         // being requested from REST
-        HashMap<String, String> updateEntry = new HashMap<String, String>();
+        HashMap<String, String> updateEntry = new HashMap<>();
         updateEntry.put("deleted", "1");
-        Call<IrisEntryItem> call = entryService.updatePublic(entryItem.getRemoteId(), updateEntry);
+        Call<IrisEntryItem> call = mEntryService.updatePublic(entryItem.getRemoteId(), updateEntry);
         call.enqueue(new Callback<IrisEntryItem>() {
             @Override
-            public void onResponse(Call<IrisEntryItem> call, Response<IrisEntryItem> response) {
+            public void onResponse(@NotNull Call<IrisEntryItem> call,
+                                   @NotNull Response<IrisEntryItem> response) {
                 if (response.isSuccessful()) {
                     mEntryDeleted.postValue(true);
                     // refresh after everything has been done
@@ -188,7 +192,7 @@ public class IrisEntryRepository {
             }
 
             @Override
-            public void onFailure(Call<IrisEntryItem> call, Throwable throwable) {
+            public void onFailure(@NotNull Call<IrisEntryItem> call, @NotNull Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 mConnectionError.postValue(true);
                 mLoadingComplete.postValue(true);
@@ -200,12 +204,13 @@ public class IrisEntryRepository {
     public void updateRemoteEntryPublicity(IrisEntryItem entryItem, int isPublic) {
         // this will pass change the flag of an item to deleted, so it will stop
         // being requested from REST
-        HashMap<String, String> updateEntry = new HashMap<String, String>();
+        HashMap<String, String> updateEntry = new HashMap<>();
         updateEntry.put("public", String.valueOf(isPublic));
-        Call<IrisEntryItem> call = entryService.updatePublic(entryItem.getRemoteId(), updateEntry);
+        Call<IrisEntryItem> call = mEntryService.updatePublic(entryItem.getRemoteId(), updateEntry);
         call.enqueue(new Callback<IrisEntryItem>() {
             @Override
-            public void onResponse(Call<IrisEntryItem> call, Response<IrisEntryItem> response) {
+            public void onResponse(@NotNull Call<IrisEntryItem> call,
+                                   @NotNull Response<IrisEntryItem> response) {
                 if (response.isSuccessful()) {
                     if (isPublic == 1) {
                         mPublicOrPrivate.postValue("public");
@@ -218,7 +223,7 @@ public class IrisEntryRepository {
             }
 
             @Override
-            public void onFailure(Call<IrisEntryItem> call, Throwable throwable) {
+            public void onFailure(@NotNull Call<IrisEntryItem> call, @NotNull Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 mConnectionError.postValue(true);
                 mLoadingComplete.postValue(true);
