@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
@@ -34,7 +33,7 @@ public class IrisEntryItem {
     @SerializedName("colour")
     @ColumnInfo(name = "colour")
     @Expose
-    private int mColour;
+    private final int mColour;
 
     @SerializedName("date_time")
     @ColumnInfo(name = "date_time")
@@ -49,32 +48,19 @@ public class IrisEntryItem {
     @SerializedName("public")
     @ColumnInfo(name = "public")
     @Expose
-    private int mIsPublic;
+    private final int mIsPublic;
 
-    @Ignore
-    public IrisEntryItem(String remoteId, String dateTime, int colour, int isPublic) {
-        //mEntryId = 0;
-        mRemoteId = remoteId;
-        mDateTime = dateTime;
-        mColour = colour;
-        mIsPublic = isPublic;
-    }
-
-    //Overloaded for entries into the database
     public IrisEntryItem(String name, int colour, int isPublic) {
         //mEntryId = 0;
         mName = name;
         mColour = colour;
         mIsPublic = isPublic;
+        mRemoteId = "";
     }
 
     /**
      * Getter methods for getting Views into the RecycleView.
-     * @return
      */
-
-    // getters and setters
-    //public int getId() { return mEntryId; }
 
     public String getName() { return mName; }
 
@@ -99,13 +85,6 @@ public class IrisEntryItem {
     public int getColour() { return mColour; }
 
     public int getIsPublic() { return mIsPublic; }
-
-    public int getIsDeleted() { return mIsDeleted; }
-
-
-    public void setIsDeleted(int mIsDeleted) {
-        this.mIsDeleted = mIsDeleted;
-    }
 
     public void setRemoteId(String mRemoteId) {
         this.mRemoteId = mRemoteId;

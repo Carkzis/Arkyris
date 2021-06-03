@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
@@ -33,7 +32,7 @@ public class ArkeEntryItem {
     @SerializedName("colour")
     @ColumnInfo(name = "colour")
     @Expose
-    private int mColour;
+    private final int mColour;
 
     @SerializedName("date_time")
     @ColumnInfo(name = "date_time")
@@ -48,26 +47,14 @@ public class ArkeEntryItem {
     @SerializedName("public")
     @ColumnInfo(name = "public")
     @Expose
-    private int mIsPublic;
-
-    @Ignore
-    public ArkeEntryItem(String remoteId, String dateTime, int colour, int isPublic) {
-            //mEntryId = 0;
-            mRemoteId = remoteId;
-            mDateTime = dateTime;
-            mColour = colour;
-            mIsPublic = isPublic;
-        }
+    private final int mIsPublic;
 
     public ArkeEntryItem(String name, int colour, int isPublic) {
-//            mEntryId = 0;
             mName = name;
             mColour = colour;
             mIsPublic = isPublic;
-        }
-
-    // getters and setters
-//    public int getId() { return mEntryId; }
+            mRemoteId = "";
+    }
 
     public String getRemoteId() { return mRemoteId; }
 
@@ -86,7 +73,6 @@ public class ArkeEntryItem {
         return localDateTime.format(formatter);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public String getTime() {
         OffsetDateTime localDateTime = OffsetDateTime.parse(mDateTime);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");

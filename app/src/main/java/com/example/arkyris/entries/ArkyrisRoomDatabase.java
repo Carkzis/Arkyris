@@ -43,20 +43,20 @@ public abstract class ArkyrisRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+    private static final RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
 
             databaseWriteExecutor.execute(() -> {
                 // Populate database in the background
-                IrisEntryDao dao = INSTANCE.irisEntryDao();
+                INSTANCE.irisEntryDao();
 
             });
 
             databaseWriteExecutor.execute(() -> {
                 // Populate database in the background
-                ArkeEntryDao dao = INSTANCE.arkeEntryDao();
+                INSTANCE.arkeEntryDao();
 
             });
 

@@ -15,7 +15,6 @@ public interface EntryService {
 
     /**
      * This is only for public posts, i.e. Arke
-     * @return
      */
     @GET("public/")
     Call<List<ArkeEntryItem>> getPublicEntries();
@@ -28,11 +27,11 @@ public interface EntryService {
 
     /**
      * This is only for private posts, i.e. Iris
-     * @return
      */
 
     @PATCH("update/{id}/")
-    Call<IrisEntryItem> updatePublic(@Path("id") String id, @Body HashMap<String, String> updateFields);
+    Call<IrisEntryItem> updatePublic(
+            @Path("id") String id, @Body HashMap<String, String> updateFields);
 
     @GET("private/")
     Call<List<IrisEntryItem>> getPrivateEntries(@Query("user") String user);
