@@ -18,8 +18,7 @@
         app:layout_constraintEnd_toEndOf="@+id/text_password_requirements"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/text_password_requirements"
-        app:layout_constraintTop_toBottomOf="@+id/text_password_requirements"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/text_password_requirements" />
 
     <TextView
         android:id="@+id/register_title"
@@ -47,8 +46,7 @@
         app:layout_constraintBottom_toTopOf="@+id/text_username_requirements"
         app:layout_constraintEnd_toEndOf="@+id/register_title"
         app:layout_constraintStart_toStartOf="@+id/register_title"
-        app:layout_constraintTop_toBottomOf="@+id/register_title"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/register_title" />
 
     <EditText
         android:id="@+id/edittext_email"
@@ -61,8 +59,7 @@
         app:layout_constraintBottom_toTopOf="@+id/edittext_register_password1"
         app:layout_constraintEnd_toEndOf="@+id/text_username_requirements"
         app:layout_constraintStart_toStartOf="@+id/text_username_requirements"
-        app:layout_constraintTop_toBottomOf="@+id/text_username_requirements"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/text_username_requirements" />
 
     <EditText
         android:id="@+id/edittext_register_password1"
@@ -76,8 +73,7 @@
         app:layout_constraintEnd_toEndOf="@+id/edittext_email"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/edittext_email"
-        app:layout_constraintTop_toBottomOf="@+id/edittext_email"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/edittext_email" />
 
     <Button
         android:id="@+id/button_actual_register"

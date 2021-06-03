@@ -34,8 +34,7 @@
         app:layout_constraintBottom_toTopOf="@+id/linear_layout_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edittext_username"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/edittext_username" />
 
     <EditText
         android:id="@+id/edittext_username"
@@ -47,8 +46,7 @@
         app:layout_constraintBottom_toTopOf="@+id/edittext_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_title"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/login_title" />
 
     <LinearLayout
         android:id="@+id/linear_layout_buttons"
