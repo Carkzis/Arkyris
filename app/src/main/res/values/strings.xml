@@ -99,4 +99,16 @@
     <string name="change_it">Change it!</string>
     <string name="change_password_background">Change password background.</string>
     <string name="no_entries">You have no entries! Enter something below!</string>
+  <string name="connection_error">Connection error…</string>
+    <string name="entry_added">Entry added!</string>
+    <string name="entry_deleted">Entry deleted!</string>
+    <string name="entry_public">Entry is now public!</string>
+    <string name="entry_private">Entry is now private!</string>
+    <string name="feeling_query">How do you feel today?</string>
+    <string name="make_colour_public">Make your colour public?</string>
+    <string name="make_entry_public">Make this entry public?</string>
+    <string name="delete_entry_query">Delete this entry?</string>
+    <string name="cancel_nothing">Cancel, do nothing.</string>
+    <string name="make_entry_private">Make this entry private?</string>
+    <string name="like_to_do_query">What would you like to do?</string>
 </resources>
