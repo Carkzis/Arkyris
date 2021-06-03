@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,11 +14,14 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.arkyris.MainActivity;
 import com.example.arkyris.R;
 
+import static android.view.View.GONE;
+
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel mViewModel;
     private EditText mUsername;
     private EditText mPassword;
+    private ProgressBar mLoadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +41,10 @@ public class LoginActivity extends AppCompatActivity {
         // Initialise view variables
         mUsername = findViewById(R.id.edittext_username);
         mPassword = findViewById(R.id.edittext_password);
+        mLoadingIndicator = findViewById(R.id.loading_indicator_login);
 
         mViewModel.getConnectionError().observe(this, connectionError -> {
+            mLoadingIndicator.setVisibility(GONE);
             // update cached copy of words in adapter
             if (connectionError) {
                 Toast.makeText(
@@ -50,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         mViewModel.getLoginResponseCode().observe(this, responseCode -> {
+            mLoadingIndicator.setVisibility(GONE);
             if (responseCode == 200) {
                 Toast.makeText(
                         getApplicationContext(),
@@ -85,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        mLoadingIndicator.setVisibility(View.VISIBLE);
         mViewModel.authenticateUser(username, password);
 
     }

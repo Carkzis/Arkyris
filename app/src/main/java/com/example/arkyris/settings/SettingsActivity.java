@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ public class SettingsActivity extends AppCompatActivity {
     private TextView mUsername;
     private SettingsViewModel mViewModel;
     private IrisViewModel mIrisViewModel;
+    private ProgressBar mLoadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         mUsername = findViewById(R.id.text_settings_name);
+        mLoadingIndicator = findViewById(R.id.loading_indicator_settings);
 
         mViewModel = ViewModelProviders.of(this).get(SettingsViewModel.class);
         mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
@@ -48,6 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         mViewModel.getLogoutSuccess().observe(this, successString -> {
             // update cached copy of words in adapter
+            mLoadingIndicator.setVisibility(View.GONE);
             if (successString != null) {
                 String toastMessage = null;
                 boolean loggedOut = false;
@@ -108,8 +112,10 @@ public class SettingsActivity extends AppCompatActivity {
         builder.setTitle("Leaving so soon?");
         builder.setItems(choices, (dialog, which) -> {
             if (getString(R.string.logout_one).equals(choices[which])) {
+                mLoadingIndicator.setVisibility(View.VISIBLE);
                 mViewModel.logout();
             } else if (getString(R.string.logout_all).equals(choices[which])) {
+                mLoadingIndicator.setVisibility(View.VISIBLE);
                 mViewModel.logoutAll();
             }
         });

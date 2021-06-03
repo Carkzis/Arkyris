@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +20,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private EditText mOldPassword;
     private EditText mNewPassword1;
     private EditText mNewPassword2;
+    private ProgressBar mLoadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +39,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
         mOldPassword = findViewById(R.id.edittext_old_password);
         mNewPassword1 = findViewById(R.id.edittext_new_password1);
         mNewPassword2 = findViewById(R.id.edittext_new_password2);
+        mLoadingIndicator = findViewById(R.id.loading_indicator_change_password);
 
         mViewModel.getPasswordEntryFailure().observe(this, failure -> {
+            mLoadingIndicator.setVisibility(View.GONE);
             // update cached copy of words in adapter
             if (failure.equals("not_equal")) {
                 Toast.makeText(
@@ -58,6 +62,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         });
 
         mViewModel.getChangePasswordSuccess().observe(this, response -> {
+            mLoadingIndicator.setVisibility(View.GONE);
             if (response.equals("failed")) {
                 Toast.makeText(
                         getApplicationContext(),
@@ -98,6 +103,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             return;
         }
 
+        mLoadingIndicator.setVisibility(View.VISIBLE);
         // This will test passwords first
         mViewModel.changePassword(oldPassword, newPassword1, newPassword2);
 

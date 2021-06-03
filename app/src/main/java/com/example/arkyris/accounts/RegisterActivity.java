@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText mEmail;
     private EditText mPassword1;
     private EditText mPassword2;
+    private ProgressBar mLoadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +33,11 @@ public class RegisterActivity extends AppCompatActivity {
         mEmail = findViewById(R.id.edittext_email);
         mPassword1 = findViewById(R.id.edittext_register_password1);
         mPassword2 = findViewById(R.id.edittext_register_password2);
+        mLoadingIndicator = findViewById(R.id.loading_indicator_register);
 
         // This shows if there is no connection, the call to the database fails.
         mViewModel.getConnectionError().observe(this, connectionError -> {
+            mLoadingIndicator.setVisibility(View.GONE);
             // update cached copy of words in adapter
             if (connectionError) {
                 Toast.makeText(
@@ -48,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         // is returned if the username already exists, any other errors (except no connection)
         // show here
         mViewModel.getRegisterResponseCode().observe(this, responseCode -> {
+            mLoadingIndicator.setVisibility(View.GONE);
             if (responseCode == 200) {
             Toast.makeText(
                 getApplicationContext(),
@@ -108,6 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        mLoadingIndicator.setVisibility(View.VISIBLE);
         mViewModel.insertUser(username, email, password1);
 
     }
