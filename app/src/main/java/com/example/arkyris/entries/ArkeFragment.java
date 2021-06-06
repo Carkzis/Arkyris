@@ -112,12 +112,6 @@ public class ArkeFragment extends Fragment {
             // update cached copy of words in adapter
             mAdapter.setEntries(entries);
             mEntryListSize = entries.size();
-            // Moved this here, so that the connection error never shows if there are any entries.
-            if (mEntryListSize > 0) {
-                mConnectionError.setVisibility(View.GONE);
-            } else if (mLoadingIndicator.getVisibility() == View.GONE) {
-                mConnectionError.setVisibility(View.VISIBLE);
-            }
         });
 
     }
@@ -131,9 +125,12 @@ public class ArkeFragment extends Fragment {
             mSwipeRefreshLayout.setEnabled(true);
 
             // This will display a message to say there are no entries to show only
-            // after everything has loaded.
+            // after everything has loaded. The entry list variable is kept updated by the
+            // public entries observer
             if (mEntryListSize < 1) {
                 mConnectionError.setVisibility(View.VISIBLE);
+            } else {
+                mConnectionError.setVisibility(View.GONE);
             }
 
             mFab.setVisibility(View.VISIBLE);

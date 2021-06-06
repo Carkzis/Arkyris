@@ -38,7 +38,6 @@ public class IrisFragment extends Fragment {
     private int mColourName;
     private int mEntryListSize = 0;
     private ProgressBar mLoadingIndicator;
-    // TODO: Do something about this to prevent multiple loads!
     private boolean mInitialLoad = true;
 
     private View mRootView;
@@ -173,8 +172,8 @@ public class IrisFragment extends Fragment {
             if (loadingComplete) {
                 mLoadingIndicator.setVisibility(View.GONE);
                 mArkeViewModel.refreshArkeCache();
-                // This will display a message to say there are entries to show on only
-                // after everything has loaded.
+                // This will display a message to say there are no entries to show only
+                // after everything has loaded (and there are no entries).
                 if (mEntryListSize == 0) {
                     mConnectionError.setVisibility(View.VISIBLE);
                 } else {
