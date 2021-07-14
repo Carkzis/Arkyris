@@ -14,7 +14,6 @@ public class ArkeViewModel extends AndroidViewModel {
     private final ArkeEntryRepository mRepository;
     private final LiveData<List<ArkeEntryItem>> mPublicEntries;
     private MutableLiveData<String> mAccountName;
-    private MutableLiveData<Boolean> mConnectionError;
     private MutableLiveData<String> mLoadingOutcome;
     private MutableLiveData<Boolean> mEntryAdded;
 
@@ -30,7 +29,6 @@ public class ArkeViewModel extends AndroidViewModel {
         mRepository = new ArkeEntryRepository(application);
         mPublicEntries = mRepository.getAllPublicEntries();
         mAccountName = mRepository.getAccountName();
-        mConnectionError = mRepository.getConnectionError();
         mLoadingOutcome = mRepository.getLoadingOutcome();
         mEntryAdded = mRepository.getEntryAdded();
     }
@@ -45,13 +43,6 @@ public class ArkeViewModel extends AndroidViewModel {
             mAccountName = new MutableLiveData<>();
         }
         return mAccountName;
-    }
-
-    public MutableLiveData<Boolean> getConnectionError() {
-        if (mConnectionError == null) {
-            mConnectionError = new MutableLiveData<>();
-        }
-        return mConnectionError;
     }
 
     public MutableLiveData<String> getLoadingOutcome() {
@@ -72,9 +63,7 @@ public class ArkeViewModel extends AndroidViewModel {
         mEntryAdded.postValue(false);
     }
 
-    public void connectionErrorNotified() {
-        mConnectionError.postValue(false);
-    }
+    public void loadingOutcomeComplete() { mLoadingOutcome.postValue("standby"); }
 
     // wrapper for insert that calls Repository's insert() method,
     // hides implementation of insert() from UI

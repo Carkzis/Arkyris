@@ -28,7 +28,6 @@ public class ArkeEntryRepository {
     private final EntryService mEntryService = APIUtils.getEntryService();
     private final SharedPreferences mPreferences;
 
-    private final MutableLiveData<Boolean> mConnectionError;
     private final MutableLiveData<String> mLoadingOutcome;
     private final MutableLiveData<Boolean> mEntryAdded;
     private final MutableLiveData<String> mAccountName;
@@ -45,7 +44,6 @@ public class ArkeEntryRepository {
         // Initialise variables for getting account name currently logged in
         mPreferences = PreferenceManager.getDefaultSharedPreferences(application);
         mAccountName = new MutableLiveData<>();
-        mConnectionError = new MutableLiveData<>();
         mLoadingOutcome = new MutableLiveData<>();
         mEntryAdded = new MutableLiveData<>();
     }
@@ -83,10 +81,6 @@ public class ArkeEntryRepository {
         return mAccountName;
     }
 
-    public MutableLiveData<Boolean> getConnectionError() {
-        return mConnectionError;
-    }
-
     public MutableLiveData<String> getLoadingOutcome() {
         return mLoadingOutcome;
     }
@@ -114,7 +108,6 @@ public class ArkeEntryRepository {
             @Override
             public void onFailure(@NotNull Call<List<ArkeEntryItem>> call, @NotNull Throwable t) {
                 Log.e(LOG_TAG, t.getMessage());
-                mConnectionError.postValue(true);
                 mLoadingOutcome.postValue("error");
             }
         });
@@ -140,7 +133,6 @@ public class ArkeEntryRepository {
             public void onFailure(@NotNull Call<ArkeEntryItem> call,
                                   @NotNull Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
-                mConnectionError.postValue(true);
                 mLoadingOutcome.postValue("error");
             }
 

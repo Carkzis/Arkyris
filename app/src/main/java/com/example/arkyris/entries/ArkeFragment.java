@@ -142,16 +142,15 @@ public class ArkeFragment extends Fragment {
                 } else {
                     mInitialLoad = false;
                 }
-            } else { // loadingOutcome will equal "error"
+            } else if (loadingOutcome.equals("error")) {
                 View tablayoutView = requireActivity().findViewById(R.id.tab_layout);
                 Snackbar snackbar = Snackbar.make(mRootView, "Connection error...",
                         Snackbar.LENGTH_LONG);
                 snackbar.setAnchorView(tablayoutView);
                 snackbar.show();
-
-                // Reset the connectionError LiveData to false
-                mArkeViewModel.connectionErrorNotified();
             }
+            // Reset the connectionError LiveData to "standby"
+            mArkeViewModel.loadingOutcomeComplete();
         });
     }
 
