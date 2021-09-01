@@ -5,7 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="?colorPrimaryVariant"
-  tools:context=".accounts.RegisterActivity">
+  tools:context="com.carkzis.arkyris.accounts.RegisterActivity">
 
     <EditText
       android:id="@+id/edittext_register_password2"

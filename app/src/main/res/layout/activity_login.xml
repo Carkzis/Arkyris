@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?colorPrimaryVariant"
-    tools:context=".accounts.LoginActivity">
+    tools:context="com.carkzis.arkyris.accounts.LoginActivity">
 
     <TextView
         android:id="@+id/login_title"
