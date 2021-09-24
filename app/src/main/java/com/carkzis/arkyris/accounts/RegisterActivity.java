@@ -49,7 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
         // This shows if there is no connection, the call to the database fails.
         mViewModel.getConnectionError().observe(this, connectionError -> {
             mLoadingIndicator.setVisibility(View.GONE);
-            // update cached copy of words in adapter
+            // Update cached copy of words in adapter
             if (connectionError) {
                 Toast.makeText(
                         getApplicationContext(),
