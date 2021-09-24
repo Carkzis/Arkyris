@@ -17,6 +17,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Repository for dealing with the communication between the app and
+ * the Django Rest Framework, dealing purely with changing a user's password.
+ */
 public class ChangePasswordRepository {
 
     private static final String LOG_TAG = LogoutRepository.class.getSimpleName();
@@ -24,24 +28,29 @@ public class ChangePasswordRepository {
     private final MutableLiveData<String> mChangePasswordSuccess;
     private final String mToken;
 
-
     ChangePasswordRepository(Application application) {
         SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(application);
         mToken = mPreferences.getString("mToken", null);
         mChangePasswordSuccess = new MutableLiveData<>();
     }
 
+    /**
+     * Returns the password success status (could be replacing with enum rather than String).
+     */
     public MutableLiveData<String> getChangePasswordSuccess() {
         return mChangePasswordSuccess;
     }
 
     /**
-     * Change the password in the remote database, and return response.
+     * Change the password in the remote database, and return the response.
      */
     public void changePassword(String oldPassword, String newPassword) {
         Call<ResponseBody> call = mAccountService.changePassword(
                 "Token " + mToken, oldPassword, newPassword);
         call.enqueue(new Callback<ResponseBody>() {
+            /**
+             * Method called when a response is received.
+             */
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call,
                                    @NotNull Response<ResponseBody> response) {
@@ -57,6 +66,9 @@ public class ChangePasswordRepository {
                 }
             }
 
+            /**
+             * Method called when there is no response from the server.
+             */
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call,
                                   @NotNull Throwable throwable) {

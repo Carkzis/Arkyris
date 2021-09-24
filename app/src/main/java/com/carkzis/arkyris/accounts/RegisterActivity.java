@@ -62,11 +62,10 @@ public class RegisterActivity extends AppCompatActivity {
 
     /**
      * Sets up an observer for responding to the response code when attempting to log in.
+     * 200 is a pass, 400 is returned if the username already exists, any other errors
+     * (except no connection) show here.
      */
     private void setUpResponseCodeObserver() {
-        // Observes the server response code on attempting to register, 200 is a pass, 400
-        // is returned if the username already exists, any other errors (except no connection)
-        // show here
         mViewModel.getRegisterResponseCode().observe(this, responseCode -> {
             mLoadingIndicator.setVisibility(View.GONE);
             if (responseCode == 200) {
@@ -96,10 +95,10 @@ public class RegisterActivity extends AppCompatActivity {
      * Validates the registration inputs via the ViewModel and inserts the data.
      */
     public void registerUser(View view) {
-        // This will need to be tested against the online database
+        // This will need to be tested against the online database.
         String username = mUsername.getText().toString();
 
-        // Can test locally
+        // Can test locally.
         String email = mEmail.getText().toString();
         String password1 = mPassword1.getText().toString();
         String password2 = mPassword2.getText().toString();

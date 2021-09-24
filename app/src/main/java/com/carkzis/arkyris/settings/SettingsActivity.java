@@ -11,12 +11,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.carkzis.arkyris.accounts.LoginActivity;
 import com.carkzis.arkyris.entries.IrisViewModel;
 import com.example.arkyris.R;
-import com.carkzis.arkyris.accounts.LoginActivity;
 
 import java.util.Objects;
 
+/**
+ * Activity for allowing the user to change their password or logging out.
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     private TextView mUsername;
@@ -42,13 +45,27 @@ public class SettingsActivity extends AppCompatActivity {
         mViewModel = ViewModelProviders.of(this).get(SettingsViewModel.class);
         mIrisViewModel = ViewModelProviders.of(this).get(IrisViewModel.class);
 
+        setUpAccountName();
+        setUpLogoutSuccessObserver();
+
+    }
+
+    /**
+     * Observes the account name from the repository.
+     */
+    public void setUpAccountName() {
         mViewModel.getAccountName().observe(this, username -> {
             // update cached copy of words in adapter
             if (username != null) {
                 mUsername.setText(username);
             }
         });
+    }
 
+    /**
+     * Observes the success of logging the user out.
+     */
+    public void setUpLogoutSuccessObserver() {
         mViewModel.getLogoutSuccess().observe(this, successString -> {
             // update cached copy of words in adapter
             mLoadingIndicator.setVisibility(View.GONE);
@@ -103,6 +120,10 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Shows a dialog with options relating to logging the member out, and
+     * sends a request to the server via the ViewModel.
+     */
     public void logoutUser(View view) {
         String[] choices = {
                 getString(R.string.logout_one),
@@ -122,6 +143,9 @@ public class SettingsActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     * Sets up an intent to traverse to the ChangePasswordActivity.
+     */
     public void changePasswordScreen(View view) {
         Intent intent = new Intent(getApplicationContext(), ChangePasswordActivity.class);
         startActivity(intent);

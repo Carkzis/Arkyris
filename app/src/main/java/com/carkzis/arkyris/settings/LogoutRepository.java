@@ -17,6 +17,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Repository for dealing with the communication between the app and
+ * the Django Rest Framework, dealing purely with logging a user out.
+ */
 public class LogoutRepository {
 
     private static final String LOG_TAG = LogoutRepository.class.getSimpleName();
@@ -35,24 +39,37 @@ public class LogoutRepository {
         token = mPreferences.getString("token", null);
     }
 
-    // hides implementation from the UI
+    /**
+     * Wrapper methods for returning the username from the Shared Preferences.
+     * Bit of an odd place to put this, but the name is displayed on the settings screen,
+     * from where you can log out.
+     */
     public MutableLiveData<String> getAccountName() {
         String username = mPreferences.getString("username", null);
         mAccountName.postValue(username);
         return mAccountName;
     }
 
+    /**
+     * Wrapper methods for returning LiveData.
+     */
     public MutableLiveData<String> getLogoutSuccess() {
         return mLogoutSuccess;
     }
-
     public MutableLiveData<Boolean> getAutoLoggedOut() {
         return mAutoLoggedOut;
     }
 
+    /**
+     * Method for logging the method out of the device.
+     * Note: the loggout is performed regardless of if it succeeds with the server.
+     */
     public void logout() {
         Call<ResponseBody> call = mAccountService.logout("Token " + token);
         call.enqueue(new Callback<ResponseBody>() {
+            /**
+             * Method called when a response is received.
+             */
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call,
                                    @NotNull Response<ResponseBody> response) {
@@ -71,6 +88,9 @@ public class LogoutRepository {
                 }
             }
 
+            /**
+             * Method called when there is no response from the server.
+             */
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
@@ -84,9 +104,17 @@ public class LogoutRepository {
         });
     }
 
+    /**
+     * Method for logging the method out of all the user's devices.
+     * Note: This will only allow the user to log out if this succeeds, unlike logging out
+     * of a single device.
+     */
     public void logoutAll() {
         Call<ResponseBody> call = mAccountService.logoutAll("Token " + token);
         call.enqueue(new Callback<ResponseBody>() {
+            /**
+             * Method called when a response is received.
+             */
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call,
                                    @NotNull Response<ResponseBody> response) {
@@ -103,6 +131,9 @@ public class LogoutRepository {
                 }
             }
 
+            /**
+             * Method called when there is no response from the server.
+             */
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
@@ -119,6 +150,9 @@ public class LogoutRepository {
     public void loggedIn() {
         Call<ResponseBody> call = mAccountService.loggedIn("Token " + token);
         call.enqueue(new Callback<ResponseBody>() {
+            /**
+             * Method called when a response is received.
+             */
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call,
                                    @NotNull Response<ResponseBody> response) {
@@ -134,11 +168,14 @@ public class LogoutRepository {
                 }
             }
 
+            /**
+             * Method called when there is no response from the server.
+             */
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());
                 Log.e(LOG_TAG, "No connection, so cannot check login status.");
-                // Do nothing here, won't log out users if they are not logged in.
+                // Do nothing here.
             }
         });
     }

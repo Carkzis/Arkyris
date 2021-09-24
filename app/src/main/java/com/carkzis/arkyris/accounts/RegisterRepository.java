@@ -14,7 +14,7 @@ import retrofit2.Response;
 
 /**
  * Repository for dealing with the communication between the app and
- * the Django Rest Framework, dealing purely with registering a new user..
+ * the Django Rest Framework, dealing purely with registering a new user.
  */
 public class RegisterRepository {
 
