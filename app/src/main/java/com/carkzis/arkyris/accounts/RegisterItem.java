@@ -2,6 +2,9 @@ package com.carkzis.arkyris.accounts;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Item for sending registration details to the Django Rest Framework.
+ */
 public class RegisterItem {
 
     @SerializedName("username")

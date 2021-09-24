@@ -8,6 +8,9 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * ViewModel for the LoginActivity.
+ */
 public class RegisterViewModel extends AndroidViewModel {
 
     private final RegisterRepository mRepository;
@@ -21,8 +24,10 @@ public class RegisterViewModel extends AndroidViewModel {
         mRegisterResponseCode = mRepository.getRegisterResponseCode();
     }
 
-    // getter method for getting checking any correction error
-    // hides implementation from the UI
+    /**
+     * Getter method for getting checking any connection error, hides
+     * implementation from the UI.
+     */
     public MutableLiveData<Boolean> getConnectionError() {
         if (mConnectionError == null) {
             mConnectionError = new MutableLiveData<>();
@@ -30,6 +35,10 @@ public class RegisterViewModel extends AndroidViewModel {
         return mConnectionError;
     }
 
+    /**
+     * Getter method for getting checking the registration response code, hides
+     * implementation from the UI.
+     */
     public MutableLiveData<Integer> getRegisterResponseCode() {
         if (mRegisterResponseCode == null) {
             mRegisterResponseCode = new MutableLiveData<>();
@@ -37,14 +46,20 @@ public class RegisterViewModel extends AndroidViewModel {
         return mRegisterResponseCode;
     }
 
+    /**
+     * These methods reset the values held in the LiveData after any events (such as
+     * generating a toast in response to an error) so that they do not happen more than once.
+     */
     public void connectionErrorHandled() {
         mConnectionError.postValue(false);
     }
-
     public void registerResponseHandled() {
         mRegisterResponseCode.postValue(-1);
     }
 
+    /**
+     * Method for validating the username inputs according to the constraints provided.
+     */
     public boolean testUsername (String username) {
         String usernameRegex = "[a-zA-Z1-9]{1,50}";
         Pattern pattern = Pattern.compile(usernameRegex);
@@ -53,6 +68,10 @@ public class RegisterViewModel extends AndroidViewModel {
         return matcher.matches();
     }
 
+    /**
+     * Method for validating the email address input.  This does not check the email exists,
+     * only that it follows the correct email pattern.
+     */
     public boolean testEmail (String email) {
 
         // Thank https://howtodoinjava.com/ for this ghastly thing...
@@ -65,10 +84,16 @@ public class RegisterViewModel extends AndroidViewModel {
         return matcher.matches();
     }
 
+    /**
+     * Tests that the passwords provided locally.
+     */
     public boolean testPasswordMatch (String password1, String password2) {
         return (password1.equals(password2));
     }
 
+    /**
+     * Ensures that the password follows the correct format.
+     */
     public boolean testPasswordFormat (String password1) {
 
         String passwordRegex = "[a-zA-Z1-9]{8,20}";
@@ -78,6 +103,10 @@ public class RegisterViewModel extends AndroidViewModel {
         return matcher.matches();
     }
 
+    /**
+     * Provides failure messages if any of the validations fail, which a hierarchy of username,
+     * email, password matching and password format.
+     */
     public String failureMessage(boolean userFormat, boolean emailFormat,
                                  boolean passwordMatch, boolean passwordFormat) {
         if (!userFormat) {
@@ -92,8 +121,10 @@ public class RegisterViewModel extends AndroidViewModel {
         return null;
     }
 
-    // wrapper for insert that calls Repository's insert() method,
-    // hides implementation of insert() from UI
+    /**
+     * Wrapper for authenticating the user that calls RegisterRepository's
+     * insert() method, and hides it's implementation from the UI.
+     */
     public void insertUser(String username, String email, String password) {
         RegisterItem newUser = new RegisterItem(username, email, password);
         mRepository.insertUser(newUser);

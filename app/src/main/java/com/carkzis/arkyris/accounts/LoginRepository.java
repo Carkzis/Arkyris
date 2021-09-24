@@ -17,6 +17,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Repository for dealing with the communication between the app and
+ * the Django Rest Framework, dealing purely with logging the user in.
+ */
 public class LoginRepository {
 
     private static final String LOG_TAG = LoginRepository.class.getSimpleName();
@@ -32,22 +36,33 @@ public class LoginRepository {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(application);
     }
 
-    // wrapper method to get connection error
+    /**
+     * Wrapper methods for returning LiveData.
+     */
     public MutableLiveData<Boolean> getConnectionError() {
         return mConnectionError;
     }
-
     public MutableLiveData<Integer> getLoginResponseCode() {
         return mLoginResponseCode;
     }
 
+    /**
+     * Returns the authentication token held in the Shared Preferences.
+     */
     public String getToken() {
         return mPreferences.getString("token", null);
     }
 
+    /**
+     * Method for attempting to authenticate the user with the provided username
+     * and password, then providing the relevant response to the LiveData/Shared Preferences.
+     */
     public void authenticateUser(String username, String password) {
         Call<ResponseBody> call = mAccountService.authenticateUser(username, password);
         call.enqueue(new Callback<ResponseBody>() {
+            /**
+             * Method called when a response is received.
+             */
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call,
                                    @NotNull Response<ResponseBody> response) {
@@ -78,6 +93,9 @@ public class LoginRepository {
                 }
             }
 
+            /**
+             * Method called when there is no response from the server.
+             */
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable throwable) {
                 Log.e(LOG_TAG, throwable.getMessage());

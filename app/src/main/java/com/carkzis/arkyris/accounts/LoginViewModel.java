@@ -5,6 +5,9 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+/**
+ * ViewModel for the LoginActivity.
+ */
 public class LoginViewModel extends AndroidViewModel {
 
     private static final String LOG_TAG = LoginViewModel.class.getSimpleName();
@@ -20,8 +23,10 @@ public class LoginViewModel extends AndroidViewModel {
         mLoginResponseCode = mRepository.getLoginResponseCode();
     }
 
-    // getter method for getting checking any connection error
-    // hides implementation from the UI
+    /**
+     * Getter method for getting checking any connection error, hides
+     * implementation from the UI.
+     */
     public MutableLiveData<Boolean> getConnectionError() {
         if (mConnectionError == null) {
             mConnectionError = new MutableLiveData<Boolean>();
@@ -29,6 +34,10 @@ public class LoginViewModel extends AndroidViewModel {
         return mConnectionError;
     }
 
+    /**
+     * Getter method for getting checking the login response code, hides
+     * implementation from the UI.
+     */
     public MutableLiveData<Integer> getLoginResponseCode() {
         if (mLoginResponseCode == null) {
             mLoginResponseCode = new MutableLiveData<Integer>();
@@ -36,20 +45,28 @@ public class LoginViewModel extends AndroidViewModel {
         return mLoginResponseCode;
     }
 
+    /**
+     * These methods reset the values held in the LiveData after any events (such as
+     * generating a toast in response to an error) so that they do not happen more than once.
+     */
     public void connectionErrorHandled() {
         mConnectionError.postValue(false);
     }
-
     public void loginResponseHandled() {
         mLoginResponseCode.postValue(-1);
     }
 
+    /**
+     * Gives the LoginActivity access to the stored authentication token.
+     */
     public String getToken() {
         return mRepository.getToken();
     }
 
-    // wrapper for insert that calls Repository's insert() method,
-    // hides implementation of insert() from UI
+    /**
+     * Wrapper for authenticating the user that calls LoginRepository's
+     * authenticateUser() method, hides it's implementation from the UI.
+     */
     public void authenticateUser(String username, String password) {
         mRepository.authenticateUser(username, password);
     }

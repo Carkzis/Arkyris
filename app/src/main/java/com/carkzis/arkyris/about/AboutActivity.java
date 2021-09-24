@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.arkyris.R;
 
+/**
+ * Activity for the about information, which supplies information about the app and how to
+ * use it.
+ */
 public class AboutActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = AboutActivity.class.getSimpleName();
@@ -19,6 +23,7 @@ public class AboutActivity extends AppCompatActivity {
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Set the buttons on the action bar.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 

@@ -1,5 +1,7 @@
 package com.carkzis.arkyris.accounts;
 
+import static android.view.View.GONE;
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +16,9 @@ import androidx.lifecycle.ViewModelProviders;
 import com.carkzis.arkyris.MainActivity;
 import com.example.arkyris.R;
 
-import static android.view.View.GONE;
-
+/**
+ * Activity for logging in the user.
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel mViewModel;
@@ -28,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
-        //preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
         String token = mViewModel.getToken();
         if (token != null) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -43,6 +46,15 @@ public class LoginActivity extends AppCompatActivity {
         mPassword = findViewById(R.id.edittext_password);
         mLoadingIndicator = findViewById(R.id.loading_indicator_login);
 
+        setUpConnectionErrorObserver();
+        setUpResponseCodeObserver();
+
+    }
+
+    /**
+     * Sets up an observer for viewing and responding to connection errors.
+     */
+    private void setUpConnectionErrorObserver() {
         mViewModel.getConnectionError().observe(this, connectionError -> {
             mLoadingIndicator.setVisibility(GONE);
             // update cached copy of words in adapter
@@ -54,7 +66,12 @@ public class LoginActivity extends AppCompatActivity {
                 mViewModel.connectionErrorHandled();
             }
         });
+    }
 
+    /**
+     * Sets up an observer for responding to the response code when attempting to log in.
+     */
+    private void setUpResponseCodeObserver() {
         mViewModel.getLoginResponseCode().observe(this, responseCode -> {
             mLoadingIndicator.setVisibility(GONE);
             if (responseCode == 200) {
@@ -75,11 +92,18 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets up an intent to traverse to the RegisterActivity.
+     */
     public void registerScreen(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Verifies that the login information has been supplied, before attempting
+     * to authenticate the user via the server.
+     */
     public void loginUser(View view) {
         String username = mUsername.getText().toString();
         String password = mPassword.getText().toString();
@@ -99,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
     
     /**
      * Forgotten password functionality is not currently avaialable, but this may be replaced
-     * by social logins anyway.
+     * by Firebase authentication..
      */
     public void forgottenPasswordAlert(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)

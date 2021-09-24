@@ -12,6 +12,9 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.arkyris.R;
 
+/**
+ * Activity for registering a new user.
+ */
 public class RegisterActivity extends AppCompatActivity {
 
     private RegisterViewModel mViewModel;
@@ -35,6 +38,14 @@ public class RegisterActivity extends AppCompatActivity {
         mPassword2 = findViewById(R.id.edittext_register_password2);
         mLoadingIndicator = findViewById(R.id.loading_indicator_register);
 
+        setUpConnectionErrorObserver();
+        setUpResponseCodeObserver();
+    }
+
+    /**
+     * Sets up an observer for viewing and responding to connection errors.
+     */
+    private void setUpConnectionErrorObserver() {
         // This shows if there is no connection, the call to the database fails.
         mViewModel.getConnectionError().observe(this, connectionError -> {
             mLoadingIndicator.setVisibility(View.GONE);
@@ -47,17 +58,22 @@ public class RegisterActivity extends AppCompatActivity {
                 mViewModel.connectionErrorHandled();
             }
         });
+    }
 
+    /**
+     * Sets up an observer for responding to the response code when attempting to log in.
+     */
+    private void setUpResponseCodeObserver() {
         // Observes the server response code on attempting to register, 200 is a pass, 400
         // is returned if the username already exists, any other errors (except no connection)
         // show here
         mViewModel.getRegisterResponseCode().observe(this, responseCode -> {
             mLoadingIndicator.setVisibility(View.GONE);
             if (responseCode == 200) {
-            Toast.makeText(
-                getApplicationContext(),
-                "Account created, please login!",
-                Toast.LENGTH_SHORT).show();
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Account created, please login!",
+                        Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
             } else if (responseCode == 400) {
@@ -77,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * Validates the registration inputs via the ViewModel and inserts the data
+     * Validates the registration inputs via the ViewModel and inserts the data.
      */
     public void registerUser(View view) {
         // This will need to be tested against the online database

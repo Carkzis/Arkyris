@@ -12,6 +12,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Repository for dealing with the communication between the app and
+ * the Django Rest Framework, dealing purely with registering a new user..
+ */
 public class RegisterRepository {
 
     private static final String LOG_TAG = RegisterRepository.class.getSimpleName();
@@ -19,24 +23,30 @@ public class RegisterRepository {
     private final MutableLiveData<Boolean> mConnectionError;
     private final MutableLiveData<Integer> mRegisterResponseCode;
 
-    // constructor
     RegisterRepository() {
         mConnectionError = new MutableLiveData<>();
         mRegisterResponseCode = new MutableLiveData<>();
     }
 
-    // wrapper method to get connection error
+    /**
+     * Wrapper methods for returning LiveData.
+     */
     public MutableLiveData<Boolean> getConnectionError() {
         return mConnectionError;
     }
-
     public MutableLiveData<Integer> getRegisterResponseCode() {
         return mRegisterResponseCode;
     }
 
+    /**
+     * Method for inserting the new user into the remote database.
+     */
     public void insertUser(RegisterItem newUser) {
         Call<RegisterItem> call = mAccountService.registerUser(newUser);
         call.enqueue(new Callback<RegisterItem>() {
+            /**
+             * Method called when a response is received.
+             */
             @Override
             public void onResponse(@NotNull Call<RegisterItem> call,
                                    @NotNull Response<RegisterItem> response) {
@@ -52,6 +62,9 @@ public class RegisterRepository {
                 }
             }
 
+            /**
+             * Method called when there is no response from the server.
+             */
             @Override
             public void onFailure(@NotNull Call<RegisterItem> call,
                                   @NotNull Throwable throwable) {
