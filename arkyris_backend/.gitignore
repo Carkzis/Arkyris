@@ -5,3 +5,4 @@ __pycache__/
 local_settings.py
 *.sqlite3
 arkyris_env/
+heroku_git/

@@ -23,8 +23,7 @@ class EntryListMember(generics.ListAPIView):
         queryset = Entry.objects.filter(deleted=0).order_by('-date_time')
         user = self.request.query_params.get('user')
         queryset = queryset.filter(user=user)
-        return queryset
-    
+        return queryset  
 
 class EntryListPublic(generics.ListAPIView):
     # Allows entries to be listed and viewed
