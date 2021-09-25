@@ -14,6 +14,10 @@ import com.google.gson.annotations.SerializedName;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Room item for Iris entries, which are entries visible purely to the user, whereas Arke
+ * entries are public entries.
+ */
 @Entity(tableName = "iris_entry_table")
 public class IrisEntryItem {
 
@@ -59,15 +63,17 @@ public class IrisEntryItem {
     }
 
     /**
-     * Getter methods for getting Views into the RecycleView.
+     * Getter methods for getting data into the RecycleView.
      */
-
     public String getName() { return mName; }
-
     public String getRemoteId() { return mRemoteId; }
-
     public String getDateTime() { return mDateTime; }
+    public int getColour() { return mColour; }
+    public int getIsPublic() { return mIsPublic; }
 
+    /**
+     * Getter that takes the stored DateTime, and retrieves just the date from it as a String.
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String getDate() {
         OffsetDateTime localDateTime = OffsetDateTime.parse(mDateTime);
@@ -75,6 +81,9 @@ public class IrisEntryItem {
         return localDateTime.format(formatter);
     }
 
+    /**
+     * Getter that takes the stored DateTime, and retrieves just the time from it as a String.
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String getTime() {
         OffsetDateTime localDateTime = OffsetDateTime.parse(mDateTime);
@@ -82,18 +91,15 @@ public class IrisEntryItem {
         return localDateTime.format(formatter);
     }
 
-    public int getColour() { return mColour; }
-
-    public int getIsPublic() { return mIsPublic; }
-
+    /**
+     * Setters for data held in ArkeEntryItem.
+     */
     public void setRemoteId(String mRemoteId) {
         this.mRemoteId = mRemoteId;
     }
-
     public void setDateTime(String mDateTime) {
         this.mDateTime = mDateTime;
     }
-
     public void setName(String mName) {
         this.mName = mName;
     }

@@ -8,6 +8,10 @@ import androidx.room.Query;
 
 import java.util.List;
 
+/**
+ * Data access object interface for the Iris entries in the local Room SQLite database.
+ * Provides methods for inserting, deleting and retrieving these entries.
+ */
 @Dao
 public interface IrisEntryDao {
 

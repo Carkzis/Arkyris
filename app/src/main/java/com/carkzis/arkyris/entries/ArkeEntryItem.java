@@ -14,6 +14,10 @@ import com.google.gson.annotations.SerializedName;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Room item for Arke entries, which are entries visible by all users, whereas Iris
+ * entries are purely private entries.
+ */
 @Entity(tableName = "arke_entry_table")
 public class ArkeEntryItem {
 
@@ -56,16 +60,22 @@ public class ArkeEntryItem {
             mRemoteId = "";
     }
 
+
+    /**
+     * Getters for the data held in an ArkeEntryItem.
+     */
     public String getRemoteId() { return mRemoteId; }
-
     public String getName() { return mName; }
-
     public int getColour() { return mColour; }
-
     public String getDateTime() { return mDateTime; }
-
     public int getIsPublic() { return mIsPublic; }
+    public int getIsDeleted() {
+        return mIsDeleted;
+    }
 
+    /**
+     * Getter that takes the stored DateTime, and retrieves just the date from it as a String.
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String getDate() {
         OffsetDateTime localDateTime = OffsetDateTime.parse(mDateTime);
@@ -73,28 +83,27 @@ public class ArkeEntryItem {
         return localDateTime.format(formatter);
     }
 
+    /**
+     * Getter that takes the stored DateTime, and retrieves just the time from it as a String.
+     */
     public String getTime() {
         OffsetDateTime localDateTime = OffsetDateTime.parse(mDateTime);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return localDateTime.format(formatter);
     }
 
-    public int getIsDeleted() {
-        return mIsDeleted;
-    }
-
+    /**
+     * Setters for data held in ArkeEntryItem.
+     */
     public void setIsDeleted(int mIsDeleted) {
         this.mIsDeleted = mIsDeleted;
     }
-
     public void setRemoteId(String mRemoteId) {
         this.mRemoteId = mRemoteId;
     }
-
     public void setDateTime(String mDateTime) {
         this.mDateTime = mDateTime;
     }
-
     public void setName(String mName) {
         this.mName = mName;
     }

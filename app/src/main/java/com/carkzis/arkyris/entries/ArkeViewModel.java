@@ -9,6 +9,9 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * ViewModel for the ArkeFragment.
+ */
 public class ArkeViewModel extends AndroidViewModel {
 
     private final ArkeEntryRepository mRepository;
@@ -17,8 +20,9 @@ public class ArkeViewModel extends AndroidViewModel {
     private MutableLiveData<String> mLoadingOutcome;
     private MutableLiveData<Boolean> mEntryAdded;
 
-    // These set colours are for the random colour selected when the colour picker is
-    // opened up
+    /**
+     * These set colours are for the random colour selected when the colour picker is opened up.
+     */
     private static final String[] mColourArray = {"red", "pink", "purple", "deep_purple",
             "indigo", "blue", "light_blue", "cyan", "teal", "green",
             "light_green", "lime", "yellow", "amber", "orange", "deep_orange",
@@ -33,11 +37,16 @@ public class ArkeViewModel extends AndroidViewModel {
         mEntryAdded = mRepository.getEntryAdded();
     }
 
-    // getter method for getting all the words,
-    // hides implementation from the UI
+    /**
+     * Getter method for retrieving the public entries, hides
+     * implementation from the UI.
+     */
     public LiveData<List<ArkeEntryItem>> getPublicEntries() { return mPublicEntries; }
 
-    // getter method to retrieve account name from repository shared preferences
+    /**
+     * Getter method for the account name from the repository, to be observed by the
+     * ArkeFragment.
+     */
     public MutableLiveData<String> getAccountName() {
         if (mAccountName == null) {
             mAccountName = new MutableLiveData<>();
@@ -45,6 +54,10 @@ public class ArkeViewModel extends AndroidViewModel {
         return mAccountName;
     }
 
+    /**
+     * Getter method for getting checking the loading outcome, hides
+     * implementation from the UI.
+     */
     public MutableLiveData<String> getLoadingOutcome() {
         if (mLoadingOutcome == null) {
             mLoadingOutcome = new MutableLiveData<>();
@@ -52,6 +65,9 @@ public class ArkeViewModel extends AndroidViewModel {
         return mLoadingOutcome;
     }
 
+    /**
+     * Getter method for checking if an entry has been added.
+     */
     public MutableLiveData<Boolean> getEntryAdded() {
         if (mEntryAdded == null) {
             mEntryAdded = new MutableLiveData<>();
@@ -59,29 +75,40 @@ public class ArkeViewModel extends AndroidViewModel {
         return mEntryAdded;
     }
 
+    /**
+     * These methods reset the values held in the LiveData after any events (such as
+     * generating a toast in response to an error) so that they do not happen more than once.
+     */
     public void entryAddedComplete() {
         mEntryAdded.postValue(false);
     }
-
     public void loadingOutcomeComplete() { mLoadingOutcome.postValue("standby"); }
 
-    // wrapper for insert that calls Repository's insert() method,
-    // hides implementation of insert() from UI
+    /**
+     * Wrapper for calling the ArkeEntryRepository's
+     * insert() method, which inserts the entry into the local database.
+     */
     public void insert(ArkeEntryItem entry) { mRepository.insert(entry); }
 
+    /**
+     * Wrapper for calling the ArkeEntryRepository's
+     * addRemoteEntry(), which adds an entry into the remote database.
+     */
     public void addRemoteEntry(int colour) {
         mRepository.addRemoteEntry(colour);
     }
 
-    // refresh cache
+    /**
+     * Wrapper for refreshing the arke_entry_table.
+     */
     public void refreshArkeCache() { mRepository.refreshArkeCache(); }
 
     /**
-     * Method for generating a random color
+     * Method for generating a random color.
      */
     public String randomColour() {
         Random random = new Random();
-        // pick a random colour (using an index)
+        // Pick a random colour (using an index).
         return mColourArray[random.nextInt(20)];
     }
 
