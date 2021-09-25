@@ -10,6 +10,9 @@ import com.carkzis.arkyris.entries.IrisFragment;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Class for attaching fragments to the viewpager.
+ */
 public class PagerAdapter extends FragmentStatePagerAdapter {
 
     private final int mNumOfTabs;
@@ -19,6 +22,9 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
         this.mNumOfTabs = 2;
     }
 
+    /**
+     * Returns a different fragment depending on the users position in the viewpager.
+     */
     @NotNull
     @Override
     public Fragment getItem(int position) {
@@ -32,6 +38,9 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
         }
     }
 
+    /**
+     * Returns the number of tabs.
+     */
     @Override
     public int getCount() {
         return mNumOfTabs;
