@@ -25,6 +25,9 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Fragment for displaying all public (Arke) entry items to the user.
+ */
 public class ArkeFragment extends Fragment {
 
     private View mRootView;
@@ -35,7 +38,7 @@ public class ArkeFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private ArkeListAdapter mAdapter;
 
-    // all activity interactions are with the WordViewModel only
+    // All activity interactions are with the ViewModels only.
     private IrisViewModel mIrisViewModel;
     private ArkeViewModel mArkeViewModel;
 
@@ -44,7 +47,7 @@ public class ArkeFragment extends Fragment {
     private boolean mInitialLoad = true;
 
     public ArkeFragment() {
-        // Required empty public constructor
+        // Required empty public constructor.
     }
 
     @Override
@@ -53,28 +56,34 @@ public class ArkeFragment extends Fragment {
 
         mRootView = inflater.inflate(R.layout.fragment_arke, container, false);
 
-        // associated the ViewModel with the controller
-        // Note: IrisViewModel is shared between activities so Iris
-        // can display whether or not there are any user entries on launching the app.
+        /*
+         Associates the ViewModel with the controller.
+         Note: IrisViewModel is shared between fragments so Iris can display whether
+          or not there are any user entries on launching the app.
+         */
         mIrisViewModel = ViewModelProviders.of(requireActivity()).get(IrisViewModel.class);
         mArkeViewModel = ViewModelProviders.of(this).get(ArkeViewModel.class);
 
         mFab = mRootView.findViewById(R.id.arke_fab);
-        // connection error text view
+        // Connection error text view.
         mConnectionError = mRootView.findViewById(R.id.connection_error);
-        // loading indicator
+        // Loading indicator.
         mLoadingIndicator = mRootView.findViewById(R.id.loading_indicator);
-        // swipe refresh widget
+        // Swipe refresh widget.
         mSwipeRefreshLayout = mRootView.findViewById(R.id.arke_swipe);
-        // Get a handler for the RecyclerView
+        // Get a handler for the RecyclerView.
         mRecyclerView = mRootView.findViewById(R.id.arke_recyclerview);
 
+        // Automatically attempt to refresh the cache.
         mArkeViewModel.refreshArkeCache();
 
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragment.
         return mRootView;
     }
 
+    /**
+     * We are using this to set up all the observer methods, for tidiness.
+     */
     @Override
     public void onViewCreated(@NonNull @NotNull View view,
                               @Nullable @org.jetbrains.annotations
@@ -89,6 +98,9 @@ public class ArkeFragment extends Fragment {
 
     }
 
+    /**
+     * Sets up the click listener on the fab that opens the colour picker dialogue.
+     */
     public void setUpFab() {
         mFab.setOnClickListener(view -> {
             // get a random colour, to initially display to the user in the color picker dialogue.
@@ -98,6 +110,10 @@ public class ArkeFragment extends Fragment {
         });
     }
 
+    /**
+     * Sets up the RecyclerView, which observes the public entries and updates the RecylcerView
+     * adapter accordingly.
+     */
     private void setUpRecyclerView() {
 
         // Create an adapter and supply the data
@@ -116,23 +132,29 @@ public class ArkeFragment extends Fragment {
 
     }
 
+    /**
+     * Sets up the observer for the loading outcome, and acts accordingly.
+     */
     private void setUpLoadingOutcomeObserver() {
 
-        // Observer for whether loading has completed
+        // Observer for whether loading has completed.
         mArkeViewModel.getLoadingOutcome().observe(requireActivity(), loadingOutcome -> {
 
             mLoadingIndicator.setVisibility(View.GONE);
             mSwipeRefreshLayout.setEnabled(true);
 
-            // This will display a message to say there are no entries to show only
-            // after everything has loaded. The entry list variable is kept updated by the
-            // public entries observer
+            /*
+            This will display a message to say there are no entries to show only
+            after everything has loaded, if appropriate. The entry list size variable is kept
+            updated by the public entries observer.
+             */
             if (mEntryListSize < 1) {
                 mConnectionError.setVisibility(View.VISIBLE);
             } else {
                 mConnectionError.setVisibility(View.GONE);
             }
 
+            // Set the fab to visible one there is a loading outcome.
             mFab.setVisibility(View.VISIBLE);
 
             if (loadingOutcome.equals("complete")) {
@@ -143,17 +165,22 @@ public class ArkeFragment extends Fragment {
                     mInitialLoad = false;
                 }
             } else if (loadingOutcome.equals("error")) {
+                // Display an error message in a snackbar.
                 View tablayoutView = requireActivity().findViewById(R.id.tab_layout);
                 Snackbar snackbar = Snackbar.make(mRootView, "Connection error...",
                         Snackbar.LENGTH_LONG);
                 snackbar.setAnchorView(tablayoutView);
                 snackbar.show();
             }
-            // Reset the connectionError LiveData to "standby"
+            // Reset the connectionError LiveData to "standby".
             mArkeViewModel.loadingOutcomeComplete();
         });
     }
 
+    /**
+     * Observe whether and entry has been added successfully, and scroll to the top if this
+     * has been done.
+     */
     private void setUpEntryAddedObserver() {
         mArkeViewModel.getEntryAdded().observe(requireActivity(), entryAdded -> {
             if (entryAdded) {
@@ -168,8 +195,11 @@ public class ArkeFragment extends Fragment {
         });
     }
 
+    /**
+     * Refreshes the data in fragment on swiping down.
+     */
     private void setUpSwipeRefresh() {
-        // disable swipe refresh until page loaded
+        // Disable swipe refresh until page loaded.
         mSwipeRefreshLayout.setEnabled(false);
 
         // Refresh the fragment on swiping down.
@@ -181,17 +211,13 @@ public class ArkeFragment extends Fragment {
     }
 
     /**
-     * Method for applying random colour for the colour picker
-     *
-     * @return the colour resources, colourRes
+     * Method for applying random colour for the colour picker. Returns the colour resource int.
      */
     public int changeColour() {
         int colourResourceName = getResources()
                 .getIdentifier(mArkeViewModel.randomColour(), "color",
                         requireActivity().getApplicationContext().getPackageName());
-        // look up the string colorName in the
-        // "color" resources
-        // there are separate ints for both names and the values
+        // Look up the string colorName in the color resources.
         return ContextCompat.getColor(requireActivity(), colourResourceName);
     }
 
@@ -200,7 +226,6 @@ public class ArkeFragment extends Fragment {
      * with our chosen colour.
      */
     public void openColourPickerDialogue() {
-
         ColorPickerDialogBuilder
                 .with(requireActivity(), R.style.ColorPickerDialogTheme)
                 .setTitle("Tell the world how you feel!")
@@ -208,13 +233,13 @@ public class ArkeFragment extends Fragment {
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                 .density(12)
                 .showAlphaSlider(false)
-                // what to do if they choose the colour
+                // What to do if they choose the colour.
                 .setPositiveButton("ok", (dialog, selectedColor, allColors) -> {
-                    // amend the colour to the chosen one
+                    // Amend the colour to the chosen one.
                     mColourName = selectedColor;
                     addRemoteEntry(mColourName);
                 })
-                // otherwise exit
+                // Otherwise exit.
                 .setNegativeButton("cancel", (dialog, which) -> {
                 })
                 .build()

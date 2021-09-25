@@ -26,6 +26,9 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Fragment for displaying all user (Iris) entry items.
+ */
 public class IrisFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
@@ -56,21 +59,22 @@ public class IrisFragment extends Fragment {
 
         mRootView = inflater.inflate(R.layout.fragment_iris, container, false);
 
-        // associated the ViewModel with the controller, this persists through config changes
+        // Associates the ViewModel with the controller, this persists through config changes.
         mIrisViewModel = ViewModelProviders.of(requireActivity()).get(IrisViewModel.class);
         mArkeViewModel = ViewModelProviders.of(this).get(ArkeViewModel.class);
 
         mFab = mRootView.findViewById(R.id.iris_fab);
         mColourCircle = mRootView.findViewById(R.id.chosen_colour);
-        // Get a handler for the RecyclerView
+        // Get a handler for the RecyclerView.
         mRecyclerView = mRootView.findViewById(R.id.iris_recyclerview);
-        // loading indicator
+        // Loading indicator.
         mLoadingIndicator = mRootView.findViewById(R.id.loading_indicator_iris);
+        // Message suggesting the user has no entries made yet.
         mConnectionError = mRootView.findViewById(R.id.text_no_entries);
 
         mIrisViewModel.refreshIrisCache(false);
 
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragment.
         return mRootView;
 
     }
@@ -93,65 +97,84 @@ public class IrisFragment extends Fragment {
 
     }
 
+    /**
+     * This will set up the fab to add the colour in the displayed circle to the user's diary.
+      */
     private void setUpFab() {
         mFab.setOnClickListener(view -> {
-            // this will add the colour in the circle to the user's diary
             makePublicAlert();
         });
     }
 
+    /**
+     * Sets up the colour circle displayed in the UI, that, when clicked,
+     * opens a colour picker that can change the colour of the circle.
+     */
     private void setUpColourCircleButton() {
         mColourName = changeColour();
         mColourCircle.setColorFilter(mColourName);
 
         mColourCircle.setOnClickListener(view -> {
-            // get a random colour, to initially display to the user in the color picker dialogue.
+            // Get a random colour, to initially display to the user in the color picker dialogue.
             mColourName = changeColour();
             // This will open a dialogue to enter a colour.
             openColourPickerDialogue(mColourCircle);
         });
     }
 
-
+    /**
+     * Sets up a listener on entry items, which, after a long click,
+     * a dialogue is opened up.
+     */
     private void setUpEntryClickListener() {
-
-        // delete an item on long click
+        // Opens a dialogue after a long click of an item.
         mAdapter.setOnItemClickListener((v, position) -> {
             IrisEntryItem entryItem = mAdapter.getEntryAtPosition(position);
 
-            // call method to decide what to do with entry
+            // Call method to decide what to do with entry.
             deleteOrPublicAlert(entryItem);
         });
 
     }
 
+    /**
+     * Sets up the RecyclerView, which observes the user entries and updates the RecylcerView
+     * adapter accordingly.
+     */
     private void setUpRecyclerView() {
-        // Create an adapter and supply the data
+        // Create an adapter and supply the data.
         mAdapter = new IrisListAdapter(getActivity());
-        // Connect adapter to RecyclerView
+        // Connect adapter to RecyclerView.
         mRecyclerView.setAdapter(mAdapter);
-        // Give RecyclerView a LayoutManager, make it horizontal
+        // Give RecyclerView a LayoutManager, make it horizontal.
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 getActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 false);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        // Observer for the entries to list in the recyclerview
+        // Observer for the entries to list in the recyclerview.
         mIrisViewModel.getAllEntries().observe(requireActivity(), entries -> {
-            // update cached copy of words in adapter
+            // Update cached copy of words in adapter.
             mAdapter.setEntries(entries);
-            // We want the size, so that we can decide whether to provide a message
-            // saying there are no entries after loading has finished
+            /*
+             We want the size, so that we can decide whether to provide a message
+             saying there are no entries after loading has finished.
+             */
             mEntryListSize = entries.size();
         });
     }
 
+    /**
+     * Sets up the observer for any connection errors, and acts accordingly.
+     */
     private void setUpConnectionErrorObserver() {
-        // Observer for any connection error
+        // Observer for any connection error.
         mIrisViewModel.getConnectionError().observe(requireActivity(), connectionError -> {
-            // The connection error for IrisFragment should not occur when loading the
-            // app, as this is already handled by ArkeFragment.
+            /*
+             The connection error for IrisFragment should not occur when loading the
+             app, as this is already handled by ArkeFragment.
+             */
             if (connectionError) {
                 if (!mInitialLoad) {
                     View tablayoutView = requireActivity().findViewById(R.id.tab_layout);
@@ -166,6 +189,9 @@ public class IrisFragment extends Fragment {
         });
     }
 
+    /**
+     * Sets up the observer for the loading completion, and acts accordingly.
+     */
     private void setUpLoadingCompleteObserver() {
         // Observer for whether loading has completed
         mIrisViewModel.getLoadingComplete().observe(requireActivity(), loadingComplete -> {
@@ -180,15 +206,18 @@ public class IrisFragment extends Fragment {
                     mConnectionError.setVisibility(View.GONE);
                 }
             }
-            // I have added this again here, to avoid concurrency issues with the
-            // connectionError LiveData
+            /*
+             I have added this again here, to avoid concurrency issues with the
+             connectionError LiveData.
+             */
             mInitialLoad = false;
         });
     }
 
-
+    /**
+     * Observe whether and entry has been added successfully.
+     */
     private void setUpEntryAddedObserver() {
-
         mIrisViewModel.getEntryAdded().observe(requireActivity(), entryAdded -> {
             if (entryAdded) {
                 Toast.makeText(getActivity(),
@@ -199,9 +228,11 @@ public class IrisFragment extends Fragment {
                 mIrisViewModel.entryAddedComplete();
             }
         });
-
     }
 
+    /**
+     * Observes whether an entry has been deleting, and informs the user via a toast.
+     */
     public void setUpEntryDeletedToast() {
         mIrisViewModel.getEntryDeleted().observe(requireActivity(), entryDeleted -> {
             if (entryDeleted) {
@@ -213,6 +244,10 @@ public class IrisFragment extends Fragment {
         });
     }
 
+    /**
+     * Observes whether an entry has had its publicity status changed,
+     * and informs the user via a toast appropriately.
+     */
     public void setUpPublicityToast() {
         mIrisViewModel.getIsPublic().observe(requireActivity(), isPublic -> {
             if (isPublic.equals("public")) {
@@ -233,7 +268,6 @@ public class IrisFragment extends Fragment {
      * with our chosen colour.
      */
     public void openColourPickerDialogue(ImageView image) {
-
         ColorPickerDialogBuilder
                 .with(requireActivity(), R.style.ColorPickerDialogTheme)
                 .setTitle(getString(R.string.feeling_query))
@@ -241,13 +275,13 @@ public class IrisFragment extends Fragment {
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                 .density(12)
                 .showAlphaSlider(false)
-                // what to do if they choose the colour
+                // What to do if they choose the colour.
                 .setPositiveButton("ok", (dialog, selectedColor, allColors) -> {
-                    // amend the colour to the chosen one
+                    // Amend the colour to the chosen one.
                     mColourName = selectedColor;
                     image.setColorFilter(mColourName);
                 })
-                // otherwise exit
+                // Otherwise exit.
                 .setNegativeButton("cancel", (dialog, which) -> {
                 })
                 .build()
@@ -276,14 +310,20 @@ public class IrisFragment extends Fragment {
         builder.show();
     }
 
+    /**
+     * Displays an alert dialogue to allow the user to choose if they want to
+     * delete and entry, and change it's publicity status (i.e., public, private).
+     */
     public void deleteOrPublicAlert(IrisEntryItem entryItem) {
-        // initial choices
+        // Initial choices.
         String [] choices = {
                 getString(R.string.make_entry_public),
                 getString(R.string.delete_entry_query),
                 getString(R.string.cancel_nothing)};
-        // change the text for the first choice depending on whether the
-        // item is currently public or private
+        /*
+         Change the text for the first choice depending on whether the item
+          is currently public or private.
+         */
         if (entryItem.getIsPublic() == 1) {
             choices[0] = getString(R.string.make_entry_private);
         }
@@ -304,18 +344,24 @@ public class IrisFragment extends Fragment {
         builder.show();
     }
 
+    /**
+     * Requests that the remote entry be deleted.
+     */
     public void deleteRemoteEntry(IrisEntryItem entryItem) {
         mIrisViewModel.deleteRemoteEntry(entryItem);
         mLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Requests that the publicity status on an entry be deleted.
+     */
     public void updateRemoteEntryPublicity(IrisEntryItem entryItem, int isPublic) {
         mIrisViewModel.updateRemoteEntryPublicity(entryItem, isPublic);
         mLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
     /**
-     * Add colour to the backend postgreSQL database
+     * Adds colour entry to the backend postgreSQL database.
      */
     public void addRemoteEntry(int isPublic) {
         mIrisViewModel.addRemoteEntry(mColourName, isPublic);
@@ -323,14 +369,12 @@ public class IrisFragment extends Fragment {
     }
 
     /**
-     * Method for applying random colour for the colour picker
+     * Method for applying random colour for the colour picker.
      */
     public int changeColour() {
         int colourResourceName = getResources().getIdentifier(mIrisViewModel.randomColour(), "color",
                 requireActivity().getApplicationContext().getPackageName());
-        // look up the string colorName in the
-        // "color" resources
-        // there are separate ints for both names and the values
+        // Look up the string colorName in the color resources.
         return ContextCompat.getColor(requireActivity(), colourResourceName);
     }
 

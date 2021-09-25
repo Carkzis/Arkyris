@@ -16,6 +16,9 @@ import com.example.arkyris.R;
 
 import java.util.List;
 
+/**
+ * Adapter class for adding ArkeEntryItem data to the ArkeFragment RecyclerView.
+ */
 public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeViewHolder> {
 
     private final LayoutInflater mInflater;
@@ -47,11 +50,17 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
         holder.mTimeView.setText(mCurrent.getTime());
     }
 
+    /**
+     * Sets the LiveData entries, and notifies the adapter if the data set has changed.
+     */
     void setEntries(List<ArkeEntryItem> entries){
         mEntries = entries;
         notifyDataSetChanged();
     }
 
+    /**
+     * Retrieves the amount of items in the RecyclerView.
+     */
     @Override
     public int getItemCount() {
         if (mEntries != null) {
@@ -60,6 +69,10 @@ public class ArkeListAdapter extends RecyclerView.Adapter<ArkeListAdapter.ArkeVi
             return 0;
     }
 
+    /**
+     * Describes the item view (it "holds" the item) and any associated data,
+     * which is then contained within the RecyclerView.
+     */
     static class ArkeViewHolder extends RecyclerView.ViewHolder {
 
         public final ImageView mImageView;

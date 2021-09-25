@@ -16,6 +16,9 @@ import com.example.arkyris.R;
 
 import java.util.List;
 
+/**
+ * Adapter class for adding IrisEntryItem data to the IrisFragment RecyclerView.
+ */
 public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisViewHolder> {
 
     private final LayoutInflater mInflater;
@@ -35,6 +38,9 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
         return new IrisViewHolder(mItemView, this);
     }
 
+    /**
+     * Connects your data to the view holder.
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull IrisListAdapter.IrisViewHolder holder, int position) {
@@ -45,11 +51,17 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
         holder.mTimeView.setText(mCurrent.getTime());
     }
 
+    /**
+     * Sets the LiveData entries, and notifies the adapter if the data set has changed.
+     */
     void setEntries(List<IrisEntryItem> entries){
         mEntries = entries;
         notifyDataSetChanged();
     }
 
+    /**
+     * Retrieves the amount of items in the RecyclerView.
+     */
     @Override
     public int getItemCount() {
         if (mEntries != null) {
@@ -58,6 +70,10 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
         return 0;
     }
 
+    /**
+     * Describes the item view (it "holds" the item) and any associated data,
+     * which is then contained within the RecyclerView.
+     */
     static class IrisViewHolder extends RecyclerView.ViewHolder {
 
         public final ImageView mImageView;
@@ -72,7 +88,7 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
             mDateView = itemView.findViewById(R.id.iris_date);
             mTimeView = itemView.findViewById(R.id.iris_time);
 
-            // converting it to a long click
+            // Sets a click listener to the ViewHolder, allowing the user to perform actions on it.
             itemView.setOnLongClickListener(v -> {
                 clickListener.onItemClick(v, getAdapterPosition());
                 return true;
@@ -82,15 +98,24 @@ public class IrisListAdapter extends RecyclerView.Adapter<IrisListAdapter.IrisVi
         }
     }
 
+    /**
+     * Returns the entry at a particular position.
+     */
     public IrisEntryItem getEntryAtPosition(int position) {
         return mEntries.get(position);
     }
 
-
+    /**
+     * Sets a click listener to the adapter.
+     */
     public void setOnItemClickListener(ClickListener clickListener) {
         IrisListAdapter.clickListener = clickListener;
     }
 
+    /**
+     * Interface for the click listener, taking in the view and position as arguments
+     * so that we are listening on a particular item.
+     */
     public interface ClickListener {
         void onItemClick(View v, int position);
     }
