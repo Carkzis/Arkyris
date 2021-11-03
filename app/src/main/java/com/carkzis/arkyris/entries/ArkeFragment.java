@@ -1,6 +1,7 @@
 package com.carkzis.arkyris.entries;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,6 +158,7 @@ public class ArkeFragment extends Fragment {
             // Set the fab to visible one there is a loading outcome.
             mFab.setVisibility(View.VISIBLE);
 
+            Log.e(loadingOutcome, loadingOutcome);
             if (loadingOutcome.equals("complete")) {
                 // If this is not the initial load, also update the Iris cache.
                 if (!mInitialLoad) {
@@ -173,7 +175,9 @@ public class ArkeFragment extends Fragment {
                 snackbar.show();
             }
             // Reset the connectionError LiveData to "standby".
-            mArkeViewModel.loadingOutcomeComplete();
+            if (!loadingOutcome.equals("standby")) {
+                mArkeViewModel.loadingOutcomeComplete();
+            }
         });
     }
 
