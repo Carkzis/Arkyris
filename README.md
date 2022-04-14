@@ -45,7 +45,7 @@ Arkyris (a combination of the Greek Gods of colour, Arke and Iris), if an app fo
 Marc Jowett (carkzis.apps@gmail.com)
 
 ## Version History
-* 0.1
+* 1.0
   * Initial Release.  See [commits](https://github.com/Carkzis/Arkyris/commits/main).
 
 ## License
